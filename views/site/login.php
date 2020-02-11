@@ -11,8 +11,13 @@ $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
+    <?php if(Yii::$app->session->hasFlash('user_confirmation')): ?>
+    <div class="alert alert-success alert-dismissable">
+        <h4><?php echo Yii::$app->session->getFlash('user_confirmation'); ?></h4>
+    </div>
+    <?php else: ?>    
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <?php endif; ?>
     <p>Please fill out the following fields to login:</p>
 
     <?php $form = ActiveForm::begin([
