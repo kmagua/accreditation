@@ -17,7 +17,7 @@ class Utility {
      * @param type $subject Email's Subject
      * @param type $msg email Body
      */
-    public static function sendMail($to, $subject, $msg, $cc='', $attach = '', $from = 'kenneth.kamau@icta.go.ke')
+    public static function sendMail($to, $subject, $msg, $cc='', $attach = '', $from = 'kenmagua@gmail.com')
     {
         $message = Yii::$app->mailer->compose();
         $message->setFrom($from)

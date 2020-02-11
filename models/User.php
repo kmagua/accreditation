@@ -46,7 +46,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email'], 'string', 'max' => 30],
             [['first_name', 'last_name'], 'string', 'max' => 20],
             [['password', 'password_repeat'], 'string', 'max' => 100],
-            [['password_repeat'], 'validatePasswordRepeat'],
+            [['password_repeat'], 'validatePasswordRepeat', 'on'=>'new_account'],
         ];
     }
 
@@ -145,7 +145,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['email' => $username]);
+        return static::findOne(['email' => $username, 'status'=>1]);
     }
 
     /**
@@ -168,12 +168,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'password_reset_token' => $token
         ]);
     }
-
+    
     public function beforeSave($insert)
     {
         parent::beforeSave($insert);
-        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-
+        //only on new record
+        if($insert){
+            $this->password = password_hash($this->password, PASSWORD_DEFAULT);        
+        }    
         return true;
     }
     
@@ -227,7 +229,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      * @return boolean if password provided is valid for current user
      */
     public function validatePassword($password)
-    {        
+    {
         return password_verify($password, $this->password);
     }
 
@@ -236,10 +238,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      *
      * @param string $password
      */
-    public function setPassword($password)
+    /*public function setPassword($password)
     {
         $this->password_hash = Security::generatePasswordHash($password);
-    }
+    }*/
 
     /**
      * Generates "remember me" authentication key
@@ -267,8 +269,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     
     public function sendEmailConfirmationEmail()
     {
+        $this->refresh(); // pull updates from table
         $hash = password_hash($this->id . '' . $this->status . strtolower($this->email), PASSWORD_DEFAULT);
-        $link = \yii\helpers\Url::toRoute(['user/confirm-user-account', 'id' => $this->id,'h'=>$hash], true);
+        
+        $link = urldecode(\yii\helpers\Url::to(['user/confirm-user-account', 'id' => $this->id, 'h'=>$hash], true));
+        
         $text_link = "<a href='".$link. "' target='_blank'>click this link</a>";
         $msg = <<<MSG
             Dear $this->first_name ." " . $$this->last_name, <p>
