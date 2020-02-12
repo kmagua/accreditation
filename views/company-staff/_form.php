@@ -12,8 +12,6 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'company_id')->textInput() ?>
-
     <?= $form->field($model, 'first_name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'last_name')->textInput(['maxlength' => true]) ?>
@@ -32,11 +30,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'staff_type')->dropDownList([ 'Staff' => 'Staff', 'Technical Director' => 'Technical Director', 'Director' => 'Director', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'status')->dropDownList([ 1 => '1', 0 => '0', ], ['prompt' => '']) ?>
-
-    <?= $form->field($model, 'date_created')->textInput() ?>
-
-    <?= $form->field($model, 'last_updated')->textInput() ?>
+    <?= $form->field($model, 'status')->dropDownList([ 1 => 'Active', 0 => 'Inactive', ], ['prompt' => '']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
