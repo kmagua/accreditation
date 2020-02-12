@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' 
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="company-profile-update">
-
+<div class="bordered">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
@@ -19,3 +19,14 @@ $this->params['breadcrumbs'][] = 'Update';
     ]) ?>
 
 </div>
+  </div>
+
+<style>
+  .bordered {
+    width: 1200px;
+    height: 600px;
+    padding: 20px;
+    border: 1px solid darkorange;
+    border-radius: 8px;
+  }
+</style>
