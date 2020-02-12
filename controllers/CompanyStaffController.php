@@ -124,4 +124,38 @@ class CompanyStaffController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+    
+    /**
+     * 
+     * @param type $cid Company ID
+     */
+    public function actionStaffData($cid)
+    {
+        $searchModel = new CompanyStaffSearch();
+        $searchModel->company_id = $cid;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        $html = $this->renderPartial('company_staff_list', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider
+        ]);
+        return \yii\helpers\Json::encode($html);
+    }
+    
+    /**
+     * 
+     * @param type $cid Company ID
+     */
+    public function actionNew($cid)
+    {
+        $model = new CompanyStaff();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->renderAjax('new', [
+            'model' => $model,
+        ]);
+    }
 }

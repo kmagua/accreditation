@@ -74,7 +74,29 @@ AppAsset::register($this);
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
-
+<?php
+yii\bootstrap\Modal::begin([
+    'headerOptions' => ['id' => 'modalHeader'],
+    'id' => 'accreditation-modal',
+    'size' => 'modal-lg',
+    'closeButton' => [
+        'id'=>'close-button',
+        'class'=>'close',
+        'data-dismiss' =>'modal',
+    ],
+    //keeps from closing modal with esc key or by clicking out of the modal.
+    // user must click cancel or X to close
+    'options' => [
+        'data-backdrop' => 'static', 'keyboard' => true,
+        'tabindex' => false
+    ]
+]);
+echo "<div id='modalContent'><div style='text-align:center'>" . Html::img('@web/images/radio.gif')  . "</div></div>";
+echo '<div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>';
+yii\bootstrap\Modal::end();
+?>
 <?php $this->endBody() ?>
 </body>
 </html>
