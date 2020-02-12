@@ -1,12 +1,9 @@
 <?php
 
-use yii\helpers\Html;
-
 /* @var $this yii\web\View */
-/* @var $model app\models\CompanyStaff */
+/* @var $model app\models\AcademicQualification */
 ?>
-<div class="company-staff-update">
-
+<div class="academic-qualification-create">
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

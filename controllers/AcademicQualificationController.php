@@ -74,6 +74,28 @@ class AcademicQualificationController extends Controller
             'model' => $model,
         ]);
     }
+    
+    /**
+     * @param type $sid
+     * @return string
+     */
+    public function actionCreateAjax($sid)
+    {
+        $model = new AcademicQualification();
+        $model->staff_id = $sid;
+
+        if ($model->load(Yii::$app->request->post())){
+            $model->saveQualification();
+        }
+        $searchModel = new AcademicQualificationSearch();
+        $searchModel->staff_id = $sid;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        return $this->renderAjax('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
     /**
      * Updates an existing AcademicQualification model.
@@ -91,6 +113,36 @@ class AcademicQualificationController extends Controller
         }
 
         return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+    
+    /**
+     * Updates an existing AcademicQualification model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdateAjax($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->saveQualification();
+            
+            
+            $searchModel = new AcademicQualificationSearch();
+            $searchModel->staff_id = $model->staff_id;
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+            return $this->renderAjax('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+
+        return $this->renderAjax('_form', [
             'model' => $model,
         ]);
     }
@@ -123,5 +175,21 @@ class AcademicQualificationController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    
+    /**
+     * 
+     * @param type $sid Staff ID
+     */
+    public function actionData($sid)
+    {
+        $searchModel = new AcademicQualificationSearch();
+        $searchModel->staff_id = $sid;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->renderAjax('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

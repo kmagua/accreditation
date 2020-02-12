@@ -1,6 +1,9 @@
 <?php
 use yii\helpers\Html;
 use kartik\tabs\TabsX;
+use kartik\icons\Icon;
+
+Icon::map($this, Icon::FAS); // Maps the Elusive icon font framework
 
 /* @var $this yii\web\View */
 /* @var $model app\models\CompanyProfile */
@@ -28,7 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'label' => 'Staff Details',
-            //'content'=>$content2,
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['company-staff/staff-data', 'cid'=>$model->id])],
             'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'myveryownID'],
@@ -50,3 +52,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ]); 
 ?>
 </div>
+<?php
+$this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);
+$this->registerJsFile('../js/company_staff.js', ['position'=>yii\web\View::POS_END]);

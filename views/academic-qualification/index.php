@@ -7,18 +7,14 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\AcademicQualificationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Academic Qualifications';
-$this->params['breadcrumbs'][] = $this->title;
+$model = new \app\models\AcademicQualification();
+$model->staff_id = $searchModel->staff_id;
 ?>
 <div class="academic-qualification-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Academic Qualification', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?= $this->render('_form', [
+        'model' => $model,
+    ]) ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,15 +22,38 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'staff_id',
+            //'id',
+            //'staff_id',
             'level',
             'course_name',
-            'certificate',
+            [
+                'attribute' => 'certificate',
+                'content' => function($data){
+                    return $data->fileLink(true);
+                }
+            ],
             //'date_created',
             //'last_updated',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['style' => 'width: 7%'],
+                //'visible'=> Yii::$app->user->isGuest ? false : true,
+                'template' => '{update}{delete}',
+                'buttons'=>[                    
+                    'update' => function ($url, $model) {
+                        $url = yii\helpers\Url::to(['academic-qualification/update-ajax', 'id'=>$model->id]);
+                        return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
+                            'title' =>"Edit Staff Details",
+                            'onclick'=>"getStaffForm('$url', '<h3>Course Edit</h3>'); return false;"]);
+                    },
+                    'delete' => function ($url) {
+                        //$url = yii\helpers\Url::to(['academic-qualification/delete', 'id'=>$model->id]);
+                        return Html::a('', $url, ['class' => 'glyphicon glyphicon-trash', 'title' =>"Delete",
+                            'onclick'=>"deleteData('$url'); return false;"]);
+                    },
+                ],                
+            ],
         ],
     ]); ?>
 

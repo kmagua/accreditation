@@ -45,6 +45,7 @@ class CompanyStaff extends \yii\db\ActiveRecord
     {
         return [
             [['company_id', 'first_name', 'last_name'], 'required'],
+            //[['first_name', 'last_name'], 'match', 'pattern' => '/^[a-z]\w*$/i'],
             [['company_id', 'national_id'], 'integer'],
             [['gender', 'disability_status', 'staff_type', 'status'], 'string'],
             [['dob', 'date_created', 'last_updated'], 'safe'],
@@ -126,5 +127,27 @@ class CompanyStaff extends \yii\db\ActiveRecord
     public function getStaffExperiences()
     {
         return $this->hasMany(StaffExperience::className(), ['staff_id' => 'id']);
+    }
+    
+    /**
+     * 
+     * @param type $insert
+     */
+    public function beforeSave($insert)
+    {
+        parent::beforeSave($insert);
+        if($this->dob != ''){
+            $this->dob = date('Y-m-d', strtotime($this->dob));
+        }
+        return true;
+    }
+    
+    /**
+     * Get staff name
+     * @return type string
+     */
+    public function getNames()
+    {
+        return $this->first_name . ' '. $this->last_name;
     }
 }

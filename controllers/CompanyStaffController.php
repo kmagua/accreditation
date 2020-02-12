@@ -52,7 +52,7 @@ class CompanyStaffController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -90,7 +90,7 @@ class CompanyStaffController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
+        return $this->renderAjax('update', [
             'model' => $model,
         ]);
     }
@@ -149,9 +149,12 @@ class CompanyStaffController extends Controller
     public function actionNew($cid)
     {
         $model = new CompanyStaff();
+        $model->company_id = $cid;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $model = new CompanyStaff();
+            $model->company_id = $cid;
+            \Yii::$app->session->setFlash('staff_added','Staff details added successfully!');
         }
 
         return $this->renderAjax('new', [

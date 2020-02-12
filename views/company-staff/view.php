@@ -29,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'company_id',
+            //'id',
+            'company.company_name',
             'first_name',
             'last_name',
             'national_id',
@@ -40,9 +40,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'disability_status',
             'title',
             'staff_type',
-            'status',
-            'date_created',
-            'last_updated',
+            [
+                'attribute' => 'status',
+                'value' => function($model){
+                    return ($model->status == 1)?'Active':'Inactive';
+                }
+            ],
+            //'date_created',
+            //'last_updated',
         ],
     ]) ?>
 
