@@ -21,7 +21,8 @@
         "kartik-v/yii2-tabs-x": "@dev",
         "yiisoft/yii2-jui": "^2.0",
         "kartik-v/yii2-icons": "@dev",
-        "rmrevin/yii2-fontawesome": "2.10.*"
+        "rmrevin/yii2-fontawesome": "2.10.*",
+        "dmstr/yii2-adminlte-asset": "^2.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

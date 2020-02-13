@@ -1,24 +1,51 @@
 <?php
-use yii\widgets\DetailView;
+//use yii\widgets\DetailView;
+use kartik\tabs\TabsX;
+use app\models\CompanyDocumentSearch;
+
+$companyDocumnets = new CompanyDocumentSearch();
+$companyDocumnets->company_id = $model->id;
+$dataProvider = $companyDocumnets->search(Yii::$app->request->queryParams);
 ?>
-<?= DetailView::widget([
-    'model' => $model,
-    'attributes' => [
-        'id',
-        'business_reg_no',
-        'company_name',
-        'registration_date',
-        'county',
-        'town',
-        'building',
-        'floor',
-        'telephone_number',
-        'company_email:email',
-        'type_of_business',
-        'postal_address',
-        'company_categorization',
-        'user_id',
-        'date_created',
-        'last_updated',
+
+
+<?= TabsX::widget([
+    'position' => TabsX::ALIGN_LEFT,
+    'align' => TabsX::ALIGN_LEFT,
+    'items' => [
+        [
+            'label' => 'Company Profile',
+            'content' =>$this->render('_companydetail', [
+                'model' => $model,
+                //'dataProvider' => $dataProvider,
+            ]),
+            'active' => true
+        ],
+        [
+              'label' => 'Company Documents',
+            'content' =>$this->render('../company-document/_documentdetails', [
+                'model' => $companyDocumnets,
+                 'dataProvider' => $dataProvider,
+                 ]),
+      
+            
+        ],
+        [
+            'label' => 'Dropdown',
+            'items' => [
+                 [
+                     'label' => 'DropdownA',
+                     'content' => 'DropdownA, Anim pariatur cliche...',
+                 ],
+                 [
+                     'label' => 'DropdownB',
+                     'content' => 'DropdownB, Anim pariatur cliche...',
+                 ],
+            ],
+        ],
     ],
-]) ?>
+]);
+?>
+
+
+
