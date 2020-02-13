@@ -18,7 +18,7 @@ class CompanyProfileSearch extends CompanyProfile
     {
         return [
             [['id', 'user_id'], 'integer'],
-            [['business_reg_no', 'company_name', 'registration_date', 'county', 'town', 'building', 'floor', 'telephone_number', 'company_email', 'type_of_business', 'postal_address', 'company_categorization', 'date_created', 'last_updated'], 'safe'],
+            [['business_reg_no', 'company_name', 'registration_date', 'county', 'town', 'building', 'floor', 'telephone_number', 'company_email', 'company_type_id', 'postal_address', 'company_categorization', 'date_created', 'last_updated'], 'safe'],
         ];
     }
 
@@ -63,6 +63,7 @@ class CompanyProfileSearch extends CompanyProfile
             'user_id' => $this->user_id,
             'date_created' => $this->date_created,
             'last_updated' => $this->last_updated,
+            'company_type_id' => $this->company_type_id,
         ]);
 
         $query->andFilterWhere(['like', 'business_reg_no', $this->business_reg_no])
@@ -73,7 +74,6 @@ class CompanyProfileSearch extends CompanyProfile
             ->andFilterWhere(['like', 'floor', $this->floor])
             ->andFilterWhere(['like', 'telephone_number', $this->telephone_number])
             ->andFilterWhere(['like', 'company_email', $this->company_email])
-            ->andFilterWhere(['like', 'type_of_business', $this->type_of_business])
             ->andFilterWhere(['like', 'postal_address', $this->postal_address])
             ->andFilterWhere(['like', 'company_categorization', $this->company_categorization]);
 

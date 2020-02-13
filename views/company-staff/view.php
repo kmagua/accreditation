@@ -1,54 +1,69 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+use kartik\tabs\TabsX;
+use app\models\AcademicQualificationSearch;
+use app\models\StaffExperienceSearch;
+use app\models\ProfessionalCertificationSearch;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\CompanyStaff */
 
-$this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Company Staff', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+// acasemic qualifications
+$acSearchModel = new AcademicQualificationSearch();
+$acSearchModel->staff_id = $model->id;
+$acDataProvider = $acSearchModel->search(Yii::$app->request->queryParams);
+
+// acasemic qualifications
+$pcSearchModel = new ProfessionalCertificationSearch();
+$pcSearchModel->staff_id = $model->id;
+$pcDataProvider = $pcSearchModel->search(Yii::$app->request->queryParams);
+
+// acasemic qualifications
+$xpSearchModel = new StaffExperienceSearch();
+$xpSearchModel->staff_id = $model->id;
+$xpDataProvider = $xpSearchModel->search(Yii::$app->request->queryParams);
 ?>
 <div class="company-staff-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            //'id',
-            'company.company_name',
-            'first_name',
-            'last_name',
-            'national_id',
-            'kra_pin',
-            'gender',
-            'dob',
-            'disability_status',
-            'title',
-            'staff_type',
-            [
-                'attribute' => 'status',
-                'value' => function($model){
-                    return ($model->status == 1)?'Active':'Inactive';
-                }
-            ],
-            //'date_created',
-            //'last_updated',
+<?= TabsX::widget([
+    'items' => [
+        [
+            'label' => 'Personal Information',
+            'options' => ['id' => 'staff-personal-details-tab'],
+            'content' => $this->render('_view', ['model'=>$model]),
         ],
-    ]) ?>
+        [
+            'label' => 'Academic Qualifications',
+            'options' => ['id' => 'staff-academic-qualifications-tab'],
+            'content' => $this->render('../academic-qualification/gridview', 
+                ['searchModel'=>$acSearchModel, 'dataProvider'=>$acDataProvider]
+            ),
+        ],
+        [
+            'label' => 'Professional Certifications',
+            'options' => ['id' => 'staff-professional-certifications-tab'],
+            'content' => $this->render('../professional-certification/gridview', 
+                ['searchModel'=>$pcSearchModel, 'dataProvider'=>$pcDataProvider]
+            ),
+        ],
+        [
+            'label' => 'Work Experience',
+            'options' => ['id' => 'staff-staff-experience-tab'],
+            'content' => $this->render('../staff-experience/gridview', 
+                ['searchModel'=>$xpSearchModel, 'dataProvider'=>$xpDataProvider]
+            ),
+        ],
+    ],
+    'position'=>TabsX::POS_LEFT,
+    'encodeLabels'=>false,
+    'containerOptions' =>['id' => 'full-staff-details-view'],
+    /*'options' => ['tag' => 'div'],
+    'itemOptions' => ['tag' => 'div'],
+    'headerOptions' => ['tag' => 'h3'],
+    'clientOptions' => ['collapsible' => true],*/
+]);
+
+?>
 
 </div>

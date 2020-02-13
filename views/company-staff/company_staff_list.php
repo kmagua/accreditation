@@ -45,10 +45,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'visible'=> Yii::$app->user->isGuest ? false : true,
                 'template' => '{view}{update}{academic}',
                 'buttons'=>[
-                    'view' => function ($url) {
+                    'view' => function ($url, $model) {
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-eye-open btn btn-default btn-xs custom_button',
                             'title' =>"Full Staff Details",
-                            'onclick'=>"getStaffForm('$url', '<h3>Staff Details</h3>'); return false;"]);
+                            'onclick'=>"getStaffForm('$url', '<h3>Full Staff Details - " . $model->getNames() . "</h3>'); return false;"]);
                     },
                     'update' => function ($url) {
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
