@@ -33,6 +33,12 @@ $this->params['breadcrumbs'][] = $this->title;
             //'status',
             //'date_created',
             //'last_updated',
+            [
+                'label' => 'Actions',
+                'content' => function ($data){
+                    return $data->getStaffDetailsLinks();
+                }
+            ],
 
             ['class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 7%'],
@@ -48,11 +54,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
                             'title' =>"Edit Staff Details",
                             'onclick'=>"getStaffForm('$url', '<h3>Record Edit</h3>'); return false;"]);
-                    },
-                    'academic' => function ($url, $model) {
-                        $url = yii\helpers\Url::to(['academic-qualification/data', 'sid'=>$model->id]);
-                        return Html::a('', $url, ['class' => 'fas fa-graduation-cap', 'title' =>"Staff's Academic Qualifications",
-                            'onclick'=>"getStaffForm('$url', '<h3>Academic Qualifications for " . $model->getNames() . "</h3>'); return false;"]);
                     },
                 ],
             ],

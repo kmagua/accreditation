@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $staff_id
- * @property int|null $organization
+ * @property string|null $organization
  * @property string|null $role
  * @property string|null $assignment
  * @property string|null $start_date
@@ -36,9 +36,9 @@ class StaffExperience extends \yii\db\ActiveRecord
     {
         return [
             [['staff_id'], 'required'],
-            [['staff_id', 'organization'], 'integer'],
+            [['staff_id'], 'integer'],
             [['start_date', 'end_date', 'date_created', 'last_updated'], 'safe'],
-            [['role'], 'string', 'max' => 100],
+            [['role', 'organization'], 'string', 'max' => 100],
             [['assignment'], 'string', 'max' => 200],
             [['staff_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyStaff::className(), 'targetAttribute' => ['staff_id' => 'id']],
         ];
@@ -70,5 +70,22 @@ class StaffExperience extends \yii\db\ActiveRecord
     public function getStaff()
     {
         return $this->hasOne(CompanyStaff::className(), ['id' => 'staff_id']);
+    }
+    
+    /**
+     * overridden function
+     * @param type $insert
+     * @return boolean
+     */
+    public function beforeSave($insert)
+    {
+        parent::beforeSave($insert);
+        if($this->start_date != ''){
+            $this->start_date = date('Y-m-d', strtotime($this->start_date));
+        }
+        if($this->end_date != ''){
+            $this->end_date = date('Y-m-d', strtotime($this->end_date));
+        }
+        return true;
     }
 }

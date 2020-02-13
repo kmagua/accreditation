@@ -160,6 +160,18 @@ class AcademicQualificationController extends Controller
 
         return $this->redirect(['index']);
     }
+    
+    /**
+     * Deletes an existing AcademicQualification model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDeleteAjax($id)
+    {
+        return $this->findModel($id)->delete();
+    }
 
     /**
      * Finds the AcademicQualification model based on its primary key value.
