@@ -61,7 +61,9 @@ use yii\widgets\ActiveForm;
         </div>
         
         <div class="col-md-6">
-              <?= $form->field($model, 'type_of_business')->dropDownList([ 'Sole proprietor' => 'Sole proprietor', 'Partnership' => 'Partnership', 'Corporation' => 'Corporation', 'Private Company' => 'Private Company', 'Limited company' => 'Limited company', 'Co-operative' => 'Co-operative', ], ['prompt' => '']) ?>
+              <?= $form->field($model, 'company_type_id')->dropDownList([ 'Sole proprietor' => 'Sole proprietor', 
+                  'Partnership' => 'Partnership', 'Corporation' => 'Corporation', 'Private Company' => 'Private Company', 
+                  'Limited company' => 'Limited company', 'Co-operative' => 'Co-operative', ], ['prompt' => '']) ?>
         </div>
     </div>
 

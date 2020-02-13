@@ -10,22 +10,28 @@ use yii\widgets\ActiveForm;
 
 <div class="professional-certification-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'staff_id')->textInput() ?>
-
-    <?= $form->field($model, 'qualification_type')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'other_description')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'certificate')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'date_created')->textInput() ?>
-
-    <?= $form->field($model, 'last_updated')->textInput() ?>
+    <?php $form = ActiveForm::begin([
+            'id' =>'professional-certification-form',
+            'action' => ($model->isNewRecord)?['professional-certification/create-ajax', 'sid'=>$model->staff_id] : 
+                ['professional-certification/update-ajax', 'id'=>$model->id],
+            'options' => ['enctype' => 'multipart/form-data']
+        ]); ?>
+    <div class="row"> 
+        <div class="col-md-6">
+            <?= $form->field($model, 'qualification_type')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'other_description')->textInput(['maxlength' => true]) ?>
+        </div>
+    </div>
+    <div class="row"> 
+        <div class="col-md-8">
+        <?= $form->field($model, 'certificate_upload')->fileInput() ?>
+        </div>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'onclick'=>'saveStaffData(this); return false;']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

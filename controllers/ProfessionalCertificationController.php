@@ -74,6 +74,28 @@ class ProfessionalCertificationController extends Controller
             'model' => $model,
         ]);
     }
+    
+    /**
+     * @param type $sid
+     * @return string
+     */
+    public function actionCreateAjax($sid)
+    {
+        $model = new ProfessionalCertification();
+        $model->staff_id = $sid;
+
+        if ($model->load(Yii::$app->request->post())){
+            $model->saveProfessionalCertification();
+        }
+        $searchModel = new ProfessionalCertificationSearch();
+        $searchModel->staff_id = $sid;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        return $this->renderAjax('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
     /**
      * Updates an existing ProfessionalCertification model.
@@ -91,6 +113,35 @@ class ProfessionalCertificationController extends Controller
         }
 
         return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+    
+    /**
+     * Updates an existing AcademicQualification model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdateAjax($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->saveProfessionalCertification();            
+            
+            $searchModel = new ProfessionalCertificationSearch();
+            $searchModel->staff_id = $model->staff_id;
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+            return $this->renderAjax('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+
+        return $this->renderAjax('_form', [
             'model' => $model,
         ]);
     }
@@ -123,5 +174,21 @@ class ProfessionalCertificationController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    
+    /**
+     * 
+     * @param type $sid Staff ID
+     */
+    public function actionData($sid)
+    {
+        $searchModel = new ProfessionalCertificationSearch();
+        $searchModel->staff_id = $sid;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->renderAjax('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

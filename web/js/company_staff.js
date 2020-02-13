@@ -25,7 +25,7 @@ function saveStaffData(clickedButton){
         cache: false,             
         processData:false,
         success: function(result){
-            $('#modalHeader').html('<h3>Add Staff</h3>');
+            //$('#modalHeader').html('<h3>Add Staff</h3>');
             $('div#modalContent').html(result);
             //$.pjax.reload({container: "#staff-data-list", async: false});
             //$( "#companystaff-dob" ).datepicker();

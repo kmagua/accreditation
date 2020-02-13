@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use \kartik\icons\Icon;
 
 /**
  * This is the model class for table "company_staff".
@@ -149,5 +150,30 @@ class CompanyStaff extends \yii\db\ActiveRecord
     public function getNames()
     {
         return $this->first_name . ' '. $this->last_name;
+    }
+    
+    /**
+     * Staff AJAX grid view link
+     * @return type
+     */
+    public function getStaffDetailsLinks()
+    {
+       
+        $ac_url = yii\helpers\Url::to(['academic-qualification/data', 'sid'=>$this->id]);
+        $ac_link = \yii\helpers\Html::a(Icon::show('graduation-cap', ['class' => 'fas',
+            'framework' => Icon::FAS]), $ac_url, ['title' =>"Staff's Academic Qualifications",
+            'onclick'=>"getStaffForm('$ac_url', '<h3>Academic Qualifications for " . $this->getNames() . "</h3>'); return false;"]);
+        
+        $pc_url = yii\helpers\Url::to(['professional-certification/data', 'sid'=>$this->id]);
+        $pc_link = \yii\helpers\Html::a(Icon::show('certificate', ['class' => 'fas',
+            'framework' => Icon::FAS]), $pc_url, ['title' =>"Professional Certification",
+            'onclick'=>"getStaffForm('$pc_url', '<h3>Professional Certifications for " . $this->getNames() . "</h3>'); return false;"]);
+        
+        $xp_url = yii\helpers\Url::to(['staff-experience/data', 'sid'=>$this->id]);
+        $xp_link = \yii\helpers\Html::a(Icon::show('tasks', ['class' => 'fas',
+            'framework' => Icon::FAS]), $xp_url, ['title' =>"Work Experience",
+            'onclick'=>"getStaffForm('$xp_url', '<h3>Work Experience for " . $this->getNames() . "</h3>'); return false;"]);
+        
+        return $ac_link .'&nbsp;&nbsp;' . $pc_link . '&nbsp;&nbsp;' .$xp_link;
     }
 }

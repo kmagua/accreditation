@@ -10,26 +10,64 @@ use yii\widgets\ActiveForm;
 
 <div class="staff-experience-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+            'id' =>'staff-experience-form',
+            'action' => ($model->isNewRecord)?['staff-experience/create-ajax', 'sid'=>$model->staff_id] : 
+                ['staff-experience/update-ajax', 'id'=>$model->id],
+            //'options' => ['enctype' => 'multipart/form-data']
+        ]); ?>
+    <div class="row"> 
+        <div class="col-md-6">
+            <?= $form->field($model, 'organization')->textInput() ?>
+        </div>
 
-    <?= $form->field($model, 'staff_id')->textInput() ?>
-
-    <?= $form->field($model, 'organization')->textInput() ?>
-
-    <?= $form->field($model, 'role')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'assignment')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'start_date')->textInput() ?>
-
-    <?= $form->field($model, 'end_date')->textInput() ?>
-
-    <?= $form->field($model, 'date_created')->textInput() ?>
-
-    <?= $form->field($model, 'last_updated')->textInput() ?>
+        <div class="col-md-6">
+            <?= $form->field($model, 'role')->textInput(['maxlength' => true]) ?>
+        </div>
+    </div>
+    
+    <div class="row"> 
+        <div class="col-md-8">
+            <?= $form->field($model, 'assignment')->textarea(['rows' => 4, 'cols'=>70]) ?>
+        </div>
+            
+        
+    </div>
+    <div class="row"> 
+        <div class="col-md-6">
+             <?= $form->field($model, 'start_date')->widget(\yii\jui\DatePicker::classname(), [
+                //'language' => 'ru',
+                'dateFormat' => 'dd-MM-yyyy',
+                'clientOptions'=>[
+                    'yearRange'=>(date('Y')-70).":".(date('Y')),
+                    'maxDate' => "+0day",
+                    'changeYear' => true,
+                    'changeMonth' => 'true'
+                ],
+                'options' =>[
+                    'class' => 'form-control',
+                ]
+            ]) ?>
+        </div>
+        <div class="col-md-6">
+             <?= $form->field($model, 'end_date')->widget(\yii\jui\DatePicker::classname(), [
+                //'language' => 'ru',
+                'dateFormat' => 'dd-MM-yyyy',
+                'clientOptions'=>[
+                    'yearRange'=>(date('Y')-70).":".(date('Y')+5),
+                    //'maxDate' => "18Y",
+                    'changeYear' => true,
+                    'changeMonth' => 'true'
+                ],
+                'options' =>[
+                    'class' => 'form-control',
+                ]
+            ]) ?>
+        </div>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'onclick'=>'saveStaffData(this); return false;']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'floor',
             //'telephone_number',
             //'company_email:email',
-            //'type_of_business',
+            //'company_type_id',
             //'postal_address',
             //'company_categorization',
             //'user_id',

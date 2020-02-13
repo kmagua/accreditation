@@ -17,7 +17,7 @@ use Yii;
  * @property string|null $floor
  * @property string|null $telephone_number
  * @property string|null $company_email
- * @property string|null $type_of_business
+ * @property string|null $company_type_id
  * @property string|null $postal_address
  * @property string|null $company_categorization
  * @property int|null $user_id
@@ -48,7 +48,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
         return [
             [['business_reg_no', 'company_name'], 'required'],
             [['registration_date', 'date_created', 'last_updated'], 'safe'],
-            [['type_of_business', 'company_categorization'], 'string'],
+            [['company_type_id', 'company_categorization'], 'string'],
             [['user_id'], 'integer'],
             [['business_reg_no', 'county', 'floor'], 'string', 'max' => 20],
             [['company_name', 'telephone_number', 'company_email'], 'string', 'max' => 100],
@@ -75,7 +75,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
             'floor' => 'Floor',
             'telephone_number' => 'Telephone Number',
             'company_email' => 'Company Email',
-            'type_of_business' => 'Type Of Business',
+            'company_type_id' => 'Type Of Business',
             'postal_address' => 'Postal Address',
             'company_categorization' => 'Company Categorization',
             'user_id' => 'User ID',
