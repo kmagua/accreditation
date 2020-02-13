@@ -22,11 +22,11 @@ $dataProvider = $companyDocumnets->search(Yii::$app->request->queryParams);
             'active' => true
         ],
         [
-              'label' => 'Company Documents',
+            'label' => 'Company Documents',
             'content' =>$this->render('../company-document/_documentdetails', [
-                'model' => $companyDocumnets,
-                 'dataProvider' => $dataProvider,
-                 ]),
+                'searchModel' => $companyDocumnets,
+                'dataProvider' => $dataProvider,
+            ]),
       
             
         ],

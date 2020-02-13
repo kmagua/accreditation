@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     'items' => [
         [
             'label' => 'Company Details',
-            'content' => $this->render('_view', [
+            'content' => $this->render('_companydetail', [
                 'model' => $model,
                 //'dataProvider' => $dataProvider,
             ]),

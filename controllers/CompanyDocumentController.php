@@ -82,6 +82,28 @@ class CompanyDocumentController extends Controller
             'model' => $model,
         ]);
     }
+    
+    /**
+     * @param type $cid Company Profile ID
+     * @return string
+     */
+    public function actionCreateAjax($cid)
+    {
+        $model = new CompanyDocument();
+        $model->company_id = $cid;
+
+        if ($model->load(Yii::$app->request->post())){
+            $model->saveCompanyDocument();
+        }
+        $searchModel = new CompanyDocumentSearch();
+        $searchModel->company_id = $cid;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        return $this->renderAjax('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
     /**
      * Updates an existing CompanyDocument model.
@@ -102,6 +124,35 @@ class CompanyDocumentController extends Controller
             'model' => $model,
         ]);
     }
+    
+    /**
+     * Updates an existing AcademicQualification model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdateAjax($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->saveCompanyDocument();            
+            
+            $searchModel = new CompanyDocumentSearch();
+            $searchModel->company_id = $model->company_id;
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+            return $this->renderAjax('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+
+        return $this->renderAjax('_form', [
+            'model' => $model,
+        ]);
+    }
 
     /**
      * Deletes an existing CompanyDocument model.
@@ -117,9 +168,17 @@ class CompanyDocumentController extends Controller
         return $this->redirect(['index']);
     }
     
-    
-    
-    
+    /**
+     * Deletes an existing AcademicQualification model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDeleteAjax($id)
+    {
+        return $this->findModel($id)->delete();
+    }
     
     public function actionUpload()
     {
@@ -150,5 +209,21 @@ class CompanyDocumentController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    
+    /**
+     * 
+     * @param type $cid Company Profile ID
+     */
+    public function actionData($cid)
+    {
+        $searchModel = new CompanyDocumentSearch();
+        $searchModel->company_id = $cid;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->renderAjax('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

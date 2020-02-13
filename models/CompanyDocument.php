@@ -10,12 +10,12 @@ use yii\web\UploadedFile;
  *
  * @property int $id
  * @property int|null $company_id
- * @property int|null $document_type_id
+ * @property int|null $company_type_doc_id
  * @property string|null $date_created
  * @property string|null $last_updated
  * @property string|null $upload_file
  * 
- * @property DocumentType $documentType
+ * @property CompanyTypeDocument $companyTypeDoc
  * @property CompanyProfile $company
  */
 class CompanyDocument extends \yii\db\ActiveRecord
@@ -35,11 +35,11 @@ class CompanyDocument extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'document_type_id'], 'integer'],
+            [['company_id', 'company_type_doc_id'], 'integer'],
             [['date_created', 'last_updated'], 'safe'],
             [['upload_file'], 'string'],
-            [['uploadFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png,pdf,doc, jpg'],
-            [['document_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => DocumentType::className(), 'targetAttribute' => ['document_type_id' => 'id']],
+            [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,pdf,doc, jpg'],
+            [['company_type_doc_id'], 'exist', 'skipOnError' => true, 'targetClass' => DocumentType::className(), 'targetAttribute' => ['company_type_doc_id' => 'id']],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
         ];
     }
@@ -52,7 +52,7 @@ class CompanyDocument extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'company_id' => 'Company ID',
-            'document_type_id' => 'Document Type ID',
+            'company_type_doc_id' => 'Document Type ID',
              'upload_file' => 'Upload File', 
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
@@ -64,9 +64,9 @@ class CompanyDocument extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getDocumentType()
+    public function getCompanyTypeDoc()
     {
-        return $this->hasOne(DocumentType::className(), ['id' => 'document_type_id']);
+        return $this->hasOne(CompanyTypeDocument::className(), ['id' => 'company_type_doc_id']);
     }
 
     /**
@@ -79,7 +79,40 @@ class CompanyDocument extends \yii\db\ActiveRecord
         return $this->hasOne(CompanyProfile::className(), ['id' => 'company_id']);
     }
     
+    /**
+     * return the link to a protocol file
+     * @author kmagua
+     * @return string
+     */
+    public function fileLink($icon = false)
+    {
+        if($this->upload_file != ''){
+            $text = ($icon== true)?"<span class='glyphicon glyphicon-download-alt' title='Download - {$this->upload_file}'></span>" :
+                \yii\helpers\Html::encode($this->upload_file);
+            $path = Yii::getAlias('@web') ."/";
+            return \yii\helpers\Html::a($text,$path . $this->upload_file,['data-pjax'=>"0", 'target'=>'_blank']);
+        }else{
+            return '';
+        }
+    }
     
-   
-    
+    public function saveCompanyDocument()
+    {
+        $transaction = \Yii::$app->db->beginTransaction();
+        try {
+            $this->uploadFile = \yii\web\UploadedFile::getInstance($this, 'uploadFile');
+            //if file uploaded
+            if($this->uploadFile){
+                $this->upload_file = 'uploads/company_documents/' . $this->company_id ."-" . $this->companyTypeDoc->documentType->name .'-'. microtime() .
+                    '.' . $this->uploadFile->extension;
+            }
+            if($this->save()){
+                ($this->uploadFile)? $this->uploadFile->saveAs($this->upload_file):null;
+            }
+            $transaction->commit();
+        }catch (\Exception $e) {
+           $transaction->rollBack();
+           throw $e;
+        }
+    }
 }

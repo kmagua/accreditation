@@ -4,20 +4,18 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\StaffExperienceSearch */
-/* @var $model app\models\StaffExperience */
+/* @var $searchModel app\models\CompanyExperienceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$model = new \app\models\StaffExperience();
-$model->staff_id = $searchModel->staff_id;
+$model = new \app\models\CompanyExperience();
+$model->company_id = $searchModel->company_id;
 ?>
-<div class="staff-experience-index">
+<div class="company-experience-index">
 
     <?= $this->render('_form', [
         'model' => $model,
-    ]) ?>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    ]);
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,17 +24,23 @@ $model->staff_id = $searchModel->staff_id;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            //'staff_id',
-            'organization',
-            'role',
-            'assignment',
+            //'company_id',
+            'organization_type',
+            'project_name',
             [
                 'label' => 'Dates',
                 'content' => function($data){
                     return $data->start_date . ' - ' . $data->end_date;
                 }
             ],
-            //'end_date',
+            'status',
+            'project_cost',            
+            [
+                'attribute' => 'attachment',
+                'content' => function($data){
+                    return $data->fileLink(true);
+                }
+            ],
             //'date_created',
             //'last_updated',
 
@@ -47,14 +51,14 @@ $model->staff_id = $searchModel->staff_id;
                 'template' => '{update}{delete}',
                 'buttons'=>[                    
                     'update' => function ($url, $model) {
-                        $url = yii\helpers\Url::to(['staff-experience/update-ajax', 'id'=>$model->id]);
+                        $url = yii\helpers\Url::to(['company-experience/update-ajax', 'id'=>$model->id]);
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
                             'title' =>"Edit Work Experience",
                             'onclick'=>"getStaffForm('$url', '<h3>Work Experience Edit</h3>'); return false;"]);
                     },
                     'delete' => function ($url, $model) {
-                        $url = yii\helpers\Url::to(['staff-experience/delete-ajax', 'id'=>$model->id]);
-                        $return_link = yii\helpers\Url::to(['staff-experience/data', 'sid'=>$model->staff_id]);
+                        $url = yii\helpers\Url::to(['company-experience/delete-ajax', 'id'=>$model->id]);
+                        $return_link = yii\helpers\Url::to(['company-experience/data', 'cid'=>$model->company_id]);
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-trash', 'title' =>"Delete",
                             'onclick'=>"ajaxDeleteRecord('$url', '$return_link'); return false;"]);
                     },

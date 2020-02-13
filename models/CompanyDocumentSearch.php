@@ -17,7 +17,7 @@ class CompanyDocumentSearch extends CompanyDocument
     public function rules()
     {
         return [
-            [['id', 'company_id', 'document_type_id'], 'integer'],
+            [['id', 'company_id', 'company_type_doc_id'], 'integer'],
             [['date_created', 'last_updated'], 'safe'],
         ];
     }
@@ -60,7 +60,7 @@ class CompanyDocumentSearch extends CompanyDocument
         $query->andFilterWhere([
             'id' => $this->id,
             'company_id' => $this->company_id,
-            'document_type_id' => $this->document_type_id,
+            'company_type_doc_id' => $this->company_type_doc_id,
             'date_created' => $this->date_created,
             'last_updated' => $this->last_updated,
         ]);
