@@ -133,4 +133,29 @@ class CompanyProfile extends \yii\db\ActiveRecord
     {
         return $this->hasMany(CompanyStaff::className(), ['company_id' => 'id']);
     }
+    
+    public function beforeSave($insert) 
+    {
+        parent::beforeSave($insert);
+        
+        if($insert){
+            $this->user_id = Yii::$app->user->identity->user_id;            
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Check if user has permission to view/update record
+     * @param type $id
+     * @return boolean
+     */
+    public static function canAccess($id)
+    {
+        $rec = CompanyProfile::findOne($id);
+        if($rec && $rec->user_id == Yii::$app->user->identity->user_id){
+            return true;
+        }
+        return false;
+    }
 }

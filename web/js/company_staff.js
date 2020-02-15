@@ -7,7 +7,11 @@ function getStaffForm(url, header='<h3>Add Staff</h3>'){
             $('#modalHeader').html(header);
             $('div#modalContent').html(result);
             //$( "#companystaff-dob" ).datepicker();
-        },        
+        },
+        error:function(jqXHR){
+            $('#modalHeader').html("Error Occured!");
+            $('div#modalContent').html("<p style='color:red'>" + jqXHR.responseText + '</p>');
+        }
     });
 }
 
@@ -29,6 +33,11 @@ function saveStaffData(clickedButton){
             $('div#modalContent').html(result);
             //$.pjax.reload({container: "#staff-data-list", async: false});
             //$( "#companystaff-dob" ).datepicker();
-        },        
+        },
+        error:function(jqXHR){
+            $('#modalHeader').html("Error Occured!");
+            $('div#modalContent').html("<p style='color:red'>" + jqXHR.responseText + '</p>');
+        }
     });
 }
+

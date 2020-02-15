@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\CompanyStaff;
-use app\models\CompanyStaffSearch;
+use app\models\Application;
+use app\models\ApplicationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * CompanyStaffController implements the CRUD actions for CompanyStaff model.
+ * ApplicationController implements the CRUD actions for Application model.
  */
-class CompanyStaffController extends Controller
+class ApplicationController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -23,22 +23,37 @@ class CompanyStaffController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','view','update','delete','staff-data','new'],
+                'only' => ['create','view','update','delete','index', 'new', 'applications','index','approve'],
                 'rules' => [
                     [
-                        'actions' => ['create'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['staff-data','new'],
+                        'actions' => ['new','applications','create'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
                             if(isset(Yii::$app->request->get()['cid'])){
-                                return Yii::$app->user->identity->isInternal() || \app\models\CompanyProfile::canAccess(Yii::$app->request->get()['cid']);
+                                return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess(Yii::$app->request->get()['cid']);
                             }                             
                             return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){
+                                $cid = Application::findOne(Yii::$app->request->get()['id'])->company_id;
+                                return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess($cid);
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['index','approval'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return Yii::$app->user->identity->isInternal();
                         }
                     ],
                 ],
@@ -53,12 +68,12 @@ class CompanyStaffController extends Controller
     }
 
     /**
-     * Lists all CompanyStaff models.
+     * Lists all Application models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CompanyStaffSearch();
+        $searchModel = new ApplicationSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -68,26 +83,26 @@ class CompanyStaffController extends Controller
     }
 
     /**
-     * Displays a single CompanyStaff model.
+     * Displays a single Application model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        return $this->renderAjax('view', [
+        return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new CompanyStaff model.
+     * Creates a new Application model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($cid)
     {
-        $model = new CompanyStaff();
+        $model = new Application();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -99,7 +114,7 @@ class CompanyStaffController extends Controller
     }
 
     /**
-     * Updates an existing CompanyStaff model.
+     * Updates an existing Application model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -113,13 +128,13 @@ class CompanyStaffController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->renderAjax('update', [
+        return $this->render('update', [
             'model' => $model,
         ]);
     }
 
     /**
-     * Deletes an existing CompanyStaff model.
+     * Deletes an existing Application model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -133,15 +148,15 @@ class CompanyStaffController extends Controller
     }
 
     /**
-     * Finds the CompanyStaff model based on its primary key value.
+     * Finds the Application model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return CompanyStaff the loaded model
+     * @return Application the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = CompanyStaff::findOne($id)) !== null) {
+        if (($model = Application::findOne($id)) !== null) {
             return $model;
         }
 
@@ -152,13 +167,13 @@ class CompanyStaffController extends Controller
      * 
      * @param type $cid Company ID
      */
-    public function actionStaffData($cid)
+    public function actionApplications($cid)
     {
-        $searchModel = new CompanyStaffSearch();
+        $searchModel = new ApplicationSearch();
         $searchModel->company_id = $cid;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
-        $html = $this->renderPartial('company_staff_list', [
+        $html = $this->renderPartial('company_applications', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider
         ]);
@@ -171,17 +186,36 @@ class CompanyStaffController extends Controller
      */
     public function actionNew($cid)
     {
-        $model = new CompanyStaff();
+        $model = new Application();
         $model->company_id = $cid;
+        $model->setScenario('create');
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('application_submitted','Application Submitted Successfully!');
+            $this->redirect(['company-profile/view','id'=>$cid,'#'=>'application_data_tab']);
+        }
+        
+        return $this->renderAjax('_form', [
+            'model' => $model,
+        ]);
+    }
+    
+    /**
+     * Approval for Application
+     * @param type $id Application ID
+     * @param type $level 1= Secretariat, 2 = Committee
+     */
+    public function actionApproval($id, $level)
+    {
+        $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model = new CompanyStaff();
-            $model->company_id = $cid;
-            \Yii::$app->session->setFlash('staff_added','Staff details added successfully!');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->renderAjax('new', [
+        return $this->render('view_full', [
             'model' => $model,
+            'level' => $level,
         ]);
     }
 }

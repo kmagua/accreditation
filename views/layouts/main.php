@@ -40,14 +40,14 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
-            //['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Register', 'url' => ['/user/create'],'visible'=>Yii::$app->user->isGuest],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    'Logout (' . Yii::$app->user->identity->full_name . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
@@ -79,6 +79,7 @@ yii\bootstrap\Modal::begin([
     'headerOptions' => ['id' => 'modalHeader'],
     'id' => 'accreditation-modal',
     'size' => 'modal-lg',
+    //'tabindex' => false,
     'closeButton' => [
         'id'=>'close-button',
         'class'=>'close',

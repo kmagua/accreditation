@@ -62,7 +62,7 @@ class CompanyExperience extends \yii\db\ActiveRecord
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
             'status' => 'Status',
-            'project_cost' => 'Project Cost',
+            'project_cost' => 'Project Cost (KES)',
             'attachment' => 'Attachment',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',

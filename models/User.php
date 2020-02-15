@@ -26,7 +26,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public $authKey;
     public $accessToken;
     public $password_repeat;
-	/**
+    public $group;
+    public $user_id;
+    public $full_name;
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -196,6 +199,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         parent::afterFind();
         $this->username = $this->email;
+        $this->setUserId();
+        $this->setGroup();
+        $this->full_name = $this->first_name . ' ' . $this->last_name;
+        return true;
     }
 
     /**
@@ -295,5 +302,29 @@ MSG;
     public function validateAccount($hash)
     {
         return password_verify($this->id . '' . $this->status . strtolower($this->email), $hash);
+    }
+    
+    public function setUserId()
+    {
+        $this->user_id = $this->id;
+    }
+    
+    public function setGroup()
+    {
+        $this->group = $this->role;
+    }
+    
+    public function inGroup($group)
+    {
+        $grp = strtolower($group);
+        if($grp == 'admin'){
+            return true;
+        }
+        return Yii::$app->user->identity->group == $grp;
+    }
+    
+    public function isInternal()
+    {
+        return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committe member']);        
     }
 }

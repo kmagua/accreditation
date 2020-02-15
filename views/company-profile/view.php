@@ -2,6 +2,8 @@
 use yii\helpers\Html;
 use kartik\tabs\TabsX;
 use kartik\icons\Icon;
+//use kartik\select2\Select2;
+\kartik\select2\Select2Asset::register($this);
 
 Icon::map($this, Icon::FAS); // Maps the Elusive icon font framework
 
@@ -33,9 +35,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'Staff Details',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['company-staff/staff-data', 'cid'=>$model->id])],
             'headerOptions' => ['style'=>'font-weight:bold'],
-            'options' => ['id' => 'myveryownID'],
+            'options' => ['id' => 'company_data_tab'],
         ],
         [
+            'label' => 'Applications',
+            'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['application/applications', 'cid'=>$model->id])],
+            'headerOptions' => ['style'=>'font-weight:bold'],
+            'options' => ['id' => 'application_data_tab'],
+        ],
+        /*[
             'label' => 'Dropdown',
             'items' => [
                  [
@@ -47,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                      'content' => 'DropdownB, Anim pariatur cliche...',
                  ],
             ],
-        ],
+        ],*/
     ],
 ]); 
 ?>
@@ -55,3 +63,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);
 $this->registerJsFile('../js/company_staff.js', ['position'=>yii\web\View::POS_END]);
+$js = <<<JS
+    $(function () {
+        var activeTab = $('[href="' + location.hash + '"]');
+        activeTab && activeTab.tab('show');
+    });    
+JS;
+$this->registerJs($js,yii\web\View::POS_END, 'enable_select2');
