@@ -11,15 +11,17 @@ use app\models\Application;
  */
 class ApplicationSearch extends Application
 {
+    public $company;
+    public $accreditationType;
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'company_id', 'accediation_category_id', 'user_id'], 'integer'],
+            [['id', 'company_id', 'accreditation_type_id', 'user_id'], 'integer'],
             [['financial_status_amount'], 'number'],
-            [['financial_status_link', 'status', 'declaration', 'date_created', 'last_updated'], 'safe'],
+            [['financial_status_link', 'status', 'declaration', 'date_created', 'last_updated', 'company', 'accreditationType'], 'safe'],
         ];
     }
 
@@ -45,6 +47,7 @@ class ApplicationSearch extends Application
 
         // add conditions that should always apply here
 
+        $query->joinWith(['accreditationType', 'company']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -61,15 +64,17 @@ class ApplicationSearch extends Application
         $query->andFilterWhere([
             'id' => $this->id,
             'company_id' => $this->company_id,
-            'accediation_category_id' => $this->accediation_category_id,
+            'accreditation_type_id' => $this->accreditation_type_id,
             'financial_status_amount' => $this->financial_status_amount,
             'user_id' => $this->user_id,
-            'date_created' => $this->date_created,
-            'last_updated' => $this->last_updated,
+            //'date_created' => $this->date_created,
+            //'last_updated' => $this->last_updated,
         ]);
 
         $query->andFilterWhere(['like', 'financial_status_link', $this->financial_status_link])
             ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['like', 'company_profile.company_name', $this->company])
+            ->andFilterWhere(['like', 'accreditation_type.name', $this->accreditationType])
             ->andFilterWhere(['like', 'declaration', $this->declaration]);
 
         return $dataProvider;

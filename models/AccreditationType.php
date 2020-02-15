@@ -42,7 +42,7 @@ class AccreditationType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Accreditation Type',
             'description' => 'Description',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',

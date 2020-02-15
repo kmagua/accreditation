@@ -7,17 +7,10 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\CompanyProfileSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Company Profiles';
+$this->title = 'Company List';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-profile-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Company Profile', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
@@ -26,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'business_reg_no',
             'company_name',
             'registration_date',
@@ -43,7 +36,17 @@ $this->params['breadcrumbs'][] = $this->title;
             //'date_created',
             //'last_updated',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['style' => 'width: 4%'],
+                //'visible'=> Yii::$app->user->isGuest ? false : true,
+                'template' => '{view}',
+                'buttons'=>[
+                    'view' => function ($url, $model) {
+                        return Html::a('', $url, ['class' => 'glyphicon glyphicon-eye-open btn btn-default btn-xs custom_button',
+                            'title' =>"Full Staff Details"]);
+                    },
+                ],
+            ],
         ],
     ]); ?>
 

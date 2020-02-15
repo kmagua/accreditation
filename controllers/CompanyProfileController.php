@@ -23,7 +23,7 @@ class CompanyProfileController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','view','update','delete'],
+                //'only' => ['create','view','update','delete', 'index'],
                 'rules' => [
                     [
                         'actions' => ['create'],
@@ -39,6 +39,14 @@ class CompanyProfileController extends Controller
                                 return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess(Yii::$app->request->get()['id']);
                             }                             
                             return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {                            
+                            return Yii::$app->user->identity->isInternal();
                         }
                     ],
                 ],

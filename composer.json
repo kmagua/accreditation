@@ -21,7 +21,9 @@
         "kartik-v/yii2-tabs-x": "@dev",
         "yiisoft/yii2-jui": "^2.0",
         "kartik-v/yii2-icons": "@dev",
-        "kartik-v/yii2-widget-select2": "@dev"
+        "kartik-v/yii2-widget-select2": "@dev",
+        "raoul2000/yii2-workflow": "*",
+        "kartik-v/yii2-grid": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

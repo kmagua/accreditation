@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'company_id') ?>
 
-    <?= $form->field($model, 'accediation_category_id') ?>
+    <?= $form->field($model, 'accreditation_type_id') ?>
 
     <?= $form->field($model, 'financial_status_amount') ?>
 

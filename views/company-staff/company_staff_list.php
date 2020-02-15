@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 7%'],
                 //'visible'=> Yii::$app->user->isGuest ? false : true,
-                'template' => '{view}{update}{academic}',
+                'template' => '{view}{update}',
                 'buttons'=>[
                     'view' => function ($url, $model) {
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-eye-open btn btn-default btn-xs custom_button',

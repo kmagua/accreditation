@@ -26,9 +26,6 @@ use yii\grid\GridView;
                     return $data->start_date . ' - ' . $data->end_date;
                 }
             ],
-            //'end_date',
-            //'date_created',
-            //'last_updated',
         ],
     ]); ?>
 

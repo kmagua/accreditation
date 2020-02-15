@@ -53,7 +53,7 @@ class CompanyDocument extends \yii\db\ActiveRecord
             'id' => 'ID',
             'company_id' => 'Company ID',
             'company_type_doc_id' => 'Document Type ID',
-             'upload_file' => 'Upload File', 
+            'upload_file' => 'Document/Certificate', 
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
         ];

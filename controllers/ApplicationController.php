@@ -23,7 +23,6 @@ class ApplicationController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','view','update','delete','index', 'new', 'applications','index','approve'],
                 'rules' => [
                     [
                         'actions' => ['new','applications','create'],
@@ -37,7 +36,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['update'],
+                        'actions' => ['update','view', 'upload-receipt'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -103,9 +102,10 @@ class ApplicationController extends Controller
     public function actionCreate($cid)
     {
         $model = new Application();
+        $model->company_id = $cid;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $this->redirect(['company-profile/view','id'=>$cid,'#'=>'application_data_tab']);
         }
 
         return $this->render('create', [
@@ -123,9 +123,11 @@ class ApplicationController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->loadExperienceData();
+        $model->loadStaffData();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $this->redirect(['company-profile/view','id'=>$model->company_id,'#'=>'application_data_tab']);
         }
 
         return $this->render('update', [
@@ -216,6 +218,27 @@ class ApplicationController extends Controller
         return $this->render('view_full', [
             'model' => $model,
             'level' => $level,
+        ]);
+    }
+    
+    /**
+     * 
+     * @param type $id
+     * @param type $l
+     */
+    public function actionUploadReceipt($id, $l)
+    {
+        $model = new \app\models\Payment();
+        $model->application_id = $id;
+        $model->level = $l;
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('application_submitted','Application Submitted Successfully!');
+            $this->redirect(['company-profile/view','id'=>$cid,'#'=>'application_data_tab']);
+        }
+        
+        return $this->renderAjax('../payment/_form', [
+            'model' => $model,
         ]);
     }
 }
