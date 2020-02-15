@@ -1,0 +1,10 @@
+.navbar-brand {
+    font-style: normal;
+    color:white;
+}
+
+.navbar-brand img {
+    height: 10%;
+    margin-top: -50px;
+   
+}
