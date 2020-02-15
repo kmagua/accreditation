@@ -26,7 +26,7 @@ $model->company_id = $searchModel->company_id;
             //'company_id',
             'companyTypeDoc.documentType.name',
             [
-                'attribute' => 'certificate',
+                'attribute' => 'upload_file',
                 'content' => function($data){
                     return $data->fileLink(true);
                 }
@@ -56,6 +56,5 @@ $model->company_id = $searchModel->company_id;
             ],
         ],
     ]); ?>
-
 
 </div>

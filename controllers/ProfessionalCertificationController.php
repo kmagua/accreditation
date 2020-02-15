@@ -179,16 +179,25 @@ class ProfessionalCertificationController extends Controller
     /**
      * 
      * @param type $sid Staff ID
+     * @param type $e Whether to show form
+     * @return type
      */
-    public function actionData($sid)
+    public function actionData($sid, $e=1)
     {
         $searchModel = new ProfessionalCertificationSearch();
         $searchModel->staff_id = $sid;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->renderAjax('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if($e){
+            return $this->renderAjax('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,            
+            ]);
+        }else{
+            return $this->renderAjax('gridview', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,            
+            ]);
+        }
     }
 }

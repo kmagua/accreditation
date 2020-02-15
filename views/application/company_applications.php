@@ -31,7 +31,7 @@ $model->company_id = $searchModel->company_id;
 
             //'id',
             //'company_id',
-            'accediation_category_id',
+            'accreditationType.name',
             'financial_status_amount',
             'financial_status_link',
             //'user_id',
@@ -40,7 +40,21 @@ $model->company_id = $searchModel->company_id;
             //'date_created',
             //'last_updated',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['style' => 'width: 7%'],
+                //'visible'=> Yii::$app->user->isGuest ? false : true,
+                'template' => '{view}{update}',
+                'buttons'=>[
+                    'view' => function ($url, $model) {
+                        return Html::a('', $url, ['class' => 'glyphicon glyphicon-eye-open btn btn-default btn-xs custom_button',
+                            'title' =>"View Application Details"]);
+                    },
+                    'update' => function ($url) {
+                        return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
+                            'title' =>"Edit Application Details"]);
+                    },
+                ],
+            ],
         ],
     ]); ?>
 

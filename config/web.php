@@ -49,9 +49,15 @@ $config = [
             'showScriptName' => false,
             'rules' => [
             ],
-        ],
-        
+        ],            
     ],
+    'modules' => [
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module',
+            //'bsVersion' => 4,
+            
+        ]
+    ],    
     'params' => $params,
 ];
 

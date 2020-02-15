@@ -5,8 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Application */
 
-$this->title = 'Create Application';
-$this->params['breadcrumbs'][] = ['label' => 'Applications', 'url' => ['index']];
+$this->title = 'Submit Application';
+$this->params['breadcrumbs'][] = ['label' => 'My Applications', 'url' => [
+    'company-profile/view','id'=>$model->company_id, '#'=>'application_data_tab']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="application-create">

@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= TabsX::widget([
     'position' => TabsX::POS_ABOVE,
     'align' => TabsX::ALIGN_LEFT,
+    'containerOptions' => ['id'=> 'company_profile_tabs'],
     'items' => [
         [
             'label' => 'Company Details',
@@ -64,9 +65,12 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);
 $this->registerJsFile('../js/company_staff.js', ['position'=>yii\web\View::POS_END]);
 $js = <<<JS
-    $(function () {
-        var activeTab = $('[href="' + location.hash + '"]');
-        activeTab && activeTab.tab('show');
-    });    
+$( document ).ready(function() {
+    $(function () {        
+        $('#company_profile_tabs a[href="' + location.hash + '"]').tab('show');
+    });
+        
+});
 JS;
 $this->registerJs($js,yii\web\View::POS_END, 'enable_select2');
+

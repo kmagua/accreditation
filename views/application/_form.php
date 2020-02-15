@@ -15,11 +15,6 @@ $expression = new yii\db\Expression("id, concat_ws(' ', first_name, last_name) f
 $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($expression)->
     where(['company_id'=>$model->company_id])->all(), 'id', 'first_name');
 
-$this->registerCss("
-    .select2-container--open{
-        z-index:9999999         
-    }
-    ");
 ?>
 
 <div class="application-form">
@@ -31,7 +26,7 @@ $this->registerCss("
     
     <div class="row"> 
         <div class="col-md-6">
-            <?= $form->field($model, 'accediation_category_id')->dropDownList(
+            <?= $form->field($model, 'accreditation_type_id')->dropDownList(
              ArrayHelper::map(app\models\AccreditationType::find()->all(), 'id', 'name'), ['prompt'=>'']) ?>
         </div>
         
@@ -42,7 +37,9 @@ $this->registerCss("
 
     <div class="row"> 
         <div class="col-md-6">
-            <?= $form->field($model, 'financial_status_link')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'financial_status_link')->textInput(['maxlength' => true])
+                ->label(null, ['data-toggle' => 'tooltip','data-placement' =>'right',
+                    'title' => 'Upload the file somewhere like on your website/google drive and then provide the link to it.']) ?>
         </div>
         
         <div class="col-md-6">
@@ -88,11 +85,3 @@ $this->registerCss("
     <?php ActiveForm::end(); ?>
 
 </div>
-
-<?php
-$js = <<<JS
-       
-    
-JS;
-$this->registerJs($js,yii\web\View::POS_END, 'enable_select2');
-?>
