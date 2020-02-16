@@ -4,22 +4,19 @@ use yii\grid\GridView;
 use yii\helpers\Html;
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+$this->title = ' ICT Authority Accreditation System';
 ?>
-<div class="site-index">
-
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+<br/><br/><br/>
+     <div class="row">
+          
+       
     </div>
+<div class="site-index">
 
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <h2>My Companies</h2>
                 <?php if(!Yii::$app->user->isGuest): ?>
                 <?php
@@ -54,13 +51,27 @@ $this->title = 'My Yii Application';
                 <p>Login to see you compmnies or register a new one!</p>
                 <?php endif; ?>
             </div>
-            <div class="col-lg-6">
-                <h2>User Information</h2>
+            <div class="col-lg-8">
+                <h2 style="color: #c11d35">Supplier Accreditation Requirements</h2>
+                <h5 style="font-style: italic"><b>The following documents are required during Accreditation</b></h5>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                <ol >
+                    <li>  Duly Filled Form ICTA/STD/CTR/F001 Download Here</li>
+                   <li>  Company profile</li>
+                   <li>  Certificate of incorporation</li>
+                   <li>  Companies act/ permit</li>
+                   <li>  KRA compliance certificate</li>
+                   <li>  CVs , IT related university certificate, project management certificate national id copies and KRA pin for all of all directors</li>
+                   <li>  CVs, IT related degree, professional certifications, certification in project management for all technical staff</li>
+                   <li>  Past LPOs and Recommendation Letters</li>
+                   <li>  Recent bank statement from the last financial year together with the audited accounts of the same</li>
+                   <li>  Partnership certificates if any</li>
+                   <li>  Binded document to be sent to Teleposta Towers, 23rd Floor, ICTA Standards Department</li>
+                   <li>  Accreditation Period is within one week of document receipt</li>
+                    <li> Certificate Should Be Handpicked by a designated company contact person after a week grace period</li>
+                   
+                </ol>
+
 
                 
             </div>
