@@ -12,6 +12,7 @@ use Yii;
  * @property string|null $specific_item
  * @property string|null $score_item
  * @property int|null $maximum_score
+ * @property int|null $status
  * @property string $date_created
  * @property string $last_updated
  *
@@ -33,11 +34,11 @@ class ScoreItem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['maximum_score'], 'integer'],
+            [['maximum_score', 'status'], 'integer'],
             [['date_created', 'last_updated'], 'safe'],
             [['category'], 'string', 'max' => 50],
             [['specific_item'], 'string', 'max' => 70],
-            [['score_item'], 'string', 'max' => 150],
+            [['score_item'], 'string', 'max' => 500],
         ];
     }
 

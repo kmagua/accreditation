@@ -44,7 +44,7 @@ $model->company_id = $searchModel->company_id;
                         $url = yii\helpers\Url::to(['company-document/update-ajax', 'id'=>$model->id]);
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
                             'title' =>"Edit Company Document",
-                            'onclick'=>"getStaffForm('$url', '<h3>Document Edit</h3>'); return false;"]);
+                            'onclick'=>"getDataForm('$url', '<h3>Document Edit</h3>'); return false;"]);
                     },
                     'delete' => function ($url, $model) {
                         $url = yii\helpers\Url::to(['company-document/delete-ajax', 'id'=>$model->id]);

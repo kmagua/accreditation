@@ -79,7 +79,7 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Submit', ['class' => 'btn btn-success', 'onclick'=>'saveStaffData(this); return false;']) ?>
+        <?= Html::submitButton('Submit', ['class' => 'btn btn-success', 'onclick'=>'saveDataForm(this); return false;']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

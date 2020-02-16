@@ -11,6 +11,8 @@ use yii\widgets\ActiveForm;
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    
+     <?= $form->field($model, 'kra_pin_number')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 

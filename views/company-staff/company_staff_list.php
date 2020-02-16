@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-staff-index">
-    <?= Html::a('Add Staff', ['new', 'cid'=>$searchModel->company_id], ['class' => 'btn btn-success', 'onclick'=>'getStaffForm(this.href); return false;']) ?>
+    <?= Html::a('Add Staff', ['new', 'cid'=>$searchModel->company_id], ['class' => 'btn btn-success', 'onclick'=>'getDataForm(this.href); return false;']) ?>
     
     <?php Pjax::begin(['id' => 'staff-data-list', 'timeout' => false, 'enablePushState' => false]); ?>
     <?= GridView::widget([
@@ -48,12 +48,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) {
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-eye-open btn btn-default btn-xs custom_button',
                             'title' =>"Full Staff Details",
-                            'onclick'=>"getStaffForm('$url', '<h3>Full Staff Details - " . $model->getNames() . "</h3>'); return false;"]);
+                            'onclick'=>"getDataForm('$url', '<h3>Full Staff Details - " . $model->getNames() . "</h3>'); return false;"]);
                     },
                     'update' => function ($url) {
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
                             'title' =>"Edit Staff Details",
-                            'onclick'=>"getStaffForm('$url', '<h3>Record Edit</h3>'); return false;"]);
+                            'onclick'=>"getDataForm('$url', '<h3>Record Edit</h3>'); return false;"]);
                     },
                 ],
             ],

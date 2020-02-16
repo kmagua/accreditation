@@ -19,6 +19,7 @@ use Yii;
  */
 class IctaCommitteeMember extends \yii\db\ActiveRecord
 {
+    public $committee_members;
     /**
      * {@inheritdoc}
      */
@@ -34,7 +35,7 @@ class IctaCommitteeMember extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'committee_id'], 'integer'],
-            [['date_created', 'last_updated'], 'safe'],
+            [['date_created', 'last_updated', 'committee_members'], 'safe'],
             [['committee_id'], 'exist', 'skipOnError' => true, 'targetClass' => IctaCommittee::className(), 'targetAttribute' => ['committee_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -82,5 +83,40 @@ class IctaCommitteeMember extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+    
+    /**
+     * 
+     */
+    public function saveMembers()
+    {
+        foreach($this->committee_members as $member){
+            $rec = IctaCommitteeMember::find()->where(['committee_id'=>$this->committee_id, 'user_id' =>$member])->one();
+            if(!$rec){                
+                \Yii::$app->db->createCommand()->insert('accreditation.icta_committee_member',[
+                    'committee_id'=> $this->committee_id, 'user_id'=>  $member
+                ])->execute();
+            }
+        }
+        $cm = implode(",", $this->committee_members); 
+        IctaCommitteeMember::deleteAll("user_id not in ($cm) AND committee_id={$this->committee_id}");   
+        return true;
+    }
+    
+    /**
+     * Sets app_company_experience to values of selected experiences
+     * 
+     */
+    public function loadCommitteeMembers()
+    {
+        $rec = IctaCommitteeMember::find()->select('user_id')->where(['committee_id'=>$this->committee_id])->all();
+        if($rec){
+            $this->committee_members = array_column($rec, 'user_id');
+        }
+    }
+    
+    public function getIctaCommitteeMembers($committee_id)
+    {
+        IctaCommitteeMember::find()->where(['committee_id' => $committee_id])->all();
     }
 }

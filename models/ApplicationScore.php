@@ -22,6 +22,9 @@ use Yii;
  */
 class ApplicationScore extends \yii\db\ActiveRecord
 {
+    public $score_item;
+    public $specific_item;
+    public $category;
     /**
      * {@inheritdoc}
      */
@@ -37,7 +40,7 @@ class ApplicationScore extends \yii\db\ActiveRecord
     {
         return [
             [['application_id', 'score_item_id', 'score', 'user_id', 'committee_id'], 'integer'],
-            [['date_created', 'last_updated'], 'safe'],
+            [['date_created', 'last_updated','score_item', 'specific_item', 'category'], 'safe'],
             [['application_id'], 'exist', 'skipOnError' => true, 'targetClass' => Application::className(), 'targetAttribute' => ['application_id' => 'id']],
             [['score_item_id'], 'exist', 'skipOnError' => true, 'targetClass' => ScoreItem::className(), 'targetAttribute' => ['score_item_id' => 'id']],
             [['committee_id'], 'exist', 'skipOnError' => true, 'targetClass' => IctaCommittee::className(), 'targetAttribute' => ['committee_id' => 'id']],

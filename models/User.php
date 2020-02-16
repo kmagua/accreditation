@@ -8,7 +8,8 @@ use Yii;
  * This is the model class for table "user".
  *
  * @property int $id
- * @property string|null $email
+ * @property string $kra_pin_number
+ * @property string $email
  * @property string|null $first_name
  * @property string|null $last_name
  * @property string|null $password
@@ -44,10 +45,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             [['role'], 'string'],
-            [['email'], 'unique'],
+            [['email', 'kra_pin_number'], 'unique'],
             [['date_created', 'last_updated'], 'safe'],
             [['email'], 'string', 'max' => 30],
-            [['first_name', 'last_name'], 'string', 'max' => 20],
+            [['first_name', 'last_name', 'kra_pin_number'], 'string', 'max' => 20],
             [['password', 'password_repeat'], 'string', 'max' => 100],
             [['password_repeat'], 'validatePasswordRepeat', 'on'=>'new_account'],
         ];
@@ -60,6 +61,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             'id' => 'ID',
+            'kra_pin_number' => 'KRA PIN Number',
             'email' => 'Email',
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
@@ -83,7 +85,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 	
     public function getUserName()
     {
-            return $this->email;
+        return $this->email;
     }
 
     /**

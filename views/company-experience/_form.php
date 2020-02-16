@@ -74,7 +74,7 @@ use yii\widgets\ActiveForm;
     </div>
     <div class="form-group">
        <?= Html::submitButton('Save', ['class' => 'btn btn-success',
-            'onclick'=>'saveStaffData(this); return false;']) ?>
+            'onclick'=>'saveDataForm(this); return false;']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

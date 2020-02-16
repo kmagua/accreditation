@@ -7,12 +7,12 @@ use yii\helpers\Html;
 
 <p>
     <?= Html::a("Documents", ['company-document/data', 'cid'=>$model->id], [
-        'class' => 'btn btn-success', 'onclick'=>'getStaffForm(this.href, "<h3> Documents for ' . $model->company_name. '</h3>"); return false;'
+        'class' => 'btn btn-success', 'onclick'=>'getDataForm(this.href, "<h3> Documents for ' . $model->company_name. '</h3>"); return false;'
         ]); 
     ?>
     
     <?= Html::a("Company Projects(Experience)", ['company-experience/data', 'cid'=>$model->id], [
-        'class' => 'btn btn-success', 'onclick'=>'getStaffForm(this.href, "<h3>Projects done by ' . $model->company_name. '</h3>"); return false;'
+        'class' => 'btn btn-success', 'onclick'=>'getDataForm(this.href, "<h3>Projects done by ' . $model->company_name. '</h3>"); return false;'
         ]); 
     ?>
 
