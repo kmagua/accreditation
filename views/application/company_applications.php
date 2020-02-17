@@ -13,7 +13,7 @@ $model->company_id = $searchModel->company_id;
 <div class="application-index">
     <p>
         <?= '' /*Html::a('Submit Application', ['new','cid'=>$model->company_id], ['class' => 'btn btn-success',
-            'onclick'=>'getStaffForm(this.href); return false;'])*/ ?>
+            'onclick'=>'getDataForm(this.href); return false;'])*/ ?>
         <?= Html::a('Submit Application', ['create','cid'=>$model->company_id], ['class' => 'btn btn-success']) ?>
     </p>
 

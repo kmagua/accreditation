@@ -45,7 +45,7 @@ $model->staff_id = $searchModel->staff_id;
                         $url = yii\helpers\Url::to(['academic-qualification/update-ajax', 'id'=>$model->id]);
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
                             'title' =>"Edit Academic Details",
-                            'onclick'=>"getStaffForm('$url', '<h3>Course Edit</h3>'); return false;"]);
+                            'onclick'=>"getDataForm('$url', '<h3>Course Edit</h3>'); return false;"]);
                     },
                     'delete' => function ($url, $model) {
                         $url = yii\helpers\Url::to(['academic-qualification/delete-ajax', 'id'=>$model->id]);

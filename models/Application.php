@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\helpers\Html;
 use kartik\icons\Icon;
+use raoul2000\workflow\events\WorkflowEvent;
 
 /**
  * This is the model class for table "application".
@@ -47,13 +48,14 @@ class Application extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'accreditation_type_id', 'financial_status_amount','app_company_experience','app_staff'], 'required'],
+            [['company_id', 'accreditation_type_id', 'financial_status_amount'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id'], 'integer'],
+            [['app_company_experience','app_staff'], 'required','on'=>'create_update'],
             [['financial_status_amount'], 'number'],
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
-            [['status'], 'string'],
+            [['status'], 'string', 'max' => 50],
             [['date_created', 'last_updated','app_company_experience','app_staff'], 'safe'],
             [['financial_status_link'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
@@ -183,9 +185,11 @@ class Application extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        $this->refresh();
-        $this->processSelectedStaff();
-        $this->processSelectedCompanyExperience();
+        if($this->scenario == 'create_update'){
+            $this->refresh();
+            $this->processSelectedStaff();
+            $this->processSelectedCompanyExperience();
+        }
         return true;
     }
     
@@ -273,6 +277,22 @@ class Application extends \yii\db\ActiveRecord
         return true;
     }
     
+    public function init()
+    {
+    	$this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-confirmed'),
+            [$this, 'sendPaymentApprovalEmail'],'application-payment-confirmed'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-rejected'),
+            [$this, 'sendPaymentApprovalEmail'],'application-payment-rejected'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approval-payment-confirmed'),
+            [$this, 'sendPaymentApprovalEmail'],'approval-payment-confirmed'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approval-payment-rejected'),
+            [$this, 'sendPaymentApprovalEmail'],'approval-payment-rejected'
+    	);
+    }
+    
     public function getApplicationProgress()
     {
         switch($this->status){
@@ -311,17 +331,20 @@ class Application extends \yii\db\ActiveRecord
     {
         return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented")']) . ' &nbsp;&nbsp; '. Html::a(Icon::show('receipt', ['class' => 'fas',
             'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> 1], 
-                ['data-pjax'=>'0', 'onclick' => "getStaffForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
+                ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
     }
     
     public function processApplicationFeePaid()
     {
-        
+        return Html::a("Update Payment Status", ['application/approve-payment', 'id' => $this->id, 'l'=> 1], 
+            ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Approve/Reject Payment Receipt</h3>'); return false;"]);
     }
     
     public function processApplicationFeeConfimed()
     {
-        
+        return Html::a(Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
+            'application/committee-members', 'id' => $this->id, 'l'=> 1], 
+                ['data-pjax'=>'0', 'title' =>'Assign secretariat members.']);
     }
     
     public function processApplicationFeeRejected()
@@ -331,7 +354,9 @@ class Application extends \yii\db\ActiveRecord
     
     public function processAtSecretariat()
     {
-        
+        return "Start here"; Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
+            'application/approval', 'id' => $this->id, 'level'=> 1], 
+                ['data-pjax'=>'0', 'title' =>'Review by ICTA Acceditation Secretariat']);
     }
         
     public function processAtCommittee()
@@ -362,10 +387,52 @@ class Application extends \yii\db\ActiveRecord
     public function processCompleted()
     {
         
-    }    
+    }
     
     public function processRenewal()
     {
         
-    }    
+    }
+    
+    /**
+     * 
+     * @param type $level Internal Approval Level : 1 = Secretariat, 2 = Committee
+     */
+    public function getPayableAtLevel($level)
+    {
+        if($level == 1){
+            return 1500;
+        }
+        return 5000;
+    }
+    
+    /**
+     * 
+     * @param type $status The new Workflow State
+     */
+    public function progressWorkFlowStatus($status)
+    {
+        $this->sendToStatus($status);
+        $this->save(false);
+    }
+    
+    public function sendPaymentApprovalEmail($outcome)
+    {
+        $outcome_array = explode("-", $outcome);
+        $header = ucwords($outcome_array[0]. " Payment ". $outcome_array[0]);
+        $additional = ".";
+        if($outcome_array[2] == 'rejected'){
+            $level = ($outcome_array[0] == 'application')? 1 : 2;
+            $payment = Payment::find()->select('comment')->where(['application_id' => $this->id, 'level' => $level])->one();
+            $additional = ' for the flowwing reason "' . $payment->comment .".";
+        }
+        $message = <<<MSG
+                Dear {$this->user->getNames()},
+                <p>Kindly note that your {$outcome_array[0]} payment to ICT Authority for accreditation has been {$outcome_array[2]}{$additional}</p>
+                
+                <p>Thank you,<br>ICT Authority Accreditation.</p>
+                
+MSG;
+        Utility::sendMail($this->company->company_email, $header, $message, $this->user->email);
+    }
 }

@@ -16,25 +16,15 @@ use yii\widgets\ActiveForm;
             'options' => ['enctype' => 'multipart/form-data'
         ]]); ?>
     
-    <div class="row">
-        <div class="col-md-6">
-            <?= $form->field($model, 'billable_amount')->textInput() ?>
-        </div>
-    
-        <div class="col-md-6">
-            <?= $form->field($model, 'mpesa_code')->textInput(['maxlength' => true]) ?>
-        </div>
-    </div>
-    
     <div class="row"> 
-        <div class="col-md-6">
-            <?= $form->field($model, 'upload_file')->fileInput() ?>
+        <div class="col-md-8">
+            <?= $form->field($model, 'upload_file')->fileInput()
+                ->label("Upload a receipt for payment of KES: " . $model->billable_amount) ?>
         </div>
-
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'onclick'=>'saveStaffData(this); return false;']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'onclick'=>'saveDataForm(this); return false;']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

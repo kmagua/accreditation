@@ -14,6 +14,7 @@ use Yii;
  * @property string|null $receipt
  * @property int|null $level
  * @property string|null $status
+ * @property string|null $comment
  * @property string $date_created
  * @property string|null $last_update
  *
@@ -41,6 +42,7 @@ class Payment extends \yii\db\ActiveRecord
             [['date_created', 'last_update'], 'safe'],
             [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
             [['receipt'], 'string', 'max' => 100],
+            [['comment'], 'string', 'max' => 200],
             [['mpesa_code', 'status'], 'string', 'max' => 20],
             [['application_id'], 'exist', 'skipOnError' => true, 'targetClass' => Application::className(), 'targetAttribute' => ['application_id' => 'id']],
         ];
@@ -54,10 +56,10 @@ class Payment extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'application_id' => 'Application ID',
-            'billable_amount' => 'Billable Amount',
+            'billable_amount' => 'Receipt Amount',
             'mpesa_code' => 'Mpesa Code',
             'receipt' => 'Receipt',
-            'status' => 'Status',
+            'status' => 'Payment Status',
             'date_created' => 'Date Created',
             'last_update' => 'Last Update',
         ];
@@ -81,6 +83,7 @@ class Payment extends \yii\db\ActiveRecord
     {
         $transaction = \Yii::$app->db->beginTransaction();
         try {
+            $this->status = 'paid';
             $this->upload_file = \yii\web\UploadedFile::getInstance($this, 'upload_file');
             //if file uploaded
             if($this->upload_file){
@@ -95,5 +98,18 @@ class Payment extends \yii\db\ActiveRecord
            $transaction->rollBack();
            throw $e;
         }
+    }
+    
+    /**
+     * 
+     */
+    public function updateApplicationPaymentStatus()
+    {
+        if($this->level == 1){
+            $status = $this->status == 'confirmed'?'application-payment-confirmed':'application-payment-rejected';
+        }else{
+            $status = $this->status == 'confirmed'?'approval-payment-confirmed':'approval-payment-rejected';
+        }
+        $this->application->progressWorkFlowStatus($status);
     }
 }

@@ -54,7 +54,7 @@ $model->company_id = $searchModel->company_id;
                         $url = yii\helpers\Url::to(['company-experience/update-ajax', 'id'=>$model->id]);
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
                             'title' =>"Edit Work Experience",
-                            'onclick'=>"getStaffForm('$url', '<h3>Work Experience Edit</h3>'); return false;"]);
+                            'onclick'=>"getDataForm('$url', '<h3>Work Experience Edit</h3>'); return false;"]);
                     },
                     'delete' => function ($url, $model) {
                         $url = yii\helpers\Url::to(['company-experience/delete-ajax', 'id'=>$model->id]);

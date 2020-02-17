@@ -50,7 +50,7 @@ $model->staff_id = $searchModel->staff_id;
                         $url = yii\helpers\Url::to(['staff-experience/update-ajax', 'id'=>$model->id]);
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
                             'title' =>"Edit Work Experience",
-                            'onclick'=>"getStaffForm('$url', '<h3>Work Experience Edit</h3>'); return false;"]);
+                            'onclick'=>"getDataForm('$url', '<h3>Work Experience Edit</h3>'); return false;"]);
                     },
                     'delete' => function ($url, $model) {
                         $url = yii\helpers\Url::to(['staff-experience/delete-ajax', 'id'=>$model->id]);

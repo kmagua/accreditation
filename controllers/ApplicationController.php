@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\base\Model;
 
 /**
  * ApplicationController implements the CRUD actions for Application model.
@@ -48,7 +49,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index','approval'],
+                        'actions' => ['index','approval','approve-payment', 'committee-members'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -103,6 +104,7 @@ class ApplicationController extends Controller
     {
         $model = new Application();
         $model->company_id = $cid;
+        $model->setScenario('create_update');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->redirect(['company-profile/view','id'=>$cid,'#'=>'application_data_tab']);
@@ -123,6 +125,7 @@ class ApplicationController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->setScenario('create_update');
         $model->loadExperienceData();
         $model->loadStaffData();
 
@@ -209,15 +212,69 @@ class ApplicationController extends Controller
      */
     public function actionApproval($id, $level)
     {
-        $model = $this->findModel($id);
+        $sql = "SELECT scoreItem.id sc_id,category, specific_item,score_item,aps.id, score,maximum_score FROM `application_score` aps RIGHT JOIN `score_item` scoreItem ON scoreItem.id=aps.`score_item_id`
+            WHERE IFNULL(aps.`application_id`,:application_id) = :application_id AND IFNULL(`committee_id`, :committee_id) = :committee_id order by sc_id";
+        $data = Yii::$app->db->createCommand($sql, [':committee_id' => $level,':application_id'=>$id])->query();
+        
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        /*if (Model::loadMultiple($application_scores, Yii::$app->request->post()) && Model::validateMultiple($application_scores)) {
+            foreach ($application_scores as $application_score) {
+                $application_score->save(false);
+            }
+            return $this->redirect('index');
+        }*/
+
+        return $this->render('internal_approval', [
+            'application_scores' => $data,
+            'level' =>$level,
+        ]);
+    }
+    
+    /**
+     * 
+     * @param type $id Application ID
+     * @param type $l Internal Approval Level : 1 = Secretariat, 2 = Committee
+     */
+    public function actionUploadReceipt($id, $l)
+    {
+        $model = \app\models\Payment::find()->where(['application_id' => $id, 'level' => $l])->one();
+        if(!$model){
+            $model = new \app\models\Payment();
+            $model->application_id = $id;
+            $model->level = $l;
+            $model->billable_amount = $model->application->getPayableAtLevel($l);
         }
-
-        return $this->render('view_full', [
+        
+        if ($model->load(Yii::$app->request->post())) {
+            $model->savePayment();
+            $model->application->progressWorkFlowStatus('application-paid');
+            return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";
+        }
+        
+        return $this->renderAjax('../payment/_form_receipt', [
             'model' => $model,
-            'level' => $level,
+        ]);
+    }
+    
+    /**
+     * 
+     * @param type $id Application ID
+     * @param type $l Internal Approval Level : 1 = Secretariat, 2 = Committee
+     */
+    public function actionApprovePayment($id, $l)
+    {
+        $model = \app\models\Payment::find()->where(['application_id' => $id, 'level' => $l])->one();
+        if(!$model){
+            throw new \Exception("Record not found!");
+        }
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->updateApplicationPaymentStatus();           
+            return "Payment status updated successfully.";
+        }
+        
+        return $this->renderAjax('../payment/approve_payment_receipt', [
+            'model' => $model,
         ]);
     }
     
@@ -225,20 +282,22 @@ class ApplicationController extends Controller
      * 
      * @param type $id
      * @param type $l
+     * @return string
+     * @throws \Exception
      */
-    public function actionUploadReceipt($id, $l)
+    public function actionCommitteeMembers($id, $l)
     {
-        $model = new \app\models\Payment();
+        $model = new \app\models\ApplicationCommitteMember();
         $model->application_id = $id;
-        $model->level = $l;
-        
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('application_submitted','Application Submitted Successfully!');
-            $this->redirect(['company-profile/view','id'=>$cid,'#'=>'application_data_tab']);
+        $model->loadApplicationCommitteeMembers();
+                
+        if ($model->load(Yii::$app->request->post()) && $model->saveApplicationCommitteeMembers()) {
+            $model->application->progressWorkFlowStatus('at-secretariat');           
+            $this->redirect(['index']);
         }
         
-        return $this->renderAjax('../payment/_form', [
-            'model' => $model,
+        return $this->render('app_committee_members', [
+            'model' => $model, 'level' => $l
         ]);
     }
 }
