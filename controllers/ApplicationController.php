@@ -318,6 +318,7 @@ class ApplicationController extends Controller
     public function actionDownloadCert($id)
     {
         $application = $this->findModel($id);
+        $sn = bin2hex($id * 53);
         $content = $this->renderPartial('certificate', ['application' => $application]);
 
         // setup kartik\mpdf\Pdf component
@@ -341,7 +342,7 @@ class ApplicationController extends Controller
             'options' => ['title' => 'Krajee Report Title'],
              // call mPDF methods on the fly
             'methods' => [ 
-                'SetHeader'=>['Krajee Report Header'], 
+                'SetHeader'=>['SN: '. $sn], 
                 'SetFooter'=>['{PAGENO}'],
             ]
         ]);
