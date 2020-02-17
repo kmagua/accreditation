@@ -36,7 +36,7 @@ AppAsset::register($this);
     <?php
    
     NavBar::begin([
-        'brandImage' => Yii::getAlias("@web")."/images/ictabann.png",
+        'brandImage' => Yii::getAlias("@web")."/images/ictabanntransparent2.png",
         'brandLabel' => Yii::$app->name, 
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
