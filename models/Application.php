@@ -18,6 +18,7 @@ use raoul2000\workflow\events\WorkflowEvent;
  * @property int|null $user_id
  * @property string|null $status
  * @property int|null $declaration
+ * @property string $initial_approval_date
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -56,7 +57,7 @@ class Application extends \yii\db\ActiveRecord
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             [['status'], 'string', 'max' => 50],
-            [['date_created', 'last_updated','app_company_experience','app_staff'], 'safe'],
+            [['date_created', 'last_updated','app_company_experience','app_staff', 'initial_approval_date'], 'safe'],
             [['financial_status_link'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -291,6 +292,12 @@ class Application extends \yii\db\ActiveRecord
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approval-payment-rejected'),
             [$this, 'sendPaymentApprovalEmail'],'approval-payment-rejected'
     	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/at-secretariat'),
+            [$this, 'loadApplicationScores'], 1
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/at-committee'),
+            [$this, 'loadApplicationScores'], 2
+    	);
     }
     
     public function getApplicationProgress()
@@ -301,19 +308,19 @@ class Application extends \yii\db\ActiveRecord
             case 'ApplicationWorkflow/application-paid':
                 return $this->processApplicationFeePaid();
             case 'ApplicationWorkflow/application-payment-confirmed':
-                return $this->processApplicationFeeConfimed();
+                return $this->assignCommitee(1);
             case 'ApplicationWorkflow/application-payment-rejected':
                 return $this->processApplicationFeeRejected();
             case 'ApplicationWorkflow/at-secretariat':
                 return $this->processAtSecretariat();
+            case 'ApplicationWorkflow/assign-approval-committee':
+                return $this->assignCommitee(2, "Assign Approval Committee Members");
             case 'ApplicationWorkflow/at-committee':
                 return $this->processAtCommittee();
             case 'ApplicationWorkflow/approved':
                 return $this->processApproved();
-                case 'ApplicationWorkflow/approval-payment':
-                return $this->processApprovalPayment();
-            case 'ApplicationWorkflow/approval-payment-confirmed':
-                return $this->processApprovalFeeConfimed();
+            case 'ApplicationWorkflow/certificate-paid':
+                return $this->processApprovalPayment();           
             case 'ApplicationWorkflow/approval-payment-rejected':
                 return $this->processApprovalFeeRejected();
             case 'ApplicationWorkflow/completed':
@@ -340,58 +347,64 @@ class Application extends \yii\db\ActiveRecord
             ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Approve/Reject Payment Receipt</h3>'); return false;"]);
     }
     
-    public function processApplicationFeeConfimed()
+    public function assignCommitee($level, $message = 'Assign secretariat members.')
     {
         return Html::a(Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
-            'application/committee-members', 'id' => $this->id, 'l'=> 1], 
-                ['data-pjax'=>'0', 'title' =>'Assign secretariat members.']);
+            'application/committee-members', 'id' => $this->id, 'l'=> $level], 
+                ['data-pjax'=>'0', 'title' => $message]);
     }
     
+    /**
+     * 
+     */
     public function processApplicationFeeRejected()
     {
-        
+        return "TBA";
     }
     
     public function processAtSecretariat()
     {
-        return "Start here"; Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
+        return Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
             'application/approval', 'id' => $this->id, 'level'=> 1], 
                 ['data-pjax'=>'0', 'title' =>'Review by ICTA Acceditation Secretariat']);
     }
         
     public function processAtCommittee()
     {
-        
+        return Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
+            'application/approval', 'id' => $this->id, 'level'=> 2], 
+                ['data-pjax'=>'0', 'title' =>'Review by ICTA Approving Committee']);
     }
     
     public function processApproved()
     {
-        
+        return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented")']) . ' &nbsp;&nbsp; '. Html::a(Icon::show('receipt', ['class' => 'fas',
+            'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> 2], 
+                ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Certificate Payment Receipt</h3>'); return false;"]);
     }
     
     public function processApprovalPayment()
     {
-        
-    }
-    
-    public function processApprovalFeeConfimed()
-    {
-        
+        return Html::a("Update Payment Status", ['application/approve-payment', 'id' => $this->id, 'l'=> 2], 
+            ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Approve/Reject Payment Receipt</h3>'); return false;"]);
     }
     
     public function processApprovalFeeRejected()
     {
-        
+        return "TBA";
     }
     
     public function processCompleted()
     {
-        
+        return Html::a('Download Certificate',[
+            'application/download-cert', 'id' => $this->id], 
+                ['data-pjax'=>'0', 'title' =>'Certificate Download']);
     }
     
     public function processRenewal()
     {
-        
+        return Html::a("Renew certificate", ['application/cert-renewal', 'id' => $this->id], 
+            ['data-pjax'=>'0']);
     }
     
     /**
@@ -434,5 +447,37 @@ class Application extends \yii\db\ActiveRecord
                 
 MSG;
         Utility::sendMail($this->company->company_email, $header, $message, $this->user->email);
+    }
+    
+    /**
+     * Load Application Score data
+     * @param type $level (Workflow event object) Internal approval level ID 1 = Secretariat, 2 = Committee in $level->data
+     */
+    public function loadApplicationScores($level)
+    {
+        $score_items_sql ="SELECT id FROM `score_item`";
+        $uid = \Yii::$app->user->identity->user_id;
+        $score_items_data = \Yii::$app->db->createCommand($score_items_sql)->queryAll();
+        foreach($score_items_data as $score_item_data){
+            $insert_sql = "INSERT INTO application_score (application_id, score_item_id, committee_id, user_id)
+                VALUES ({$this->id}, {$score_item_data['id']}, {$level->data}, $uid)
+                ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP";
+                
+            \Yii::$app->db->createCommand($insert_sql)->execute();
+        }
+    }
+    
+    public static function preogressOnCommitteeApproval($id, $status, $level)
+    {
+        if($level == 1 && $status == 1){
+            \Yii::$app->db->createCommand()
+                ->update('application', ['status' => "ApplicationWorkflow/at-committee"], ['id'=>$id])->execute();
+        }else if($level == 2 && $status == 1){
+            \Yii::$app->db->createCommand()
+                ->update('application', ['status' => "ApplicationWorkflow/approved"], ['id'=>$id])->execute();
+        }else{
+            \Yii::$app->db->createCommand()
+                ->update('application', ['status' => "ApplicationWorkflow/draft"], ['id'=>$id])->execute();
+        }
     }
 }

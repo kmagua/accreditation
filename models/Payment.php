@@ -108,7 +108,7 @@ class Payment extends \yii\db\ActiveRecord
         if($this->level == 1){
             $status = $this->status == 'confirmed'?'application-payment-confirmed':'application-payment-rejected';
         }else{
-            $status = $this->status == 'confirmed'?'approval-payment-confirmed':'approval-payment-rejected';
+            $status = $this->status == 'confirmed'?'completed':'approval-payment-rejected';
         }
         $this->application->progressWorkFlowStatus($status);
     }

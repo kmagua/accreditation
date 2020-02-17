@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\base\Model;
+use kartik\mpdf\Pdf;
 
 /**
  * ApplicationController implements the CRUD actions for Application model.
@@ -37,7 +38,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['update','view', 'upload-receipt'],
+                        'actions' => ['update','view', 'upload-receipt', 'download-cert', 'renew-cert'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -212,21 +213,27 @@ class ApplicationController extends Controller
      */
     public function actionApproval($id, $level)
     {
-        $sql = "SELECT scoreItem.id sc_id,category, specific_item,score_item,aps.id, score,maximum_score FROM `application_score` aps RIGHT JOIN `score_item` scoreItem ON scoreItem.id=aps.`score_item_id`
-            WHERE IFNULL(aps.`application_id`,:application_id) = :application_id AND IFNULL(`committee_id`, :committee_id) = :committee_id order by sc_id";
-        $data = Yii::$app->db->createCommand($sql, [':committee_id' => $level,':application_id'=>$id])->query();
-        
+        $application_scores = \app\models\ApplicationScore::find()
+            ->where(['application_id' => $id, 'committee_id' => $level])->indexBy('id')->orderBy('score_item_id')->all();
 
-        /*if (Model::loadMultiple($application_scores, Yii::$app->request->post()) && Model::validateMultiple($application_scores)) {
+        if (Model::loadMultiple($application_scores, Yii::$app->request->post()) && Model::validateMultiple($application_scores)) {
             foreach ($application_scores as $application_score) {
-                $application_score->save(false);
+                $application_score->saveApplicationScore();
             }
+            //save committee score
+            $committee_score = Yii::$app->request->post()['ApplicationScore']['committee_score'];
+            $committee_category = Yii::$app->request->post()['ApplicationScore']['classification'];
+            $approval_status = Yii::$app->request->post()['ApplicationScore']['status'];
+            \app\models\ApplicationClassification::saveClassification($id, $committee_score, $committee_category, $level, $approval_status);
+            
+            Application::preogressOnCommitteeApproval($id, $approval_status, $level);
+            
             return $this->redirect('index');
-        }*/
+        }
 
         return $this->render('internal_approval', [
-            'application_scores' => $data,
-            'level' =>$level,
+            'application_scores' => $application_scores,
+            'level' =>$level,'app_id'=>$id
         ]);
     }
     
@@ -247,7 +254,8 @@ class ApplicationController extends Controller
         
         if ($model->load(Yii::$app->request->post())) {
             $model->savePayment();
-            $model->application->progressWorkFlowStatus('application-paid');
+            $status = ($l == 1) ? "application-paid" : "certificate-paid";
+            $model->application->progressWorkFlowStatus($status);
             return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";
         }
         
@@ -289,15 +297,61 @@ class ApplicationController extends Controller
     {
         $model = new \app\models\ApplicationCommitteMember();
         $model->application_id = $id;
-        $model->loadApplicationCommitteeMembers();
+        $model->loadApplicationCommitteeMembers($l);
                 
-        if ($model->load(Yii::$app->request->post()) && $model->saveApplicationCommitteeMembers()) {
-            $model->application->progressWorkFlowStatus('at-secretariat');           
+        if ($model->load(Yii::$app->request->post()) && $model->saveApplicationCommitteeMembers($l)) {
+            $next_step = ($l == 1) ? 'at-secretariat': 'at-committee';
+            $model->application->progressWorkFlowStatus($next_step);           
             $this->redirect(['index']);
         }
         
         return $this->render('app_committee_members', [
             'model' => $model, 'level' => $l
         ]);
+    }
+    
+    /**
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function actionDownloadCert($id)
+    {
+        $application = $this->findModel($id);
+        $content = $this->renderPartial('certificate', ['application' => $application]);
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_CORE, 
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4, 
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_LANDSCAPE, 
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER, 
+            // your html content input
+            'content' => $content,  
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:18px}', 
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Krajee Report Title'],
+             // call mPDF methods on the fly
+            'methods' => [ 
+                'SetHeader'=>['Krajee Report Header'], 
+                'SetFooter'=>['{PAGENO}'],
+            ]
+        ]);
+
+        // return the pdf output as per the destination setting
+        return $pdf->render(); 
+    }
+    
+    public function actionRenewCert($id)
+    {
+        echo "TBD"; exit;
     }
 }

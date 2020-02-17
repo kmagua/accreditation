@@ -22,9 +22,10 @@ use Yii;
  */
 class ApplicationScore extends \yii\db\ActiveRecord
 {
-    public $score_item;
-    public $specific_item;
-    public $category;
+    public $committee_score; // application classification score
+    public $classification; // application classification 'classification'
+    public $maximum_score; 
+    public $status; // application classification status
     /**
      * {@inheritdoc}
      */
@@ -39,8 +40,9 @@ class ApplicationScore extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['application_id', 'score_item_id', 'score', 'user_id', 'committee_id'], 'integer'],
-            [['date_created', 'last_updated','score_item', 'specific_item', 'category'], 'safe'],
+            [['application_id', 'score_item_id', 'score', 'user_id', 'committee_id', 'committee_score', 'status'], 'integer'],
+            [['date_created', 'last_updated','score_item', 'specific_item', 'category', 'maximum_score'], 'safe'],
+            [['classification'],'string', 'max'=>30],
             [['application_id'], 'exist', 'skipOnError' => true, 'targetClass' => Application::className(), 'targetAttribute' => ['application_id' => 'id']],
             [['score_item_id'], 'exist', 'skipOnError' => true, 'targetClass' => ScoreItem::className(), 'targetAttribute' => ['score_item_id' => 'id']],
             [['committee_id'], 'exist', 'skipOnError' => true, 'targetClass' => IctaCommittee::className(), 'targetAttribute' => ['committee_id' => 'id']],
@@ -92,5 +94,13 @@ class ApplicationScore extends \yii\db\ActiveRecord
     public function getCommittee()
     {
         return $this->hasOne(IctaCommittee::className(), ['id' => 'committee_id']);
+    }
+    
+    
+    public function saveApplicationScore()
+    {
+        $this->score = ($this->score == 1)?$this->maximum_score : null;
+        
+        return $this->save();
     }
 }

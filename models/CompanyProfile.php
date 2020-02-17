@@ -134,6 +134,11 @@ class CompanyProfile extends \yii\db\ActiveRecord
         return $this->hasMany(CompanyStaff::className(), ['company_id' => 'id']);
     }
     
+    /**
+     * 
+     * @param type $insert
+     * @return boolean
+     */
     public function beforeSave($insert) 
     {
         parent::beforeSave($insert);
