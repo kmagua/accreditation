@@ -30,6 +30,8 @@ use yii\widgets\ActiveForm;
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    
+    <?= $form->field($model, 'kra_pin_number')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
@@ -40,6 +42,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
     
     <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>
+    
+    <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), [
+        // configure additional widget properties here
+    ]) ?>
 
     <div class="form-group">
         <div class="col-md-6">

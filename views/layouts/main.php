@@ -50,7 +50,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],],
             ['label' => 'About', 'url' => ['/site/about'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']],
-            ['label' => 'Register', 'url' => ['/user/create'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],'visible'=>Yii::$app->user->isGuest],
+            ['label' => 'Register', 'url' => ['/user/register'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],'visible'=>Yii::$app->user->isGuest],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']]
             ) : (
@@ -68,7 +68,7 @@ AppAsset::register($this);
     NavBar::end();
     ?>
         
-    <div class="container">
+    <div class="container" style="border:2px solid red">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
