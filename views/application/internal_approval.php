@@ -26,10 +26,13 @@ if($app_classification){
         <h2>Specific Item</h2><hr>
     </div>
 
-    <div class="col-md-5">
+    <div class="col-md-4">
         <h2>Score Item</h2><hr>
     </div>
 
+    <div class="col-md-1">
+        <h2>Score</h2><hr>
+    </div>
     <div class="col-md-2">
         <h2>Score</h2><hr>
     </div>
@@ -62,11 +65,11 @@ foreach ($application_scores as $index => $application_score) {
             <?php } ?>
         </div>
         
-        <div class="col-md-5">
+        <div class="col-md-4">
             <?= $application_score->scoreItem->score_item ?>
         </div>
         
-        <div class="col-md-2">
+        <div class="col-md-1">
             <?php
             $class = ($application_score->scoreItem->group != '')? ['class' => $application_score->scoreItem->group]:[];
             if($application_score->scoreItem->checkboxes > 1){
@@ -79,7 +82,16 @@ foreach ($application_scores as $index => $application_score) {
                 echo $form->field($application_score, "[$index]score")->checkbox($class)->label(false);
             }            
             ?>
-            <?= ""// Html::checkbox("ApplicationScore[score][".$application_score['sc_id'] ."]" , null) ?>
+            <?= ""/// Html::checkbox("ApplicationScore[score][".$application_score['sc_id'] ."]" , null) ?>
+            <?= $form->field($application_score, "[$index]maximum_score")->hiddenInput(['value' => $application_score->scoreItem->maximum_score])->label(false); ?>
+        </div>
+    
+        <div class="col-md-2">
+            <?php
+            //$class = ($application_score->scoreItem->group != '')? ['class' => $application_score->scoreItem->group]:[];\               
+            echo $form->field($application_score, "[$index]comment")->textarea()->label(false);
+            ?>
+            <?= ""/// Html::checkbox("ApplicationScore[score][".$application_score['sc_id'] ."]" , null) ?>
             <?= $form->field($application_score, "[$index]maximum_score")->hiddenInput(['value' => $application_score->scoreItem->maximum_score])->label(false); ?>
         </div>
 </div>

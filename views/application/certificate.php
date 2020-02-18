@@ -3,14 +3,8 @@
 /* @var $this yii\web\View */
 /* @var $application app\models\Application */
 /* @var $form yii\widgets\ActiveForm */
-$this->title = "Certificate Download";
-$css = <<<CSS
-    table{
-        width:100%;
-        border: 1px solid red;
-    }
-CSS;
-$this->registerCss($css);
+//$this->title = "Certificate Download";
+
 ?>
 <div>
     <div style="width:100%;height:100%;margin-top:-0px;margin-left:-10px;margin-bottom:0px;margin-right:-10px;margin:auto;border:solid 4px red;margin-top:49px;">

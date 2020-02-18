@@ -325,8 +325,10 @@ class ApplicationController extends Controller
         if($application->status != "ApplicationWorkflow/completed"){
             throw new \yii\web\HttpException(403, "You cannot download a certificate until it is approved.");
         }
+            
         $sn = bin2hex($id * 53);
         $content = $this->renderPartial('certificate', ['application' => $application]);
+        $filename = "cert- " .$application->id . ".pdf";
 
         // setup kartik\mpdf\Pdf component
         $pdf = new Pdf([
@@ -337,7 +339,8 @@ class ApplicationController extends Controller
             // portrait orientation
             'orientation' => Pdf::ORIENT_LANDSCAPE, 
             // stream to browser inline
-            'destination' => Pdf::DEST_BROWSER, 
+            'destination' => Pdf::DEST_DOWNLOAD,
+            'filename' => $filename,
             // your html content input
             'content' => $content,  
             // format content from your own css file if needed or use the

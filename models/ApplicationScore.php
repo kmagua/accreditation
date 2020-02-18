@@ -13,6 +13,7 @@ use Yii;
  * @property int|null $score
  * @property int|null $user_id
  * @property int|null $committee_id
+ * @property string|null $comment
  * @property string $date_created
  * @property string $last_updated
  *
@@ -44,7 +45,7 @@ class ApplicationScore extends \yii\db\ActiveRecord
             [['application_id', 'score_item_id', 'score', 'user_id', 'committee_id', 'committee_score', 'status'], 'integer'],
             [['date_created', 'last_updated','score_item', 'specific_item', 'category', 'maximum_score'], 'safe'],
             [['classification'],'string', 'max'=>30],
-            [['rejection_comment'],'string', 'max'=>150],
+            [['rejection_comment', 'comment'],'string', 'max'=>150],
             [['application_id'], 'exist', 'skipOnError' => true, 'targetClass' => Application::className(), 'targetAttribute' => ['application_id' => 'id']],
             [['score_item_id'], 'exist', 'skipOnError' => true, 'targetClass' => ScoreItem::className(), 'targetAttribute' => ['score_item_id' => 'id']],
             [['committee_id'], 'exist', 'skipOnError' => true, 'targetClass' => IctaCommittee::className(), 'targetAttribute' => ['committee_id' => 'id']],

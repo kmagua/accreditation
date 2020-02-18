@@ -75,7 +75,7 @@ class Application extends \yii\db\ActiveRecord
             'company_id' => 'Company ID',
             'accreditation_type_id' => 'Accediation Category',
             'financial_status_amount' => 'Financial Status Amount (KES)',
-            'financial_status_link' => 'Financial Status Document Link',
+            'financial_status_link' => 'Audited Accounts Document Link',
             'user_id' => 'User ID',
             'status' => 'Status',
             'declaration' => 'I declare that the information given here is correct to the best of my knowledge.',
