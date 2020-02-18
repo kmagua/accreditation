@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-
+$this->title = "Login";
 ?>
 
 
@@ -63,7 +63,7 @@ use yii\bootstrap\ActiveForm;
             </div>
             <div class="col-lg-2">
                 <span style="color: red">  Forgot Password? </span>
-                <?= Html::a('Register', ['/user/reset-password'], ['class'=>'btn btn-default']) ?>          
+                <?= Html::a('Reset', ['/user/reset-password'], ['class'=>'btn btn-default']) ?>          
             </div>
          </div>
     

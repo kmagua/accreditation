@@ -29,14 +29,23 @@ function calculateCategoty(score){
     }
 }
 
-function clearInSimilarClass(cur_element, score){
+function clearInSimilarClass(cur_element){
     var element_class = $("#" + cur_element.id).attr('class');
     
     if(element_class != undefined){
         $("input:checkbox." + element_class).each(function(){
-            if(this.checked == true && (this.id != cur_element.id)){
+            if(this.checked == true && (this.id != cur_element.id)){                
                 this.click();
             }
         });
     }
+}
+
+function validateForm(){
+    if(Number($('#applicationscore-status').val()) == 0 && $('#applicationscore-rejection_comment').val() == ''){
+        $("#applicationscore-rejection_comment").css("border", "2px solid red");
+        alert("You must provide a comment for rejected applications.")
+        return false;
+    }
+    return true;
 }

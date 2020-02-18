@@ -25,7 +25,7 @@ class UserController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['register', 'confirm-user-account','reset-password'],
+                        'actions' => ['register', 'confirm-user-account','reset-password', 'set-new-password'],
                         'allow' => true,
                         'roles' => ['?'],                        
                     ],
@@ -173,9 +173,30 @@ class UserController extends Controller
     public function actionResetPassword()
     {
         if (Yii::$app->request->post()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            \app\models\PasswordReset::passwordReset(Yii::$app->request->post()['kra_pin_number']);
+            \Yii::$app->session->setFlash('user_confirmation','Your accout activation link has been sent to your email.');
+            return $this->redirect(['site/login']);
         }
 
         return $this->render('reset_password');
+    }
+    
+    public function actionSetNewPassword($id, $ph)
+    {
+        $pass_reset = \app\models\PasswordReset::findOne(['user_id' => Yii::$app->request->get('id'), 'hash' => $ph]);
+        if(!$pass_reset){
+            throw new \yii\web\HttpException(403, "Access denied");
+        }
+        $model = User::findOne($id);
+        $model->setScenario("password_update");
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('user_confirmation','Password updated. Use your new password to login.');
+            return $this->redirect(['site/login']);
+        }
+
+        return $this->render('password_update', [
+            'model' => $model,
+        ]);
     }
 }

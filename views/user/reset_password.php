@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
 /* @var $form yii\widgets\ActiveForm */
+$this->title = "Reset Password";
 ?>
 
 <div style="margin-top:2%;background-color:white;" id="Log">

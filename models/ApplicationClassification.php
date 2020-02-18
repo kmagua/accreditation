@@ -13,6 +13,7 @@ use Yii;
  * @property float|null $score
  * @property string|null $classification
  * @property int|null $status
+ * @property string|null $rejection_comment
  * @property int|null $user_id
  * @property string $date_created
  * @property string|null $last_updated
@@ -42,6 +43,7 @@ class ApplicationClassification extends \yii\db\ActiveRecord
             [['score'], 'number'],
             [['date_created', 'last_updated'], 'safe'],
             [['classification'], 'string', 'max' => 30],
+            [['rejection_comment'], 'string', 'max' => 150],
             [['application_id', 'icta_committee_id'], 'unique', 'targetAttribute' => ['application_id', 'icta_committee_id']],
             [['icta_committee_id'], 'exist', 'skipOnError' => true, 'targetClass' => IctaCommittee::className(), 'targetAttribute' => ['icta_committee_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],

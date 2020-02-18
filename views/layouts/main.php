@@ -49,8 +49,11 @@ AppAsset::register($this);
        // 'options' => ['style' => 'forecolor-color: red;'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],],
-            ['label' => 'About', 'url' => ['/site/about'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']],
-            ['label' => 'Register', 'url' => ['/user/register'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],'visible'=>Yii::$app->user->isGuest],
+            ['label' => 'Applications', 'url' => ['/application/index'],
+                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
+                'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']],
+            ['label' => 'Register', 'url' => ['/user/register'],
+                'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],'visible'=>Yii::$app->user->isGuest],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']]
             ) : (
@@ -58,7 +61,7 @@ AppAsset::register($this);
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     'Logout (' . Yii::$app->user->identity->full_name . ')',
-                    ['class' => 'btn btn-link logout']
+                    ['class' => 'btn btn-link logout', 'style' => 'color: white;font-weight: 900;margin-top: 25px;']
                 )
                 . Html::endForm()
                 . '</li>'

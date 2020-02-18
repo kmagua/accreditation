@@ -298,29 +298,32 @@ class Application extends \yii\db\ActiveRecord
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/at-committee'),
             [$this, 'loadApplicationScores'], 2
     	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/completed'),
+            [$this, 'sendApprovalEmail'], 'completed'
+    	);
     }
     
     public function getApplicationProgress()
     {
         switch($this->status){
             case 'ApplicationWorkflow/draft':
-                return $this->processDraft();
+                return $this->paymentConfirmation(1);
             case 'ApplicationWorkflow/application-paid':
-                return $this->processApplicationFeePaid();
+                return $this->processConfirmPayment(1);
             case 'ApplicationWorkflow/application-payment-confirmed':
                 return $this->assignCommitee(1);
             case 'ApplicationWorkflow/application-payment-rejected':
                 return $this->processApplicationFeeRejected();
             case 'ApplicationWorkflow/at-secretariat':
-                return $this->processAtSecretariat();
+                return $this->processInternalCommittee(1);
             case 'ApplicationWorkflow/assign-approval-committee':
                 return $this->assignCommitee(2, "Assign Approval Committee Members");
             case 'ApplicationWorkflow/at-committee':
-                return $this->processAtCommittee();
+                return $this->processInternalCommittee(2);
             case 'ApplicationWorkflow/approved':
-                return $this->processApproved();
+                return $this->paymentConfirmation(2);
             case 'ApplicationWorkflow/certificate-paid':
-                return $this->processApprovalPayment();           
+                return $this->processConfirmPayment(2);           
             case 'ApplicationWorkflow/approval-payment-rejected':
                 return $this->processApprovalFeeRejected();
             case 'ApplicationWorkflow/completed':
@@ -334,24 +337,44 @@ class Application extends \yii\db\ActiveRecord
      * 
      * @return type
      */
-    public function processDraft()
+    public function paymentConfirmation($level)
     {
-        return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented")']) . ' &nbsp;&nbsp; '. Html::a(Icon::show('receipt', ['class' => 'fas',
-            'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> 1], 
-                ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
+        if($this->checkUserCanAccess()){
+            return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented")']) . ' &nbsp;&nbsp; '. Html::a(Icon::show('receipt', ['class' => 'fas',
+                'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> $level], 
+                    ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
+        }
+        return "Pending Payment";
     }
     
-    public function processApplicationFeePaid()
+    /**
+     * Internal payment confirmation
+     * @param type $level
+     * @return string
+     */
+    public function processConfirmPayment($level)
     {
-        return Html::a("Update Payment Status", ['application/approve-payment', 'id' => $this->id, 'l'=> 1], 
-            ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Approve/Reject Payment Receipt</h3>'); return false;"]);
+        if(\Yii::$app->user->identity->isInternal()){        
+            return Html::a("Update Payment Status", ['application/approve-payment', 'id' => $this->id, 'l'=> $level], 
+                ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Approve/Reject Payment Receipt</h3>'); return false;"]);
+        }
+        return "Pending Payment Confirmation";
     }
     
+    /**
+     * Assign committee members to an application
+     * @param type $level
+     * @param type $message
+     * @return string
+     */
     public function assignCommitee($level, $message = 'Assign secretariat members.')
     {
-        return Html::a(Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
-            'application/committee-members', 'id' => $this->id, 'l'=> $level], 
-                ['data-pjax'=>'0', 'title' => $message]);
+        if(\Yii::$app->user->identity->isInternal()){
+            return Html::a(Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
+                'application/committee-members', 'id' => $this->id, 'l'=> $level], 
+                    ['data-pjax'=>'0', 'title' => $message]);
+        }
+        return "Pending";
     }
     
     /**
@@ -362,38 +385,36 @@ class Application extends \yii\db\ActiveRecord
         return "TBA";
     }
     
-    public function processAtSecretariat()
+    /**
+     * Internal committees scoring
+     * @param type $level
+     * @return string
+     */
+    public function processInternalCommittee($level)
     {
-        return Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
-            'application/approval', 'id' => $this->id, 'level'=> 1], 
-                ['data-pjax'=>'0', 'title' =>'Review by ICTA Acceditation Secretariat']);
-    }
-        
-    public function processAtCommittee()
-    {
-        return Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
-            'application/approval', 'id' => $this->id, 'level'=> 2], 
-                ['data-pjax'=>'0', 'title' =>'Review by ICTA Approving Committee']);
-    }
-    
-    public function processApproved()
-    {
-        return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented")']) . ' &nbsp;&nbsp; '. Html::a(Icon::show('receipt', ['class' => 'fas',
-            'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> 2], 
-                ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Certificate Payment Receipt</h3>'); return false;"]);
+        if(\Yii::$app->user->identity->isInternal()){  
+            $title = ($level == 1) ? 'Review by ICTA Acceditation Secretariat' : 'Review by ICTA Approving Committee';
+            return Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
+                'application/approval', 'id' => $this->id, 'level'=> $level], 
+                    ['data-pjax'=>'0', 'title' => $title]);
+        }else{
+            return "Pending";
+        }
     }
     
-    public function processApprovalPayment()
-    {
-        return Html::a("Update Payment Status", ['application/approve-payment', 'id' => $this->id, 'l'=> 2], 
-            ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Approve/Reject Payment Receipt</h3>'); return false;"]);
-    }
-    
+    /**
+     * 
+     * @return string
+     */
     public function processApprovalFeeRejected()
     {
         return "TBA";
     }
     
+    /**
+     * link to download certificate
+     * @return type
+     */
     public function processCompleted()
     {
         return Html::a('Download Certificate',[
@@ -401,6 +422,10 @@ class Application extends \yii\db\ActiveRecord
                 ['data-pjax'=>'0', 'title' =>'Certificate Download']);
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function processRenewal()
     {
         return Html::a("Renew certificate", ['application/cert-renewal', 'id' => $this->id], 
@@ -429,6 +454,10 @@ class Application extends \yii\db\ActiveRecord
         $this->save(false);
     }
     
+    /**
+     * Send email to applicant after payment has been approved at ICTA
+     * @param type $outcome
+     */
     public function sendPaymentApprovalEmail($outcome)
     {
         $outcome_array = explode("-", $outcome);
@@ -467,6 +496,12 @@ MSG;
         }
     }
     
+    /**
+     * update status after committee scoring
+     * @param type $id
+     * @param type $status
+     * @param type $level
+     */
     public static function preogressOnCommitteeApproval($id, $status, $level)
     {
         if($level == 1 && $status == 1){
@@ -478,6 +513,44 @@ MSG;
         }else{
             \Yii::$app->db->createCommand()
                 ->update('application', ['status' => "ApplicationWorkflow/draft"], ['id'=>$id])->execute();
+        }
+    }
+    
+    /**
+     * Send email to applicant after application has been approved by ICTA
+     * @param type $event
+     */
+    public function sendApprovalEmail($event)
+    {
+        $header = "Your accreditation request has been approved by ICT Authority";
+        $type = $this->accreditationType->name;
+        $link = \yii\helpers\Url::to(['application/download-cert', 'id' => $this->id], true);
+        
+        $message = <<<MSG
+                Dear {$this->user->getNames()},
+                <p>Kindly note that your Accreditation request for $type has been approved by ICT Authority.
+                    You can login in to the accreditation site to download your certificate or use the link below.</p>
+                <p>$link</p>
+                <p>Thank you,<br>ICT Authority Accreditation.</p>
+                
+MSG;
+        Utility::sendMail($this->company->company_email, $header, $message, $this->user->email);
+    }
+    
+    /**
+     * Check if logged in user can access an application details
+     * @return boolean
+     */
+    public function checkUserCanAccess()
+    {
+        $user_grp = strtolower(\Yii::$app->user->identity->group);
+        if(in_array($user_grp, ['admin', 'applicant'])){
+            if($user_grp == 'admin'){
+                return true;
+            }
+            return CompanyProfile::canAccess($this->company_id);
+        }else{
+            return false;
         }
     }
 }

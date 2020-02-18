@@ -48,4 +48,8 @@ class Utility {
         }	    
         return array_map('str_getcsv', file($file));
     }
+    
+    public static function generateRandomString($length = 100) {
+        return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@!', ceil($length/strlen($x)) )),1,$length);
+    }
 }

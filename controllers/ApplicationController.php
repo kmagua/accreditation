@@ -42,9 +42,11 @@ class ApplicationController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            if(isset(Yii::$app->request->get()['id'])){
-                                $cid = Application::findOne(Yii::$app->request->get()['id'])->company_id;
-                                return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess($cid);
+                            if(isset(Yii::$app->request->get()['id'])){                                
+                                $application = Application::findOne(Yii::$app->request->get()['id']);
+                                if($application){
+                                    return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess($application->company_id);
+                                }
                             }                             
                             return false;
                         }
@@ -318,6 +320,9 @@ class ApplicationController extends Controller
     public function actionDownloadCert($id)
     {
         $application = $this->findModel($id);
+        if($application->status != "ApplicationWorkflow/completed"){
+            throw new \yii\web\HttpException(403, "You cannot download a certificate until it is approved.");
+        }
         $sn = bin2hex($id * 53);
         $content = $this->renderPartial('certificate', ['application' => $application]);
 

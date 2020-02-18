@@ -8,12 +8,13 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 $form = ActiveForm::begin();
 
-$current_category = $current_specific_item =  $ac_classification = "";
+$current_category = $current_specific_item =  $ac_classification = $app_status = "";
 $ac_score =0;
 $app_classification = app\models\ApplicationClassification::find()->where(['application_id'=>$app_id, 'icta_committee_id'=>$level])->one();
 if($app_classification){    
     $ac_score = $app_classification->score;
     $ac_classification = $app_classification->classification;
+    $app_status = $app_classification->status;
 }
 ?>
 <div class="row" style="margin-top:30px;">
@@ -85,6 +86,7 @@ foreach ($application_scores as $index => $application_score) {
 <?php
 }
 ?>
+
 <div class ="row" style="margin-top: 10px; margin-bottom: 10px ">
     <div class="col-md-4">
         <?= Html::label("Score", 'applicationscore-committee_score') ?>
@@ -99,15 +101,26 @@ foreach ($application_scores as $index => $application_score) {
         ], ['prompt' => '', 'class' => 'form-control', 'id' => 'applicationscore-classification']) ?>
     </div>
     
-    <div class="col-md-3">
+    
+</div>
+
+<div class="row">
+    <div class="col-md-4">
         <?= Html::label("Approval Status", 'applicationscore-status') ?>
-        <?=Html::dropDownList("ApplicationScore[status]", '', [
+        <?= Html::dropDownList("ApplicationScore[status]", $app_status, [
             1 => 'Approved', 0 => 'Rejected'
         ], ['prompt' => '', 'class' => 'form-control', 'id' => 'applicationscore-status']) ?>
     </div>
+    
+    <div class="col-md-5">
+        <?= Html::label("Comment", 'applicationscore-rejection_comment') ?>
+        <?= Html::textarea("ApplicationScore[rejection_comment]", '', ['class' => 'form-control', 'id' => 'applicationscore-rejection_comment']) ?>
+    </div>
 </div>
+
+
 <div class="form-group">
-    <?= Html::submitButton('Submit', ['class' => 'btn btn-success']) ?>
+    <?= Html::submitButton('Submit', ['class' => 'btn btn-success', 'onclick' => 'return validateForm(); ']) ?>
 </div>
 
 <?php
@@ -117,18 +130,41 @@ $js = <<<JS
 $( document ).ready(function() {
     var score = $ac_score;
         
-    $( "input:checkbox" ).click(function(){        
+    $( "input:checkbox" ).click(function(){
+        scored = Number($('#applicationscore-committee_score').val());
         var element_details_array = this.id.split("-");
         var applicable_score = $("#"+element_details_array[0] +"-"+element_details_array[1] + "-maximum_score").val();
+        
         if(this.checked == true){
-            score += Number(applicable_score);
-            clearInSimilarClass(this, score)
+            scored += Number(applicable_score);
+            $('#applicationscore-committee_score').val(scored); //update value first
+            clearInSimilarClass(this)
         }else{
-            score -= Number(applicable_score);
-        }        
-        $('#applicationscore-committee_score').val(score);        
-        calculateCategoty(score);
-    });        
+            //console.log(element_details_array)
+            //alert(applicable_score)
+            scored -= Number(applicable_score);
+        }
+        $('#applicationscore-committee_score').val(scored);
+        calculateCategoty(scored);
+    });
+        
+    
+        
+    $( "input:radio" ).mouseup(function(){        
+        if($('input[name="' + this.name+'"]:checked').val() != null){
+            sco = Number($('#applicationscore-committee_score').val());
+            sco -= Number($('input[name="' + this.name+'"]:checked').val());
+            $('#applicationscore-committee_score').val(sco);
+        }
+    }).change(function(){
+        sc = Number($('#applicationscore-committee_score').val());
+        
+        sc += Number($('input[name="'+ this.name + '"]:checked').val());
+        $('#applicationscore-committee_score').val(sc);
+        calculateCategoty(sc);
+    });
+        
+    
 });
 JS;
 $this->registerJs($js,yii\web\View::POS_END, 'calculate_application_score');
