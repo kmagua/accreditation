@@ -37,11 +37,10 @@ AppAsset::register($this);
    
     NavBar::begin([
         'brandImage' => Yii::getAlias("@web")."/images/ictabanntransparent2.png",
-        'brandLabel' => Yii::$app->name, 
-        'brandUrl' => Yii::$app->homeUrl,
+        //'brandLabel' => Yii::$app->name, 
+        //'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'my-navbar navbar-fixed-top',
-            
+            'class' => 'my-navbar navbar-fixed-top',            
         ],
     ]);
     echo Nav::widget([
@@ -71,7 +70,7 @@ AppAsset::register($this);
     NavBar::end();
     ?>
         
-    <div class="container" style="border:2px solid red">
+    <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>

@@ -3,6 +3,11 @@
     color:white;
 }
 
+.navbar-brand :hover{
+    font-style: normal;
+    color:green !important;
+}
+
 .navbar-brand img {
     height: 10%;
     margin-top: -50px;

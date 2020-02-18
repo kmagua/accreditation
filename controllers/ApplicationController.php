@@ -107,6 +107,7 @@ class ApplicationController extends Controller
     {
         $model = new Application();
         $model->company_id = $cid;
+        $model->status = "ApplicationWorkflow/draft";
         $model->setScenario('create_update');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -226,7 +227,8 @@ class ApplicationController extends Controller
             $committee_score = Yii::$app->request->post()['ApplicationScore']['committee_score'];
             $committee_category = Yii::$app->request->post()['ApplicationScore']['classification'];
             $approval_status = Yii::$app->request->post()['ApplicationScore']['status'];
-            \app\models\ApplicationClassification::saveClassification($id, $committee_score, $committee_category, $level, $approval_status);
+            $rejection_comment = Yii::$app->request->post()['ApplicationScore']['rejection_comment'];
+            \app\models\ApplicationClassification::saveClassification($id, $committee_score, $committee_category, $level, $approval_status, $rejection_comment);
             
             Application::preogressOnCommitteeApproval($id, $approval_status, $level);
             

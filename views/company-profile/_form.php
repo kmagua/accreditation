@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\CompanyProfile */
@@ -25,7 +26,19 @@ use yii\widgets\ActiveForm;
     
     <div class="row">
         <div class="col-md-6">
-             <?= $form->field($model, 'registration_date')->textInput() ?>  
+             <?= $form->field($model, 'registration_date')->widget(\yii\jui\DatePicker::classname(), [
+                //'language' => 'ru',
+                'dateFormat' => 'dd-MM-yyyy',
+                'clientOptions'=>[
+                    'yearRange'=>(date('Y')-100).":".(date('Y')),
+                    'maxDate' => "+0d",
+                    'changeYear' => true,
+                    'changeMonth' => 'true'
+                ],
+                'options' =>[
+                    'class' => 'form-control',
+                ]
+            ]) ?>
         </div>
         
         <div class="col-md-6">
@@ -61,9 +74,8 @@ use yii\widgets\ActiveForm;
         </div>
         
         <div class="col-md-6">
-              <?= $form->field($model, 'company_type_id')->dropDownList([ 'Sole proprietor' => 'Sole proprietor', 
-                  'Partnership' => 'Partnership', 'Corporation' => 'Corporation', 'Private Company' => 'Private Company', 
-                  'Limited company' => 'Limited company', 'Co-operative' => 'Co-operative', ], ['prompt' => '']) ?>
+              <?= $form->field($model, 'company_type_id')->dropDownList(ArrayHelper::map(
+                \app\models\CompanyType::find()->where("id > 0")->all(), 'id', 'name'), ['prompt' => '']) ?>
         </div>
     </div>
 

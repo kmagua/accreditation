@@ -393,7 +393,7 @@ class Application extends \yii\db\ActiveRecord
     public function processInternalCommittee($level)
     {
         if(\Yii::$app->user->identity->isInternal()){  
-            $title = ($level == 1) ? 'Review by ICTA Acceditation Secretariat' : 'Review by ICTA Approving Committee';
+            $title = ($level == 1) ? 'Scoring by ICTA Acceditation Secretariat' : 'Scoring by ICTA Approving Committee';
             return Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
                 'application/approval', 'id' => $this->id, 'level'=> $level], 
                     ['data-pjax'=>'0', 'title' => $title]);
@@ -441,7 +441,11 @@ class Application extends \yii\db\ActiveRecord
         if($level == 1){
             return 1500;
         }
-        return 5000;
+        $ac = ApplicationClassification::find()->where(['application_id'=>$this->id, 'icta_committee_id' => 2])->one();
+        if($ac){
+            return AccreditationLevel::findOne(['name' => $ac->classification])->accreditation_fee;
+        }
+        return "Invalid payment amount";
     }
     
     /**
@@ -456,11 +460,11 @@ class Application extends \yii\db\ActiveRecord
     
     /**
      * Send email to applicant after payment has been approved at ICTA
-     * @param type $outcome
+     * @param type $outcome Workflow event object
      */
     public function sendPaymentApprovalEmail($outcome)
     {
-        $outcome_array = explode("-", $outcome);
+        $outcome_array = explode("-", $outcome->data);
         $header = ucwords($outcome_array[0]. " Payment ". $outcome_array[0]);
         $additional = ".";
         if($outcome_array[2] == 'rejected'){
@@ -469,7 +473,7 @@ class Application extends \yii\db\ActiveRecord
             $additional = ' for the flowwing reason "' . $payment->comment .".";
         }
         $message = <<<MSG
-                Dear {$this->user->getNames()},
+                Dear {$this->user->full_name},
                 <p>Kindly note that your {$outcome_array[0]} payment to ICT Authority for accreditation has been {$outcome_array[2]}{$additional}</p>
                 
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
@@ -506,7 +510,7 @@ MSG;
     {
         if($level == 1 && $status == 1){
             \Yii::$app->db->createCommand()
-                ->update('application', ['status' => "ApplicationWorkflow/at-committee"], ['id'=>$id])->execute();
+                ->update('application', ['status' => "ApplicationWorkflow/assign-approval-committee"], ['id'=>$id])->execute();
         }else if($level == 2 && $status == 1){
             \Yii::$app->db->createCommand()
                 ->update('application', ['status' => "ApplicationWorkflow/approved"], ['id'=>$id])->execute();
@@ -527,7 +531,7 @@ MSG;
         $link = \yii\helpers\Url::to(['application/download-cert', 'id' => $this->id], true);
         
         $message = <<<MSG
-                Dear {$this->user->getNames()},
+                Dear {$this->user->full_name},
                 <p>Kindly note that your Accreditation request for $type has been approved by ICT Authority.
                     You can login in to the accreditation site to download your certificate or use the link below.</p>
                 <p>$link</p>

@@ -62,7 +62,7 @@ use yii\widgets\ActiveForm;
     
     <div class="row"> 
         <div class="col-md-6">
-            <?= $form->field($model, 'disability_status')->dropDownList([ 'Yes' => 'Yes', 'No' => 'No', ], ['prompt' => '']) ?>
+            <?= $form->field($model, 'disability_status')->dropDownList([ 'No' => 'No', 'Yes' => 'Yes', ], ['prompt' => '']) ?>
         </div> 
         <div class="col-md-6">
             <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>

@@ -98,13 +98,13 @@ class ApplicationClassification extends \yii\db\ActiveRecord
         return $this->hasOne(Application::className(), ['id' => 'application_id']);
     }
     
-    public static function saveClassification($app_id, $score, $category, $icta_comm, $status)
+    public static function saveClassification($app_id, $score, $category, $icta_comm, $status, $rejection_comment)
     {
         $uid = \Yii::$app->user->identity->user_id;
-        $insert_sql = "INSERT INTO application_classification (application_id, icta_committee_id, user_id, score, classification, status)
-            VALUES ($app_id, $icta_comm, $uid, $score, '$category', $status)
+        $insert_sql = "INSERT INTO application_classification (application_id, icta_committee_id, user_id, score, classification, status, rejection_comment)
+            VALUES ($app_id, $icta_comm, $uid, $score, '$category', $status, :rejection_comment)
             ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP, score = $score, classification = '$category'";
                 
-        return \Yii::$app->db->createCommand($insert_sql, [':category' => $category])->execute();
+        return \Yii::$app->db->createCommand($insert_sql, [':rejection_comment' => $rejection_comment])->execute();
     }
 }
