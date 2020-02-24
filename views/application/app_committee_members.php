@@ -9,15 +9,16 @@ use kartik\select2\Select2;
 /* @var $model app\models\IctaCommitteeMember */
 /* @var $form yii\widgets\ActiveForm */
 $this->title = "Members";
+$data = \app\models\IctaCommitteeMember::findCommitteeMembersArray($level);
 ?>
 
-<div class="document-type-form">
+<div class="document-type-form" style = 'margin-top: 50px'>
 
     <?php $form = ActiveForm::begin(['id' =>'icta-committee-member-form',
             'action' => ['application/committee-members', 'id' => $model->application_id, 'l' => $level]]); ?>
     
     <?= $form->field($model, 'committee_member_ids')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\app\models\IctaCommitteeMember::find()->where(['committee_id' => $level])->all(), 'id', 'user.full_name'),
+            'data' => ArrayHelper::map(\app\models\IctaCommitteeMember::findCommitteeMembersArray($level),'id','full_name'),
             'options' => ['placeholder' => 'Select a state ...', 'multiple'=>'true'],
             'pluginOptions' => [
                 'allowClear' => true

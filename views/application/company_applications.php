@@ -35,7 +35,13 @@ $model->company_id = $searchModel->company_id;
             'financial_status_amount',
             'financial_status_link',
             //'user_id',
-            'status',
+            [
+                'attribute' => 'status',
+                'contentOptions' => ['style' => 'width: 7%'],
+                'content' => function($model){
+                    return $model->getApplicationProgress();
+                },
+            ],
             //'declaration',
             //'date_created',
             //'last_updated',

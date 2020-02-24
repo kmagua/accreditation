@@ -37,11 +37,10 @@ AppAsset::register($this);
    
     NavBar::begin([
         'brandImage' => Yii::getAlias("@web")."/images/ictabanntransparent2.png",
-        'brandLabel' => Yii::$app->name, 
-        'brandUrl' => Yii::$app->homeUrl,
+        //'brandLabel' => Yii::$app->name, 
+        //'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'my-navbar navbar-fixed-top',
-            
+            'class' => 'my-navbar navbar-fixed-top',            
         ],
     ]);
     echo Nav::widget([
@@ -49,8 +48,11 @@ AppAsset::register($this);
        // 'options' => ['style' => 'forecolor-color: red;'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],],
-            ['label' => 'About', 'url' => ['/site/about'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']],
-            ['label' => 'Register', 'url' => ['/user/create'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],'visible'=>Yii::$app->user->isGuest],
+            ['label' => 'Applications', 'url' => ['/application/index'],
+                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
+                'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']],
+            ['label' => 'Register', 'url' => ['/user/register'],
+                'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],'visible'=>Yii::$app->user->isGuest],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']]
             ) : (
@@ -58,7 +60,7 @@ AppAsset::register($this);
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     'Logout (' . Yii::$app->user->identity->full_name . ')',
-                    ['class' => 'btn btn-link logout']
+                    ['class' => 'btn btn-link logout', 'style' => 'color: white;font-weight: 900;margin-top: 25px;']
                 )
                 . Html::endForm()
                 . '</li>'
@@ -79,9 +81,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; ICT Authority <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <!--<p class="pull-right"><?= ""//Yii::powered() ?></p>-->
     </div>
 </footer>
 <?php

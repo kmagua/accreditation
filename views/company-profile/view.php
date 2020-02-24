@@ -63,7 +63,6 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <?php
 $this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);
-$this->registerJsFile('../js/company_staff.js', ['position'=>yii\web\View::POS_END]);
 $js = <<<JS
 $( document ).ready(function() {
     $(function () {        

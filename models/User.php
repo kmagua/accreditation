@@ -30,6 +30,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public $group;
     public $user_id;
     public $full_name;
+    public $captcha;
     /**
      * {@inheritdoc}
      */
@@ -44,13 +45,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
+            [['email', 'kra_pin_number', 'first_name', 'last_name'], 'required'],
             [['role'], 'string'],
+            [['captcha', 'password'], 'required', 'on'=>'register'],
+            [['password'], 'required', 'on'=>['register', 'password_update']],
             [['email', 'kra_pin_number'], 'unique'],
             [['date_created', 'last_updated'], 'safe'],
             [['email'], 'string', 'max' => 30],
+            ['email', 'email'],
             [['first_name', 'last_name', 'kra_pin_number'], 'string', 'max' => 20],
             [['password', 'password_repeat'], 'string', 'max' => 100],
-            [['password_repeat'], 'validatePasswordRepeat', 'on'=>'new_account'],
+            [['password_repeat'], 'validatePasswordRepeat', 'on'=>['register', 'password_update']],
         ];
     }
 
@@ -61,7 +66,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             'id' => 'ID',
-            'kra_pin_number' => 'KRA PIN Number',
+            'kra_pin_number' => 'Company/Personal KRA PIN Number',
             'email' => 'Email',
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
@@ -150,7 +155,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['email' => $username, 'status'=>1]);
+        $rec = static::findOne(['kra_pin_number' => $username, 'status'=>1]);
+        if(!$rec){
+            $rec = static::findOne(['email' => $username, 'status'=>1]);
+        }
+        return $rec;
     }
 
     /**
@@ -178,7 +187,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         parent::beforeSave($insert);
         //only on new record
-        if($insert){
+        if($insert || $this->scenario == 'password_update'){
             $this->password = password_hash($this->password, PASSWORD_DEFAULT);        
         }    
         return true;

@@ -66,7 +66,7 @@ class CompanyExperience extends \yii\db\ActiveRecord
             'attachment' => 'Attachment',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
-            'upload_file' => 'Proof Documents for the Project',
+            'upload_file' => 'Proof Documents for the Project [LPO, Recommendation letter] (Combine in one file)',
         ];
     }
 

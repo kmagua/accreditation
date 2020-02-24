@@ -71,7 +71,7 @@ class CompanyStaff extends \yii\db\ActiveRecord
             'kra_pin' => 'Kra Pin',
             'gender' => 'Gender',
             'dob' => 'Dob',
-            'disability_status' => 'Disability Status',
+            'disability_status' => 'Any Disabilty?',
             'title' => 'Title',
             'staff_type' => 'Staff Type',
             'status' => 'Status',

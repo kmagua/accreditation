@@ -46,7 +46,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['business_reg_no', 'company_name'], 'required'],
+            [['business_reg_no', 'company_name', 'registration_date', 'county', 'company_email', 'telephone_number'], 'required'],
             [['registration_date', 'date_created', 'last_updated'], 'safe'],
             [['company_type_id', 'company_categorization'], 'string'],
             [['user_id'], 'integer'],
@@ -68,7 +68,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
             'id' => 'ID',
             'business_reg_no' => 'Business Reg No',
             'company_name' => 'Company Name',
-            'registration_date' => 'Registration Date',
+            'registration_date' => 'Company Registration Date',
             'county' => 'County',
             'town' => 'Town',
             'building' => 'Building',
@@ -134,14 +134,19 @@ class CompanyProfile extends \yii\db\ActiveRecord
         return $this->hasMany(CompanyStaff::className(), ['company_id' => 'id']);
     }
     
+    /**
+     * 
+     * @param type $insert
+     * @return boolean
+     */
     public function beforeSave($insert) 
     {
         parent::beforeSave($insert);
         
         if($insert){
-            $this->user_id = Yii::$app->user->identity->user_id;            
+            $this->user_id = Yii::$app->user->identity->user_id;
         }
-        
+        $this->registration_date = date('Y-m-d');
         return true;
     }
     

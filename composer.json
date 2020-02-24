@@ -23,7 +23,10 @@
         "kartik-v/yii2-icons": "@dev",
         "kartik-v/yii2-widget-select2": "@dev",
         "raoul2000/yii2-workflow": "*",
-        "kartik-v/yii2-grid": "dev-master"
+        "kartik-v/yii2-grid": "dev-master",
+        "vova07/yii2-console-runner-extension": "*",
+        "kartik-v/yii2-mpdf": "dev-master",
+        "kartik-v/yii2-password": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

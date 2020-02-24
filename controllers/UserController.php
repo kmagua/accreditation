@@ -8,6 +8,7 @@ use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -20,6 +21,35 @@ class UserController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['register', 'confirm-user-account','reset-password', 'set-new-password'],
+                        'allow' => true,
+                        'roles' => ['?'],                        
+                    ],
+                    [
+                        'actions' => ['update','view'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){                                
+                                return Yii::$app->user->identity->isInternal() || \Yii::$app->user->identity->user_id == Yii::$app->request->get()['id'];
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['index','approval','approve-payment', 'committee-members'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return Yii::$app->user->identity->isInternal();
+                        }
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -62,9 +92,10 @@ class UserController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionRegister()
     {
         $model = new User();
+        $model->setScenario('register');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -137,5 +168,35 @@ class UserController extends Controller
         }else{
             echo "Invalid account details"; exit;
         }
+    }
+    
+    public function actionResetPassword()
+    {
+        if (Yii::$app->request->post()) {
+            \app\models\PasswordReset::passwordReset(Yii::$app->request->post()['kra_pin_number']);
+            \Yii::$app->session->setFlash('user_confirmation','Your accout activation link has been sent to your email.');
+            return $this->redirect(['site/login']);
+        }
+
+        return $this->render('reset_password');
+    }
+    
+    public function actionSetNewPassword($id, $ph)
+    {
+        $pass_reset = \app\models\PasswordReset::findOne(['user_id' => Yii::$app->request->get('id'), 'hash' => $ph]);
+        if(!$pass_reset){
+            throw new \yii\web\HttpException(403, "Access denied");
+        }
+        $model = User::findOne($id);
+        $model->setScenario("password_update");
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('user_confirmation','Password updated. Use your new password to login.');
+            return $this->redirect(['site/login']);
+        }
+
+        return $this->render('password_update', [
+            'model' => $model,
+        ]);
     }
 }

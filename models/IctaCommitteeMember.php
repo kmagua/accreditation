@@ -20,6 +20,7 @@ use Yii;
 class IctaCommitteeMember extends \yii\db\ActiveRecord
 {
     public $committee_members;
+    public $full_name; // for user
     /**
      * {@inheritdoc}
      */
@@ -118,5 +119,18 @@ class IctaCommitteeMember extends \yii\db\ActiveRecord
     public function getIctaCommitteeMembers($committee_id)
     {
         IctaCommitteeMember::find()->where(['committee_id' => $committee_id])->all();
+    }
+    
+    /**
+     * 
+     * @param type $committee_id
+     * @return type
+     */
+    public static function findCommitteeMembersArray($committee_id)
+    {
+        $exp = new \yii\db\Expression("icm.id, CONCAT_WS(' ', first_name, last_name) full_name");
+        $sql = "SELECT $exp "
+                . "FROM `icta_committee_member` icm JOIN `user` u ON u.id=icm.user_id WHERE `committee_id`=$committee_id";
+        return IctaCommitteeMember::findBySql($sql)->all();
     }
 }

@@ -75,7 +75,7 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
         return $this->hasOne(Application::className(), ['id' => 'application_id']);
     }
     
-    public function saveApplicationCommitteeMembers()
+    public function saveApplicationCommitteeMembers($committee_id)
     {
         foreach($this->committee_member_ids as $member_id){
             $rec = ApplicationCommitteMember::find()->where(['committee_member_id'=>$member_id, 'application_id' => $this->application_id])->one();
@@ -85,8 +85,10 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
                 ])->execute();
             }
         }
-        $cmi = implode(",", $this->committee_member_ids); 
-        ApplicationCommitteMember::deleteAll("committee_member_id not in ($cmi) AND application_id={$this->application_id}");   
+        $cmi = implode(",", $this->committee_member_ids);
+        $sql = "DELETE acm FROM application_committe_member acm JOIN icta_committee_member icm ON icm.id=acm.committee_member_id
+            WHERE (application_id = {$this->application_id} AND icm.committee_id = $committee_id) AND committee_member_id NOT IN ($cmi)";
+        \Yii::$app->db->createCommand($sql)->execute();
         return true;
     }
     
@@ -94,9 +96,11 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
      * Sets app_company_experience to values of selected experiences
      * 
      */
-    public function loadApplicationCommitteeMembers()
+    public function loadApplicationCommitteeMembers($level)
     {
-        $rec = ApplicationCommitteMember::find()->select('committee_member_id')->where(['application_id'=>$this->application_id])->all();
+        $rec = ApplicationCommitteMember::find()->from('application_committe_member acm')->select('committee_member_id')
+            ->join("join", 'icta_committee_member icm', "acm.committee_member_id = icm.id")
+            ->where(['application_id'=>$this->application_id, 'icm.committee_id' => $level])->all();
         if($rec){
             $this->committee_member_ids = array_column($rec, 'committee_member_id');
         }

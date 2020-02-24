@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-
+$this->title = "Login";
 ?>
 
 
@@ -47,21 +47,24 @@ use yii\bootstrap\ActiveForm;
         
     ]); ?>
 
-        <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
         <?= $form->field($model, 'password')->passwordInput() ?>
 
         <?= $form->field($model, 'rememberMe')->checkbox([ ]) ?>
 
         <div class="form-group">
-            <div class="col-lg-offset-1 col-lg-3">
+            <div class="col-lg-offset-1 col-lg-1">
                 <?= Html::submitButton('Login', ['class' => 'btn btn-success', 'name' => 'login-button']) ?>
             </div>
-            <div class="col-lg-offset-1 col-lg-7">
+            <div class="col-lg-offset-1 col-lg-6">
                 <span style="color: red">  New Member? </span>
-           <?= Html::a('Register', ['/user/create'], ['class'=>'btn btn-default']) ?>
-          
-         </div>
+                <?= Html::a('Register', ['/user/create'], ['class'=>'btn btn-default']) ?>          
+            </div>
+            <div class="col-lg-2">
+                <span style="color: red">  Forgot Password? </span>
+                <?= Html::a('Reset', ['/user/reset-password'], ['class'=>'btn btn-default']) ?>          
+            </div>
          </div>
     
 

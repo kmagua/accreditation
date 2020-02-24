@@ -35,7 +35,7 @@ class StaffExperience extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['staff_id'], 'required'],
+            [['staff_id', 'assignment', 'organization','start_date','role'], 'required'],
             [['staff_id'], 'integer'],
             [['start_date', 'end_date', 'date_created', 'last_updated'], 'safe'],
             [['role', 'organization'], 'string', 'max' => 100],
@@ -54,7 +54,7 @@ class StaffExperience extends \yii\db\ActiveRecord
             'staff_id' => 'Staff ID',
             'organization' => 'Organization',
             'role' => 'Role',
-            'assignment' => 'Assignment',
+            'assignment' => 'Assignment/Duties',
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
             'date_created' => 'Date Created',
