@@ -41,6 +41,21 @@ class CompanyStaffController extends Controller
                             return false;
                         }
                     ],
+                    [
+                        'actions' => ['view','update'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){
+                                $staff= CompanyStaff::findOne(Yii::$app->request->get()['id']);
+                                if($staff)
+                                   {
+                                   return Yii::$app->user->identity->isInternal() || \app\models\CompanyProfile::canAccess($staff->company_id); 
+                                   }                                
+                            }                             
+                            return false;
+                        }
+                    ],
                 ],
             ],
             'verbs' => [

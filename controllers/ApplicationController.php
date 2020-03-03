@@ -325,9 +325,9 @@ class ApplicationController extends Controller
         if($application->status != "ApplicationWorkflow/completed"){
             throw new \yii\web\HttpException(403, "You cannot download a certificate until it is approved.");
         }
-            
+        $app_classification = \app\models\ApplicationClassification::find()->where(['application_id'=>$id])->orderBy("id desc")->one();
         $sn = bin2hex($id * 53);
-        $content = $this->renderPartial('certificate', ['application' => $application]);
+        $content = $this->renderPartial('certificate', ['application' => $application, 'app_class' => $app_classification]);
         $filename = "cert- " .$application->id . ".pdf";
 
         // setup kartik\mpdf\Pdf component

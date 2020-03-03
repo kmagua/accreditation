@@ -13,7 +13,8 @@ use raoul2000\workflow\events\WorkflowEvent;
  * @property int $id
  * @property int $company_id
  * @property int|null $accreditation_type_id
- * @property float|null $financial_status_amount
+ * @property float|null $cash_flow
+ *  @property float|null $turnover
  * @property string|null $financial_status_link
  * @property int|null $user_id
  * @property string|null $status
@@ -49,10 +50,10 @@ class Application extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'accreditation_type_id', 'financial_status_amount'], 'required'],
+            [['company_id', 'accreditation_type_id', 'cash_flow'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id'], 'integer'],
             [['app_company_experience','app_staff'], 'required','on'=>'create_update'],
-            [['financial_status_amount'], 'number'],
+            [['cash_flow', 'turnover'], 'number'],
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
@@ -74,7 +75,8 @@ class Application extends \yii\db\ActiveRecord
             'id' => 'ID',
             'company_id' => 'Company ID',
             'accreditation_type_id' => 'Accediation Category',
-            'financial_status_amount' => 'Financial Status Amount (KES)',
+            'cash_flow' => 'Cash Flow (KES)',
+            'turnover' => 'Turnover (KES)',
             'financial_status_link' => 'Audited Accounts Document Link',
             'user_id' => 'User ID',
             'status' => 'Status',

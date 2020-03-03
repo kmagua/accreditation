@@ -11,9 +11,13 @@ $model->company_id = $searchModel->company_id;
 
 ?>
 <div class="company-document-index">
-    <?= $this->render('_form', [
+    <?= ""/*$this->render('_form', [
         'model' => $model,
-    ]);
+    ]);*/
+    ?>
+     <?= Html::a("Add Documents", ['company-document/data', 'cid'=> $searchModel->company_id], [
+        'class' => 'btn btn-success', 'onclick'=>'getDataForm(this.href, "<h3> Documents for ' . $searchModel->company->company_name. '</h3>"); return false;'
+        ]); 
     ?>
     
     <?= GridView::widget([

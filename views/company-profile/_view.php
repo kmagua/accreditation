@@ -21,6 +21,23 @@ $dataProvider = $companyDocumnets->search(Yii::$app->request->queryParams);
             ]),
             'active' => true
         ],
+        
+        [
+            'label' => 'Company Documents',
+            'content' =>$this->render('_companydetail', [
+                'model' => $model,
+                //'dataProvider' => $dataProvider,
+            ]),
+            'active' => true
+        ],
+         [
+            'label' => 'Company Projects/Experience',
+            'content' =>$this->render('_companydetail', [
+                'model' => $model,
+                //'dataProvider' => $dataProvider,
+            ]),
+            'active' => true
+        ],
         [
             'label' => 'Company Documents',
             'content' =>$this->render('../company-document/_documentdetails', [

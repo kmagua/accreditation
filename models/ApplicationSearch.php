@@ -20,7 +20,7 @@ class ApplicationSearch extends Application
     {
         return [
             [['id', 'company_id', 'accreditation_type_id', 'user_id'], 'integer'],
-            [['financial_status_amount'], 'number'],
+            [['cash_flow','turnover'], 'number'],
             [['financial_status_link', 'status', 'declaration', 'date_created', 'last_updated', 'company', 'accreditationType'], 'safe'],
         ];
     }
@@ -65,7 +65,8 @@ class ApplicationSearch extends Application
             'id' => $this->id,
             'company_id' => $this->company_id,
             'accreditation_type_id' => $this->accreditation_type_id,
-            'financial_status_amount' => $this->financial_status_amount,
+            'cash_flow' => $this->cash_flow,
+            'turnover' => $this->turnover,
             'user_id' => $this->user_id,
             //'date_created' => $this->date_created,
             //'last_updated' => $this->last_updated,

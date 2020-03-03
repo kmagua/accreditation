@@ -12,9 +12,9 @@ $model->company_id = $searchModel->company_id;
 ?>
 <div class="company-experience-index">
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]);
+    <?= Html::a("Company Projects(Experience)", ['company-experience/data', 'cid'=>$model->company_id], [
+        'class' => 'btn btn-success', 'onclick'=>'getDataForm(this.href, "<h3>Projects done by ' . $model->company->company_name. '</h3>"); return false;'
+        ]); 
     ?>
 
     <?= GridView::widget([

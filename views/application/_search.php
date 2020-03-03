@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'accreditation_type_id') ?>
 
-    <?= $form->field($model, 'financial_status_amount') ?>
+    <?= $form->field($model, 'cash_flow') ?>
 
     <?= $form->field($model, 'financial_status_link') ?>
 

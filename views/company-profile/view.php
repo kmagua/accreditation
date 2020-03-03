@@ -14,6 +14,13 @@ $this->title = $model->company_name;
 $this->params['breadcrumbs'][] = ['label' => 'Company Profiles', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+$searchCD = new app\models\CompanyDocumentSearch();
+$searchCD->company_id = $model->id;
+$cdDataProvider = $searchCD->search([]);
+
+$searchCP = new app\models\CompanyExperienceSearch();
+$searchCP->company_id = $model->id;
+$cpDataProvider = $searchCP->search([]);
 ?>
 <div class="company-profile-view">
 
@@ -31,6 +38,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'dataProvider' => $dataProvider,
             ]),
             'active' => true
+        ],
+       [
+            'label' => 'Company Documents',
+            'content' => $this->render('../company-document/index', [
+                'searchModel' => $searchCD,
+                'dataProvider' => $cdDataProvider,
+            ]),
+            
+        ],
+       [
+            'label' => 'Company Projects/Experience',
+            'content' => $this->render('../company-experience/index', [
+                'searchModel' => $searchCP,
+                'dataProvider' => $cpDataProvider,
+            ]),
+            
         ],
         [
             'label' => 'Staff Details',

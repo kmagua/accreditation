@@ -198,7 +198,7 @@ class CompanyExperienceController extends Controller
         $searchModel->company_id = $cid;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->renderAjax('index', [
+        return $this->renderAjax('index_with_form', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

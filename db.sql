@@ -66,7 +66,7 @@ CREATE TABLE `application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `company_id` int(11) NOT NULL,
   `accreditation_type_id` int(11) DEFAULT NULL,
-  `financial_status_amount` double(15,2) DEFAULT NULL,
+  `cash_flow` double(15,2) DEFAULT NULL,
   `financial_status_link` varchar(250) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE `application` (
 
 /*Data for the table `application` */
 
-insert  into `application`(`id`,`company_id`,`accreditation_type_id`,`financial_status_amount`,`financial_status_link`,`user_id`,`status`,`declaration`,`initial_approval_date`,`date_created`,`last_updated`) values 
+insert  into `application`(`id`,`company_id`,`accreditation_type_id`,`cash_flow`,`financial_status_link`,`user_id`,`status`,`declaration`,`initial_approval_date`,`date_created`,`last_updated`) values 
 (3,1,1,1000000.00,'http://google.go.ke',1,'ApplicationWorkflow/completed','1','2020-02-17','2020-02-15 10:21:59','2020-02-18 16:25:21'),
 (4,1,2,1000000.00,'1556663',1,'ApplicationWorkflow/draft','1',NULL,'2020-02-15 10:48:49','2020-02-15 12:51:10'),
 (5,3,1,1000000.00,'http://google.go.ke/my-company-status',1,'ApplicationWorkflow/completed','1',NULL,'2020-02-18 15:22:04','2020-02-18 16:23:46'),

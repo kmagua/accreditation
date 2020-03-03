@@ -39,7 +39,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'accreditationType',
                 'value' => 'accreditationType.name',
             ],            
-            'financial_status_amount',
+            'cash_flow',
+            'turnover',
             'financial_status_link',
             //'user_id',
             [

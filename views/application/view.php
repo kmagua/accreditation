@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'company.postal_address',
             'company.company_categorization',
             'accreditationType.name',
-            'financial_status_amount',
+            'cash_flow',
             'financial_status_link',
             //'user_id',
             'status',

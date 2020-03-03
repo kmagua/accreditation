@@ -31,18 +31,27 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
         </div>
         
         <div class="col-md-6">
-            <?= $form->field($model, 'financial_status_amount')->textInput() ?>
+            <?= $form->field($model, 'cash_flow')->textInput() ?>
         </div>
+        
     </div>
 
     <div class="row"> 
+        
+         <div class="col-md-6">
+            <?= $form->field($model, 'turnover')->textInput() ?>
+        </div>
         <div class="col-md-6">
             <?= $form->field($model, 'financial_status_link')->textInput(['maxlength' => true])
                 ->label(null, ['data-toggle' => 'tooltip','data-placement' =>'right',
                     'title' => 'Upload the file somewhere like on your website/google drive and then provide the link to it.']) ?>
         </div>
         
-        <div class="col-md-6">
+     
+    </div>
+    
+    <div class="row">
+          <div class="col-md-6">
             <?= $form->field($model, 'app_company_experience')->widget(Select2::classname(), [
                     'data' => $comp_exp_data,
                     'language' => 'en',
@@ -54,10 +63,8 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
                 ]);
             ?>
        
-        </div>
-    </div>
-    
-    <div class="row"> 
+        </div> 
+        
         <div class="col-md-6">
             <?= $form->field($model, 'app_staff')->widget(Select2::classname(), [
                     'data' => $staff_data,
@@ -71,7 +78,10 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
             ?>            
         </div>
         
-        <div class="col-md-6">
+       
+    </div>
+    <div class="row">
+         <div class="col-md-6">
             <?= $form->field($model, 'declaration', ['options' => 
                 ['tag' => 'span'],'template' => "{input}"])->checkbox(['checked' => false, 'required' => true])
                     ->label("I declare that the information given here is correct to the best of my knowledge") ?>
