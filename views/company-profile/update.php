@@ -6,7 +6,8 @@ use yii\helpers\Html;
 /* @var $model app\models\CompanyProfile */
 
 $this->title = 'Update Company Profile: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Company Profiles', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Company Profiles',
+    'url' => \Yii::$app->user->identity->isInternal()?['index']:['my-companies']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

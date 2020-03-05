@@ -14,7 +14,7 @@ use raoul2000\workflow\events\WorkflowEvent;
  * @property int $company_id
  * @property int|null $accreditation_type_id
  * @property float|null $cash_flow
- *  @property float|null $turnover
+ * @property float|null $turnover
  * @property string|null $financial_status_link
  * @property int|null $user_id
  * @property string|null $status

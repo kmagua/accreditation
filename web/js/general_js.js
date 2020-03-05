@@ -15,12 +15,12 @@ function getDataForm(url, header='<h3>Add Staff</h3>'){
     });
 }
 
-function saveDataForm(clickedButton){
+function saveDataForm(clickedButton, contentDivID=''){
     
     var url = $(clickedButton.form).attr('action');
     var data = new FormData(clickedButton.form)
-    console.log(data)
-    console.log(clickedButton.form.action)
+    //console.log(data)
+    //console.log(clickedButton.form.action)
     $.ajax({
         type: "POST",
         url: url,
@@ -29,10 +29,11 @@ function saveDataForm(clickedButton){
         cache: false,             
         processData:false,
         success: function(result){
-            //$('#modalHeader').html('<h3>Add Staff</h3>');
-            $('div#modalContent').html(result);
-            //$.pjax.reload({container: "#staff-data-list", async: false});
-            //$( "#companystaff-dob" ).datepicker();
+            if(contentDivID){
+                $('div#' + contentDivID).html(result);
+            }else{
+                $('div#modalContent').html(result);
+            }
         },
         error:function(jqXHR){
             $('#modalHeader').html("Error Occured!");

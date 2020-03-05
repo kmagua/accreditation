@@ -11,7 +11,8 @@ use yii\helpers\Html;
 
 
 $this->title = 'Create Company Profile';
-$this->params['breadcrumbs'][] = ['label' => 'Company Profiles', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Company Profiles',
+    'url' => \Yii::$app->user->identity->isInternal()?['index']:['my-companies']];
 $this->params['breadcrumbs'][] = $this->title;
 ?> 
 

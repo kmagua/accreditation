@@ -111,6 +111,16 @@ echo '<div class="modal-footer">
 yii\bootstrap\Modal::end();
 ?>
 <?php $this->endBody() ?>
+<?= Yii::$app->request->absoluteUrl ?>
+<?php
+$js = <<<JS
+$('#accreditation-modal').on('hidden.bs.modal', function () {
+    location.reload();
+})
+JS;
+
+$this->registerJs($js,yii\web\View::POS_END, 'refresh_on_close_modal');
+?>
 </body>
 </html>
 <?php $this->endPage() ?>

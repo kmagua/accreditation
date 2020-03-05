@@ -1,19 +1,19 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\professional\controllers;
 
 use Yii;
-use app\models\CompanyProfile;
-use app\models\CompanyProfileSearch;
+use app\modules\professional\models\PersonalInformation;
+use app\modules\professional\models\PersonalInformationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * CompanyProfileController implements the CRUD actions for CompanyProfile model.
+ * PersonalInformationController implements the CRUD actions for PersonalInformation model.
  */
-class CompanyProfileController extends Controller
+class PersonalInformationController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -26,7 +26,7 @@ class CompanyProfileController extends Controller
                 //'only' => ['create','view','update','delete', 'index'],
                 'rules' => [
                     [
-                        'actions' => ['create', 'my-companies'],
+                        'actions' => ['create', 'my-profile'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -36,7 +36,7 @@ class CompanyProfileController extends Controller
                         'roles' => ['@'],
                         'matchCallback' => function () {
                             if(isset(Yii::$app->request->get()['id'])){
-                                return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess(Yii::$app->request->get()['id']);
+                                return Yii::$app->user->identity->isInternal() || PersonalInformation::canAccess(Yii::$app->request->get()['id']);
                             }                             
                             return false;
                         }
@@ -61,12 +61,12 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Lists all CompanyProfile models.
+     * Lists all PersonalInformation models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CompanyProfileSearch();
+        $searchModel = new PersonalInformationSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -76,7 +76,7 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Displays a single CompanyProfile model.
+     * Displays a single PersonalInformation model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -89,13 +89,14 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Creates a new CompanyProfile model.
+     * Creates a new PersonalInformation model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new CompanyProfile();
+        $model = new PersonalInformation();
+        $model->user_id = \Yii::$app->user->identity->id;        
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -107,7 +108,7 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Updates an existing CompanyProfile model.
+     * Updates an existing PersonalInformation model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -127,7 +128,7 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Deletes an existing CompanyProfile model.
+     * Deletes an existing PersonalInformation model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -141,29 +142,29 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Finds the CompanyProfile model based on its primary key value.
+     * Finds the PersonalInformation model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return CompanyProfile the loaded model
+     * @return PersonalInformation the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = CompanyProfile::findOne($id)) !== null) {
+        if (($model = PersonalInformation::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
     
-    public function actionMyCompanies()
+    public function actionMyProfile()
     {
-        $searchModel = new CompanyProfileSearch();
-        $searchModel->user_id = Yii::$app->user->identity->user_id;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        return $this->render('my_companies', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+        if (($model = PersonalInformation::findOne(['user_id' => \Yii::$app->user->identity->id])) === null) {
+            return $this->redirect(['create']);
+        }
+
+        return $this->render('view', [
+            'model' => $model,            
         ]);
     }
 }

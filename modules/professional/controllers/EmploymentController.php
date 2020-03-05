@@ -1,19 +1,18 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\professional\controllers;
 
 use Yii;
-use app\models\CompanyProfile;
-use app\models\CompanyProfileSearch;
+use app\modules\professional\models\Employment;
+use app\modules\professional\models\EmploymentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
- * CompanyProfileController implements the CRUD actions for CompanyProfile model.
+ * EmploymentController implements the CRUD actions for Employment model.
  */
-class CompanyProfileController extends Controller
+class EmploymentController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -21,36 +20,6 @@ class CompanyProfileController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                //'only' => ['create','view','update','delete', 'index'],
-                'rules' => [
-                    [
-                        'actions' => ['create', 'my-companies'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['update','view'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function () {
-                            if(isset(Yii::$app->request->get()['id'])){
-                                return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess(Yii::$app->request->get()['id']);
-                            }                             
-                            return false;
-                        }
-                    ],
-                    [
-                        'actions' => ['index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function () {                            
-                            return Yii::$app->user->identity->isInternal();
-                        }
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -61,12 +30,12 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Lists all CompanyProfile models.
+     * Lists all Employment models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CompanyProfileSearch();
+        $searchModel = new EmploymentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -76,7 +45,7 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Displays a single CompanyProfile model.
+     * Displays a single Employment model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -89,13 +58,13 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Creates a new CompanyProfile model.
+     * Creates a new Employment model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new CompanyProfile();
+        $model = new Employment();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -105,9 +74,25 @@ class CompanyProfileController extends Controller
             'model' => $model,
         ]);
     }
+    
+    public function actionCreateAjax($pid)
+    {
+        $model = new Employment();
+        $model->user_id = $pid;
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model = new Employment();
+            $model->user_id = $pid;
+            \Yii::$app->session->setFlash('employment_added','Employment Record Added Successfully!');
+        }
+
+        return $this->renderAjax('_form', [
+            'model' => $model,
+        ]);
+    }
 
     /**
-     * Updates an existing CompanyProfile model.
+     * Updates an existing Employment model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -125,9 +110,22 @@ class CompanyProfileController extends Controller
             'model' => $model,
         ]);
     }
+    
+    public function actionUpdateAjax($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('employment_added','Employment Record Saved Successfully!');
+        }
+
+        return $this->renderAjax('_form', [
+            'model' => $model,
+        ]);
+    }
 
     /**
-     * Deletes an existing CompanyProfile model.
+     * Deletes an existing Employment model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -141,29 +139,32 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Finds the CompanyProfile model based on its primary key value.
+     * Finds the Employment model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return CompanyProfile the loaded model
+     * @return Employment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = CompanyProfile::findOne($id)) !== null) {
+        if (($model = Employment::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
     
-    public function actionMyCompanies()
+    
+    public function actionMyEmployment($pid)
     {
-        $searchModel = new CompanyProfileSearch();
-        $searchModel->user_id = Yii::$app->user->identity->user_id;
+        $searchModel = new EmploymentSearch();
+        $searchModel->user_id = $pid;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        return $this->render('my_companies', [
+        
+        $html = $this->renderPartial('my_employment', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
         ]);
+        return \yii\helpers\Json::encode($html);
     }
 }

@@ -1,52 +1,25 @@
 <?php
 
-use yii\grid\GridView;
 use yii\helpers\Html;
 /* @var $this yii\web\View */
 
-$this->title = ' ICT Authority Accreditation System';
+$this->title = 'ICT Authority Accreditation System';
 ?>
 <br/><br/><br/>
-     <div class="row">
-          
-       
-    </div>
+<div class="row">
+    <?= $this->title ?>
+</div>
 <div class="site-index">
 
     <div class="body-content">
 
         <div class="row">
             <div class="col-lg-4">
-                <h2>My Companies</h2>
-                <?php if(!Yii::$app->user->isGuest): ?>
-                <?php
                 
-                $searchModel = new app\models\CompanyProfileSearch();
-                $searchModel->user_id = Yii::$app->user->identity->user_id;
-                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-                ?>
-                <?= GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    //'filterModel' => $searchModel,
-                    'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
-                        'business_reg_no',
-                        'company_name',
-                       
-                        ['class' => 'yii\grid\ActionColumn',
-                            'contentOptions' => ['style' => 'width: 7%'],
-                            //'visible'=> Yii::$app->user->isGuest ? false : true,
-                            'template' => '{view}',
-                            'buttons'=>[
-                                'view' => function ($url, $model) {
-                                    return Html::a('', ['company-profile/view', 'id'=>$model->id], ['class' => 'glyphicon glyphicon-eye-open btn btn-default btn-xs custom_button',
-                                        'title' =>"View"]);
-                                },
-                            ],
-                        ],
-                    ],
-                ]); ?>
-                <?= Html::a('Add new Company', ['company-profile/create'], ['class' => 'btn btn-success']) ?>
+                <?php if(!Yii::$app->user->isGuest): ?>
+                <h2>Choose Your action Below</h2>
+                <?= Html::a('Company Accreditation', ['company-profile/my-companies'], ['class' => 'btn btn-success']) ?><br><br>
+                <?= Html::a('Individual Accreditation', ['professional/personal-information/my-profile'], ['class' => 'btn btn-success']) ?>
                 <?php else: ?>
                 <p>Login to see you compmnies or register a new one!</p>
                 <?php endif; ?>
@@ -75,7 +48,6 @@ $this->title = ' ICT Authority Accreditation System';
 
                 
             </div>
-            
         </div>
 
     </div>

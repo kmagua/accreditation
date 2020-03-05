@@ -26,7 +26,7 @@ use yii\helpers\ArrayHelper;
     
     <div class="row">
         <div class="col-md-6">
-             <?= $form->field($model, 'registration_date')->widget(\yii\jui\DatePicker::classname(), [
+            <?= $form->field($model, 'registration_date')->widget(\yii\jui\DatePicker::classname(), [
                 //'language' => 'ru',
                 'dateFormat' => 'dd-MM-yyyy',
                 'clientOptions'=>[

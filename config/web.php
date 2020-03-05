@@ -60,8 +60,8 @@ $config = [
             
         ],
         
-        'profesional' => [
-            'class' => 'app\modules\profesional\Profesional',
+        'professional' => [
+            'class' => 'app\modules\professional\Professional',
         ],
     ],    
     'params' => $params,
