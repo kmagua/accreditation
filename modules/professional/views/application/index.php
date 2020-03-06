@@ -7,16 +7,12 @@ use yii\grid\GridView;
 /* @var $searchModel app\modules\professional\models\ApplicationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Applications';
+$this->title = 'ICT Professional Certification Applications';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="application-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Application', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -26,16 +22,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'user_id',
             'category_id',
             'status',
-            'declaration',
+            [
+                'attribute' => 'declaration',
+                'label' => 'Declaration',
+            ],
             //'initial_approval_date',
             //'date_created',
             //'last_updated',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['style' => 'width: 7%'],
+                //'visible'=> Yii::$app->user->isGuest ? false : true,
+                'template' => '{view}',                
+            ],
         ],
     ]); ?>
 

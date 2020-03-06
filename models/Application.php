@@ -494,11 +494,20 @@ MSG;
         $uid = \Yii::$app->user->identity->user_id;
         $score_items_data = \Yii::$app->db->createCommand($score_items_sql)->queryAll();
         foreach($score_items_data as $score_item_data){
-            $insert_sql = "INSERT INTO application_score (application_id, score_item_id, committee_id, user_id)
-                VALUES ({$this->id}, {$score_item_data['id']}, {$level->data}, $uid)
+            $score = null;
+            if($level->data == 2){
+                $level_one_sql = 'SELECT ifnull(score,0) score FROM application_score where '
+                        . " application_id = {$this->id} and committee_id = 1 and score_item_id = {$score_item_data['id']}";
+                $level_one_score = \Yii::$app->db->createCommand($level_one_sql)->queryOne();
+                if($level_one_score){                    
+                    $score = ($level_one_score['score'] > 0)? $level_one_score['score']:null;
+                }
+            }
+            $insert_sql = "INSERT INTO application_score (application_id, score_item_id, committee_id, user_id, score)
+                VALUES ({$this->id}, {$score_item_data['id']}, {$level->data}, $uid, :score)
                 ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP";
                 
-            \Yii::$app->db->createCommand($insert_sql)->execute();
+            \Yii::$app->db->createCommand($insert_sql, [':score' => $score])->execute();
         }
     }
     
@@ -508,7 +517,7 @@ MSG;
      * @param type $status
      * @param type $level
      */
-    public static function preogressOnCommitteeApproval($id, $status, $level)
+    public static function progressOnCommitteeApproval($id, $status, $level)
     {
         if($level == 1 && $status == 1){
             \Yii::$app->db->createCommand()

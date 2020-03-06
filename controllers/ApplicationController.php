@@ -220,7 +220,7 @@ class ApplicationController extends Controller
             ->where(['application_id' => $id, 'committee_id' => $level])->indexBy('id')->orderBy('score_item_id')->all();
 
         if (Model::loadMultiple($application_scores, Yii::$app->request->post()) && Model::validateMultiple($application_scores)) {
-            foreach ($application_scores as $application_score) {
+            foreach ($application_scores as $application_score) {                
                 $application_score->saveApplicationScore();
             }
             //save committee score
@@ -230,7 +230,7 @@ class ApplicationController extends Controller
             $rejection_comment = Yii::$app->request->post()['ApplicationScore']['rejection_comment'];
             \app\models\ApplicationClassification::saveClassification($id, $committee_score, $committee_category, $level, $approval_status, $rejection_comment);
             
-            Application::preogressOnCommitteeApproval($id, $approval_status, $level);
+            Application::progressOnCommitteeApproval($id, $approval_status, $level);
             
             return $this->redirect('index');
         }

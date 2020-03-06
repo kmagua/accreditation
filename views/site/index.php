@@ -7,7 +7,7 @@ $this->title = 'ICT Authority Accreditation System';
 ?>
 <br/><br/><br/>
 <div class="row">
-    <?= $this->title ?>
+    <h1><?= $this->title ?></h1>
 </div>
 <div class="site-index">
 
@@ -17,19 +17,23 @@ $this->title = 'ICT Authority Accreditation System';
             <div class="col-lg-4">
                 
                 <?php if(!Yii::$app->user->isGuest): ?>
-                <h2>Choose Your action Below</h2>
+                <h2>Choose Your action Below</h2><hr>
                 <?= Html::a('Company Accreditation', ['company-profile/my-companies'], ['class' => 'btn btn-success']) ?><br><br>
-                <?= Html::a('Individual Accreditation', ['professional/personal-information/my-profile'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a('ICT Professional Certification', ['professional/personal-information/my-profile'], ['class' => 'btn btn-success']) ?>
                 <?php else: ?>
-                <p>Login to see you compmnies or register a new one!</p>
+                <p>Login to apply for <span style="color:red"><i>Company Certificate</i></span> or <span style='color:red'><i>ICT Professional Certification!</i></span></p>
                 <?php endif; ?>
+                <p style="margin-top:30px">Use the contacts below to reach us in case you experience difficulties using the site.</p>
+                <strong>Telephone Contacts:</strong><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;+254 20 2211960<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;+254 20 2211961<br/>
+                Email: <a href="mailto:standards@ict.go.ke" target="_top">standards@ict.go.ke</a>
             </div>
             <div class="col-lg-8">
                 <h2 style="color: #c11d35">Supplier Accreditation Requirements</h2>
                 <h5 style="font-style: italic"><b>The following documents are required during Accreditation</b></h5>
 
                 <ol >
-                    <li>  Duly Filled Form ICTA/STD/CTR/F001 Download Here</li>
                    <li>  Company profile</li>
                    <li>  Certificate of incorporation</li>
                    <li>  Companies act/ permit</li>

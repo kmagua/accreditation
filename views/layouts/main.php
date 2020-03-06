@@ -47,20 +47,33 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right',],
        // 'options' => ['style' => 'forecolor-color: red;'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],],
-            ['label' => 'Applications', 'url' => ['/application/index'],
+            ['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],],
+            /*['label' => 'Applications', 'url' => ['/application/index'],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
-                'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']],
+                'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']],*/
+            
+            [
+                'label' => 'Applications', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
+                'items' => [
+                    ['label' => 'Company Accreditation', 'url' => ['application/index'],
+                        'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
+                    ['label' => 'Professional Certificate', 'url' => ['professional/application/index'],
+                        'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],                    
+                ],
+                'visible'=> !Yii::$app->user->isGuest
+            ],
             ['label' => 'Register', 'url' => ['/user/register'],
-                'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;'],'visible'=>Yii::$app->user->isGuest],
+                'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],'visible'=>Yii::$app->user->isGuest],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']]
+                ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     'Logout (' . Yii::$app->user->identity->full_name . ')',
-                    ['class' => 'btn btn-link logout', 'style' => 'color: white;font-weight: 900;margin-top: 25px;']
+                    ['class' => 'btn btn-link logout', 'style' => 'color: white;font-weight: 450;margin-top: 20px;']
                 )
                 . Html::endForm()
                 . '</li>'

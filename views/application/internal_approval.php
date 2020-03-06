@@ -19,22 +19,22 @@ if($app_classification){
 ?>
 <div class="row" style="margin-top:30px;">
     <div class="col-md-2">
-        <h2>Categoty</h2><hr>
+        <h4>Categoty</h4><hr>
     </div>
 
     <div class="col-md-3">
-        <h2>Specific Item</h2><hr>
+        <h4>Specific Item</h4><hr>
     </div>
 
     <div class="col-md-4">
-        <h2>Score Item</h2><hr>
+        <h4>Score Item</h4><hr>
     </div>
 
     <div class="col-md-1">
-        <h2>Score</h2><hr>
+        <h4>Score</h4><hr>
     </div>
     <div class="col-md-2">
-        <h2>Score</h2><hr>
+        <h4>Comment</h4><hr>
     </div>
 </div>
 
@@ -76,10 +76,16 @@ foreach ($application_scores as $index => $application_score) {
                 $upper = $application_score->scoreItem->checkboxes * $application_score->scoreItem->each_checkbox_marks;
                 $init_array = range(0, $upper, $application_score->scoreItem->each_checkbox_marks);
                 $array = array_combine($init_array, $init_array);
-                
-                echo $form->field($application_score, "[$index]score")->radioList($array)->label(false);
+                //echo 'ahap'. $application_score->score; 
+                //echo $form->field($application_score, "[$index]score")->radioList($array)->label(false);
+                echo Html::radioList("ApplicationScore[$index][score]", 
+                    $application_score->score , $array, ['id' => "applicationscore-{$index}-score"]);
             }else{
-                echo $form->field($application_score, "[$index]score")->checkbox($class)->label(false);
+                //echo '<pre>'; print_r($application_score[$index]); exit;
+                echo Html::checkbox("ApplicationScore[$index][score]", 
+                    ($application_score->score > 0)?true: false , ['id' => "applicationscore-{$index}-score"]);
+                //echo 'Hapa', $application_score->score;
+                //echo $form->field($application_score, "[$index]score")->checkbox($class)->label(false);
             }            
             ?>
             <?= ""/// Html::checkbox("ApplicationScore[score][".$application_score['sc_id'] ."]" , null) ?>

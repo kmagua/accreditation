@@ -99,11 +99,19 @@ class ApplicationScore extends \yii\db\ActiveRecord
         return $this->hasOne(IctaCommittee::className(), ['id' => 'committee_id']);
     }
     
-    
+    /**
+     * 
+     * @return type
+     */
     public function saveApplicationScore()
     {
-        $this->score = ($this->score == 1)?$this->maximum_score : null;
-        
-        return $this->save();
+        if($this->score == 1){
+            if($this->scoreItem->checkboxes == 1){
+                $this->score = $this->maximum_score;
+            }
+        }
+        if(!$this->save()){
+            echo '<pre> hapa', print_r($this->errors, true); exit;
+        }
     }
 }

@@ -117,10 +117,33 @@ a.desc:after {
 .my-navbar {
     background-color:green;
     height: 110px;
-   
-    
 }
 .menu:hover {
   background-color: yellow;
 }
+ul.navbar-nav > li> a:hover{
+    background-color: red !important;
+}
+ul.navbar-nav > li:hover{
+    background-color: red !important;
+}
+ul.dropdown > li> a:hover{
+    background-color: red !important;
+}
+ul.dropdown > li:hover{
+    background-color: red !important;
+}
 
+ul.dropdown > li> a:hover{
+    background-color: red !important;
+}
+ul.dropdown > li:hover{
+    background-color: red !important;
+}
+
+ul.dropdown-menu > li> a:hover{
+    background-color: red !important;
+}
+ul.dropdown-menu > li:hover{
+    background-color: red !important;
+}
