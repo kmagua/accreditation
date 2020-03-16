@@ -41,7 +41,7 @@ class UserController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index','approval','approve-payment', 'committee-members'],
+                        'actions' => ['index','approval','approve-payment', 'committee-members', 'change-role'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -98,7 +98,8 @@ class UserController extends Controller
         $model->setScenario('register');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            \Yii::$app->session->setFlash('user_registration','Your account has been registered and an activation email sent to your email.');
+            return $this->redirect(['site/index']);
         }
 
         return $this->render('create', [
@@ -158,44 +159,77 @@ class UserController extends Controller
     
     public function actionConfirmUserAccount($id, $h)
     {
-        $user = User::findOne($id);
-        
-        if($user && $user->validateAccount($h)){
+        $pass_reset = \app\models\PasswordReset::findOne(['user_id' => $id, 'hash' => $h, 'status'=>0]);
+        if($pass_reset){
+            $user = $this->findModel($id);
             $user->status = 1;
             $user->save(false);
+            $pass_reset->status = 1;
+            $pass_reset->hash = '00';
+            $pass_reset->save(false);
             \Yii::$app->session->setFlash('user_confirmation','Your account has been activated. Login here.');
             return $this->redirect(['site/login']);
         }else{
-            echo "Invalid account details"; exit;
+            echo "Invalid Account Comnfirmation Details"; exit;
         }
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function actionResetPassword()
     {
         if (Yii::$app->request->post()) {
             \app\models\PasswordReset::passwordReset(Yii::$app->request->post()['kra_pin_number']);
-            \Yii::$app->session->setFlash('user_confirmation','Your accout activation link has been sent to your email.');
-            return $this->redirect(['site/login']);
+            \Yii::$app->session->setFlash('account_reset','Your account password reset link has been sent to your email.');
+            return $this->redirect(['site/index']);
         }
 
         return $this->render('reset_password');
     }
     
+    /**
+     * 
+     * @param type $id
+     * @param type $ph
+     * @return type
+     * @throws \yii\web\HttpException
+     */
     public function actionSetNewPassword($id, $ph)
     {
-        $pass_reset = \app\models\PasswordReset::findOne(['user_id' => Yii::$app->request->get('id'), 'hash' => $ph]);
+        $pass_reset = \app\models\PasswordReset::find()->
+                where(['user_id' => $id, 'hash' => $ph, 'status'=>0])->one();
         if(!$pass_reset){
             throw new \yii\web\HttpException(403, "Access denied");
         }
         $model = User::findOne($id);
-        $model->setScenario("password_update");
+        $model->setScenario('password_update');
+        $model->status = 1;
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('user_confirmation','Password updated. Use your new password to login.');
+            $pass_reset->status = 1;
+            $pass_reset->hash = '00';
+            $pass_reset->save(false);
+            \Yii::$app->session->setFlash('user_confirmation', 'Password updated. Use your new password to login.');
             return $this->redirect(['site/login']);
         }
 
         return $this->render('password_update', [
+            'model' => $model,
+        ]);
+    }
+    
+    public function actionChangeRole($id)
+    {
+        $model = $this->findModel($id);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            //\Yii::$app->session->setFlash('user_confirmation','Password updated. Use your new password to login.');
+            return $this->redirect(['user/index']);
+        }
+
+        return $this->render('change_role', [
             'model' => $model,
         ]);
     }

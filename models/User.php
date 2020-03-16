@@ -14,6 +14,7 @@ use Yii;
  * @property string|null $last_name
  * @property string|null $password
  * @property string|null $role
+ * @property int $status
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -47,6 +48,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['email', 'kra_pin_number', 'first_name', 'last_name'], 'required'],
             [['role'], 'string'],
+            [['status'], 'number'],
             [['captcha', 'password'], 'required', 'on'=>'register'],
             [['password'], 'required', 'on'=>['register', 'password_update']],
             [['email', 'kra_pin_number'], 'unique'],
@@ -186,7 +188,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function beforeSave($insert)
     {
         parent::beforeSave($insert);
-        //only on new record
+        //only on new record or password change
         if($insert || $this->scenario == 'password_update'){
             $this->password = password_hash($this->password, PASSWORD_DEFAULT);        
         }    
@@ -206,6 +208,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function afterFind()
     {
         parent::afterFind();
@@ -288,23 +294,27 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function sendEmailConfirmationEmail()
     {
         $this->refresh(); // pull updates from table
-        $hash = password_hash($this->id . '' . $this->status . strtolower($this->email), PASSWORD_DEFAULT);
-        
-        $link = urldecode(\yii\helpers\Url::to(['user/confirm-user-account', 'id' => $this->id, 'h'=>$hash], true));
-        
-        $text_link = "<a href='".$link. "' target='_blank'>click this link</a>";
-        $msg = <<<MSG
-            Dear $this->first_name ." " . $$this->last_name, <p>
-            Your account has been registered but must be confimed before you can login. 
-                Please $text_link or copy paste the link below to your broser to confirm you account. </p>
-            $link
-                
-        Regards,
-        ICT Authority Accreditation Team.
+        $hash = Utility::generateRandomString();
+        $insert_sql = "INSERT INTO password_reset (user_id, hash)
+            VALUES ({$this->id}, :hash) ON DUPLICATE KEY UPDATE hash = :hash";
+        $reset_rec = \Yii::$app->db->createCommand($insert_sql, [':hash' => $hash])->execute();
+        //$hash = password_hash($this->id . '' . $this->status . strtolower($this->email), PASSWORD_DEFAULT);
+        if($reset_rec){
+            $link = \yii\helpers\Url::to(['user/confirm-user-account', 'id' => $this->id, 'h'=>$hash], true);
+
+            $text_link = "<a href='".$link. "' target='_blank'>click this link</a>";
+            $msg = <<<MSG
+                Dear {$this->first_name} {$this->last_name}, <p>
+                Your account has been registered and needs your activation before you can login. 
+                    Please $text_link or copy paste the link below to your browser to activate your account. </p>
+                $link
+
+            Regards,
+            ICT Authority Accreditation Team.
 MSG;
-        Utility::sendMail($this->email, "Account Confirmation", $msg);
+            Utility::sendMail($this->email, "Account Confirmation - ICT Authority Accreditation", $msg);
+        }
     }
-    
     /**
      * validate if the hash on link matches details in database
      * @param type $hash
@@ -336,6 +346,6 @@ MSG;
     
     public function isInternal()
     {
-        return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committe member']);        
+        return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committee member']);        
     }
 }

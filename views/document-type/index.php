@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\DocumentTypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Document Types';
+$this->title = 'Company Document Types';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="document-type-index">
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Document Type', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Document Type', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -26,9 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'name',
-            'documents_upload',
+            'status',
             'date_created',
             'last_updated',
 

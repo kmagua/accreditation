@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=profaccreddb',
+    'dsn' => 'mysql:host=localhost;dbname=accreditprof',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',

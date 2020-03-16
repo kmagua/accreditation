@@ -21,7 +21,7 @@ $this->title = "Change Password";
 
     <div class="form-group">
         <div class="col-md-6">
-            <?= Html::submitButton('Chnage Password', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton('Change Password', ['class' => 'btn btn-success']) ?>
         </div>
     </div>
 

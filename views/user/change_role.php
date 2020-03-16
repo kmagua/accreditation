@@ -3,18 +3,19 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$this->title = 'Role Change';
 /* @var $this yii\web\View */
-/* @var $model app\models\DocumentType */
+/* @var $model app\models\ScoreItem */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="document-type-form">
+<div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-    
-    <?= $form->field($model, 'status')->dropDownList([1 => 'Active', 0 => 'Inactive']) ?>
+    <?= $form->field($model, 'role')->dropDownList([ 'Admin' => 'Admin',
+        'Secretariat' => 'Secretariat', 'Committee member' => 'Committee member',
+        'Applicant' => 'Applicant']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

@@ -59,7 +59,7 @@ $this->title = "Login";
             </div>
             <div class="col-lg-offset-1 col-lg-6">
                 <span style="color: red">  New Member? </span>
-                <?= Html::a('Register', ['/user/create'], ['class'=>'btn btn-default']) ?>          
+                <?= Html::a('Register', ['/user/register'], ['class'=>'btn btn-default']) ?>          
             </div>
             <div class="col-lg-2">
                 <span style="color: red">  Forgot Password? </span>

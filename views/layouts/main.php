@@ -30,13 +30,10 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
     <div class="wrap">
-      
-       
-        
     <?php
    
     NavBar::begin([
-        'brandImage' => Yii::getAlias("@web")."/images/ictabanntransparent2.png",
+        'brandImage' => Yii::getAlias("@web")."/images/ictabanntransparentlast.png",
         //'brandLabel' => Yii::$app->name, 
         //'brandUrl' => Yii::$app->homeUrl,
         'options' => [
@@ -56,13 +53,23 @@ AppAsset::register($this);
                 'label' => 'Applications', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
                 'items' => [
                     ['label' => 'Company Accreditation', 'url' => ['application/index'],
-                        'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
+                        //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
                     ['label' => 'Professional Certificate', 'url' => ['professional/application/index'],
-                        'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
+                        //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],                    
                 ],
-                'visible'=> !Yii::$app->user->isGuest
+                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
+            ],
+            [
+                'label' => 'Administration', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
+                'items' => [
+                    ['label' => 'Users', 'url' => ['user/index'],                        
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
+                    ['label' => 'Company Document Types', 'url' => ['document-type/index'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],                    
+                ],
+                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],
             ['label' => 'Register', 'url' => ['/user/register'],
                 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],'visible'=>Yii::$app->user->isGuest],

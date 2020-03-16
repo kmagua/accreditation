@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
         <div class="row">
             <h4 class="text-center" style=width:100%;color:green;height:6%;text-align:center;margin-top:-15.5px;text-justify: 
             font-family:'Times New Roman', 'Times', Arial, sans-serif;font-weight:100">
-                Register Account
+                Account Details Update
             </h4>
         </div>
         <br />
@@ -39,20 +39,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'last_name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
-    
-    <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>
-    
-    <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), [
-        // configure additional widget properties here
-    ]) ?>
-
     <div class="form-group">
         <div class="col-md-6">
-       <?= Html::submitButton('Register', ['class' => 'btn btn-success']) ?>
-        </div>
-        <div class="col-md-5 col-md-offset-1">
-            <?= Html::a('Back to Login', ['/site/login'], ['class'=>'btn btn-default']) ?>
+       <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
         </div>
     </div>
 

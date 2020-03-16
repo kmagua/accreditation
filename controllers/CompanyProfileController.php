@@ -36,13 +36,13 @@ class CompanyProfileController extends Controller
                         'roles' => ['@'],
                         'matchCallback' => function () {
                             if(isset(Yii::$app->request->get()['id'])){
-                                return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess(Yii::$app->request->get()['id']);
+                                return CompanyProfile::canAccess(Yii::$app->request->get()['id']);
                             }                             
                             return false;
                         }
                     ],
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {                            

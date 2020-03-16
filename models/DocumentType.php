@@ -9,7 +9,6 @@ use Yii;
  *
  * @property int $id
  * @property string|null $name
- * @property string $documents_upload
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -17,6 +16,7 @@ use Yii;
  */
 class DocumentType extends \yii\db\ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -30,11 +30,11 @@ class DocumentType extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['documents_upload'], 'required'],
+        return [            
             [['date_created', 'last_updated'], 'safe'],
             [['name'], 'string', 'max' => 50],
-            [['documents_upload'], 'string', 'max' => 255],
+            [['status'], 'integer'],
+            //[['documents_upload'], 'string', 'max' => 255],
         ];
     }
 
@@ -46,7 +46,6 @@ class DocumentType extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'documents_upload' => 'Documents Upload',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
         ];

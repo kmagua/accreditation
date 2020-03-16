@@ -18,7 +18,7 @@ class DocumentTypeSearch extends DocumentType
     {
         return [
             [['id'], 'integer'],
-            [['name', 'documents_upload', 'date_created', 'last_updated'], 'safe'],
+            [['name', 'date_created', 'last_updated'], 'safe'],
         ];
     }
 
@@ -63,8 +63,7 @@ class DocumentTypeSearch extends DocumentType
             'last_updated' => $this->last_updated,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'documents_upload', $this->documents_upload]);
+        $query->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;
     }

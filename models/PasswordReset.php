@@ -73,7 +73,7 @@ class PasswordReset extends \yii\db\ActiveRecord
         if($user){
             $hash = Utility::generateRandomString();
             $insert_sql = "INSERT INTO password_reset (user_id, hash)
-                VALUES ({$user->id}, :hash) ON DUPLICATE KEY UPDATE hash = :hash";
+                VALUES ({$user->id}, :hash) ON DUPLICATE KEY UPDATE hash = :hash, status = 0";
             $rst = \Yii::$app->db->createCommand($insert_sql, [':hash' => $hash])->execute();
             if($rst){
                 PasswordReset::sendEmail($user, $hash, $kra_pin_number);

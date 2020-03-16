@@ -14,12 +14,28 @@ $this->title = 'ICT Authority Accreditation System';
     <div class="body-content">
 
         <div class="row">
+            
+            <?php if(Yii::$app->session->hasFlash('user_registration')): ?>
+            <div class="alert alert-success alert-dismissable col-lg-12 col-md-12">
+                <h4><?php echo Yii::$app->session->getFlash('user_registration'); ?></h4>
+            </div>
+            <?php endif; ?>
+            
+            <?php if(Yii::$app->session->hasFlash('account_reset')): ?>
+            <div class="alert alert-success alert-dismissable col-lg-12 col-md-12">
+                <h4><?php echo Yii::$app->session->getFlash('account_reset'); ?></h4>
+            </div>
+            <?php endif; ?>
+            
             <div class="col-lg-4">
                 
-                <?php if(!Yii::$app->user->isGuest): ?>
+                <?php if(!Yii::$app->user->isGuest && !Yii::$app->user->identity->isInternal()): ?>
                 <h2>Choose Your action Below</h2><hr>
                 <?= Html::a('Company Accreditation', ['company-profile/my-companies'], ['class' => 'btn btn-success']) ?><br><br>
                 <?= Html::a('ICT Professional Certification', ['professional/personal-information/my-profile'], ['class' => 'btn btn-success']) ?>
+                
+                <?php elseif(!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()): ?>
+                
                 <?php else: ?>
                 <p>Login to apply for <span style="color:red"><i>Company Certificate</i></span> or <span style='color:red'><i>ICT Professional Certification!</i></span></p>
                 <?php endif; ?>
@@ -42,14 +58,8 @@ $this->title = 'ICT Authority Accreditation System';
                    <li>  CVs, IT related degree, professional certifications, certification in project management for all technical staff</li>
                    <li>  Past LPOs and Recommendation Letters</li>
                    <li>  Recent bank statement from the last financial year together with the audited accounts of the same</li>
-                   <li>  Partnership certificates if any</li>
-                   <li>  Binded document to be sent to Teleposta Towers, 23rd Floor, ICTA Standards Department</li>
-                   <li>  Accreditation Period is within one week of document receipt</li>
-                    <li> Certificate Should Be Handpicked by a designated company contact person after a week grace period</li>
-                   
+                   <li>  Partnership certificates if any</li>                   
                 </ol>
-
-
                 
             </div>
         </div>

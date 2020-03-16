@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\DocumentType */
 
-$this->title = 'Create Document Type';
+$this->title = 'Adding a Company Document Type';
 $this->params['breadcrumbs'][] = ['label' => 'Document Types', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

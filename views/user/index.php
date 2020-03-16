@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('New User', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -35,7 +35,21 @@ $this->params['breadcrumbs'][] = $this->title;
             //'date_created',
             //'last_updated',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['style' => 'width: 4%'],
+                //'visible'=> Yii::$app->user->isGuest ? false : true,
+                'template' => '{view} {update} {change_role}',
+                'buttons'=>[
+                    'view' => function ($url, $model) {
+                        return Html::a('', $url, ['class' => 'glyphicon glyphicon-eye-open btn btn-default btn-xs custom_button',
+                            'title' =>"Full Staff Details"]);
+                    },
+                    'change_role' => function ($url, $model) {
+                        return Html::a('', ['user/change-role', 'id' => $model->id], ['class' => 'glyphicon glyphicon-lock',
+                            'title' =>"Chnage User Role"]);
+                    },
+                ],
+            ],
         ],
     ]); ?>
 

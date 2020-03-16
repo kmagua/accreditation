@@ -47,7 +47,10 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            ///print_r($user); exit;
+            
+            /*if($user && $this->status < 1){
+                $this->addError('username', 'Account Not Activated!');
+            }*/
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect email or password.');
             }
@@ -78,5 +81,15 @@ class LoginForm extends Model
         }
 
         return $this->_user;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'username' => 'E-Mail / KRA PIN Number',
+        ];
     }
 }
