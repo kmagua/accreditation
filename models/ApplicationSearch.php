@@ -77,6 +77,8 @@ class ApplicationSearch extends Application
             ->andFilterWhere(['like', 'company_profile.company_name', $this->company])
             ->andFilterWhere(['like', 'accreditation_type.name', $this->accreditationType])
             ->andFilterWhere(['like', 'declaration', $this->declaration]);
+        
+        $query->orderBy("id desc");
 
         return $dataProvider;
     }

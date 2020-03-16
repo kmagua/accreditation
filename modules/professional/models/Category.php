@@ -41,7 +41,7 @@ class Category extends \yii\db\ActiveRecord
         return [
             [['date_created', 'date_modified'], 'safe'],
             [['name'], 'string', 'max' => 50],
-            [['description'], 'string', 'max' => 255],
+            [['description'], 'string'],
         ];
     }
 

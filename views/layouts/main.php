@@ -52,10 +52,10 @@ AppAsset::register($this);
             [
                 'label' => 'Applications', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
                 'items' => [
-                    ['label' => 'Company Accreditation', 'url' => ['application/index'],
+                    ['label' => 'Company Accreditation', 'url' => ['/application/index'],
                         //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
-                    ['label' => 'Professional Certificate', 'url' => ['professional/application/index'],
+                    ['label' => 'Professional Certificate', 'url' => ['/professional/application/index'],
                         //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],                    
                 ],
@@ -64,10 +64,12 @@ AppAsset::register($this);
             [
                 'label' => 'Administration', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
                 'items' => [
-                    ['label' => 'Users', 'url' => ['user/index'],                        
+                    ['label' => 'Users', 'url' => ['/user/index'],                        
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
-                    ['label' => 'Company Document Types', 'url' => ['document-type/index'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],                    
+                    ['label' => 'Company Document Types', 'url' => ['/document-type/index'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'Professional Accreditation Categories', 'url' => ['/professional/category/index'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']], 
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],

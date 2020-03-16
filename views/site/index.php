@@ -1,5 +1,5 @@
 <?php
-
+use yii\grid\GridView;
 use yii\helpers\Html;
 /* @var $this yii\web\View */
 
@@ -62,6 +62,28 @@ $this->title = 'ICT Authority Accreditation System';
                 </ol>
                 
             </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4">&nbsp;</div>
+            <div class="col-lg-8">
+                <?= GridView::widget([
+                'dataProvider' => (new \app\modules\professional\models\CategorySearch())->search([]),
+                //'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+
+                    //'id',
+                    'name',
+                    'description:ntext',
+                    //'date_created',
+                    //'date_modified',
+
+                    //['class' => 'yii\grid\ActionColumn'],
+                ],
+            ]); ?>
+            </div>
+        </div>
         </div>
 
     </div>

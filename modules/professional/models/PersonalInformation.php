@@ -151,4 +151,21 @@ class PersonalInformation extends \yii\db\ActiveRecord
         }
         return true;
     }
+    
+    /**
+     * Check if logged in user can access an application details
+     * @return boolean
+     */
+    public function checkUserCanAccess()
+    {
+        $user_grp = strtolower(\Yii::$app->user->identity->group);
+        if(in_array($user_grp, ['admin', 'applicant'])){
+            if($user_grp == 'admin'){
+                return true;
+            }
+            return CompanyProfile::canAccess($this->company_id);
+        }else{
+            return false;
+        }
+    }
 }

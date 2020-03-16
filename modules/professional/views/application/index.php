@@ -23,13 +23,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'user_id',
-            'category_id',
+            'user.first_name',
+            'user.last_name',
+            'category.name',
             'status',
-            [
+            /*[
                 'attribute' => 'declaration',
                 'label' => 'Declaration',
-            ],
+            ],*/
             //'initial_approval_date',
             //'date_created',
             //'last_updated',
