@@ -87,13 +87,13 @@ $cpDataProvider = $searchCP->search([]);
 </div>
 <?php
 $this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);
-$js = <<<JS
-$( document ).ready(function() {
+/*$js = <<<JS
+/*$( document ).ready(function() {
     $(function () {        
         $('#company_profile_tabs a[href="' + location.hash + '"]').tab('show');
     });
         
 });
 JS;
-$this->registerJs($js,yii\web\View::POS_END, 'enable_select2');
+$this->registerJs($js,yii\web\View::POS_END, 'enable_select2');*/
 
