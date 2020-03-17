@@ -10,7 +10,6 @@ $this->title = "Reset Password";
 ?>
 
 <div style="margin-top:2%;background-color:white;" id="Log">
-    <!--<div style="text-align:center;"><img src="../../web/images/icta.png"/></div>-->
     <div class="user-password-reset-form">
 
         <?php $form = ActiveForm::begin(); ?>
