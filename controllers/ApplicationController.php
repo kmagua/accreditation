@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\base\Model;
 use kartik\mpdf\Pdf;
+use app\models\CompanyProfile;
 
 /**
  * ApplicationController implements the CRUD actions for Application model.
@@ -52,11 +53,19 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index','approval','approve-payment', 'committee-members'],
+                        'actions' => ['index', 'approve-payment', 'committee-members'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
                             return Yii::$app->user->identity->isInternal();
+                        }
+                    ],
+                    [
+                        'actions' => ['approval'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return Application::canApprove(Yii::$app->request->get()['level'], Yii::$app->request->get()['id']);
                         }
                     ],
                 ],

@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use kartik\mpdf\Pdf;
 
 /**
  * ApplicationController implements the CRUD actions for Application model.
@@ -37,7 +38,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['update-ajax', 'view'],
+                        'actions' => ['update-ajax', 'view', 'download-cert'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -203,5 +204,44 @@ class ApplicationController extends Controller
             ]);
         }
         return \yii\helpers\Json::encode($html);
+    }
+    
+    public function actionDownloadCert($id)
+    {
+        $application = $this->findModel($id);
+        
+        $sn = bin2hex($id * 53);
+        $content = $this->renderPartial('certificate', ['application' => $application]);
+        $filename = "professional-cert- " .$application->id . ".pdf";
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_CORE, 
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4, 
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_LANDSCAPE, 
+            // stream to browser inline
+            'destination' => Pdf::DEST_DOWNLOAD,
+            'filename' => $filename,
+            // your html content input
+            'content' => $content,  
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:18px}', 
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Krajee Report Title'],
+             // call mPDF methods on the fly
+            'methods' => [ 
+                'SetHeader'=>['SN: '. $sn], 
+                'SetFooter'=>['{PAGENO}'],
+            ]
+        ]);
+
+        // return the pdf output as per the destination setting
+        return $pdf->render(); 
     }
 }

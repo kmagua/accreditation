@@ -335,6 +335,11 @@ MSG;
         $this->group = $this->role;
     }
     
+    /**
+     * 
+     * @param type $group
+     * @return boolean
+     */
     public function inGroup($group)
     {
         $grp = strtolower($group);
@@ -344,8 +349,30 @@ MSG;
         return Yii::$app->user->identity->group == $grp;
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function isInternal()
     {
         return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committee member']);        
+    }
+    
+     /**
+     * 
+     * @return type
+     */
+    public function isAdmin()
+    {
+        return in_array(strtolower(Yii::$app->user->identity->group),['admin']);        
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getName()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

@@ -80,7 +80,7 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
         foreach($this->committee_member_ids as $member_id){
             $rec = ApplicationCommitteMember::find()->where(['committee_member_id'=>$member_id, 'application_id' => $this->application_id])->one();
             if(!$rec){                
-                \Yii::$app->db->createCommand()->insert('accreditation.application_committe_member',[
+                \Yii::$app->db->createCommand()->insert('application_committe_member',[
                     'committee_member_id'=> $member_id, 'application_id'=> $this->application_id
                 ])->execute();
             }

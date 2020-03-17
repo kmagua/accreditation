@@ -10,7 +10,7 @@ use Yii;
  * @property int $id
  * @property int|null $application_id
  * @property int|null $score_item_id
- * @property int|null $score
+ * @property float|null $score
  * @property int|null $user_id
  * @property int|null $committee_id
  * @property string|null $comment
@@ -42,7 +42,8 @@ class ApplicationScore extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['application_id', 'score_item_id', 'score', 'user_id', 'committee_id', 'committee_score', 'status'], 'integer'],
+            [['application_id', 'score_item_id', 'user_id', 'committee_id', 'committee_score', 'status'], 'integer'],
+            [['score'], 'number'],
             [['date_created', 'last_updated','score_item', 'specific_item', 'category', 'maximum_score'], 'safe'],
             [['classification'],'string', 'max'=>30],
             [['rejection_comment', 'comment'],'string', 'max'=>150],

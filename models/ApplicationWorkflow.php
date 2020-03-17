@@ -17,12 +17,12 @@ class ApplicationWorkflow implements \raoul2000\workflow\source\file\IWorkflowDe
     public function getDefinition() 
     {
         return [
-            'initialStatusId' => 'draft',
+            'initialStatusId' => 'at-secretariat',
             'status' => [
                 'draft' => [
-                    'transition' => ['application-paid']
+                    'transition' => ['at-secretariat']
                 ],
-                'application-paid' => [
+                /*'application-paid' => [
                     'transition' => ['application-payment-confirmed', 'application-payment-rejected']
                 ],
                 'application-payment-confirmed' => [
@@ -30,7 +30,7 @@ class ApplicationWorkflow implements \raoul2000\workflow\source\file\IWorkflowDe
                 ],
                 'application-payment-rejected' => [
                     'transition' => ['draft']
-                ],
+                ],*/
                 'at-secretariat' => [
                     'transition' => ['assign-approval-committee', 'draft']
                 ],

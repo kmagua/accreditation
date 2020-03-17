@@ -69,6 +69,8 @@ AppAsset::register($this);
                     ['label' => 'Company Document Types', 'url' => ['/document-type/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                     ['label' => 'Professional Accreditation Categories', 'url' => ['/professional/category/index'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'Accreditation Type', 'url' => ['/accreditation-type/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']], 
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())

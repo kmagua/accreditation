@@ -94,7 +94,7 @@ class IctaCommitteeMember extends \yii\db\ActiveRecord
         foreach($this->committee_members as $member){
             $rec = IctaCommitteeMember::find()->where(['committee_id'=>$this->committee_id, 'user_id' =>$member])->one();
             if(!$rec){                
-                \Yii::$app->db->createCommand()->insert('accreditation.icta_committee_member',[
+                \Yii::$app->db->createCommand()->insert('icta_committee_member',[
                     'committee_id'=> $this->committee_id, 'user_id'=>  $member
                 ])->execute();
             }

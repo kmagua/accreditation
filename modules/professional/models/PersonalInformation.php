@@ -22,6 +22,7 @@ use Yii;
  * @property string|null $date_created
  * @property string|null $date_modified
  *
+ * @property \app\models\User $usr
  * @property Application[] $applications
  * @property Education[] $educations
  * @property Employment[] $employments
@@ -125,6 +126,16 @@ class PersonalInformation extends \yii\db\ActiveRecord
     }
     
     /**
+     * Gets query for [[ProfessionalRegBodies]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsr()
+    {
+        return $this->hasOne(\app\models\User::className(), ['id' => 'user_id']);
+    }
+    
+    /**
      * Check if user has permission to view/update record
      * @param type $id
      * @return boolean
@@ -167,5 +178,10 @@ class PersonalInformation extends \yii\db\ActiveRecord
         }else{
             return false;
         }
+    }
+    
+    public function getNames()
+    {
+        return $this->first_name . ' '. $this->last_name . " " . $this->other_names;
     }
 }

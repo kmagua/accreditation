@@ -67,7 +67,7 @@ class Application extends \yii\db\ActiveRecord
             'status' => 'Status',
             'declaration' => 'I declare that the information provided is correct to the best of my knowledge.',
             'initial_approval_date' => 'Initial Approval Date',
-            'date_created' => 'Date Created',
+            'date_created' => 'Date Submitted',
             'last_updated' => 'Last Updated',
         ];
     }
@@ -90,5 +90,25 @@ class Application extends \yii\db\ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(Category::className(), ['id' => 'category_id']);
+    }
+    
+    /**
+     * 
+     */
+    public function notifyUserOfApproval()
+    {
+        $header = "Your accreditation request has been approved by ICT Authority";
+        $type = $this->category->name;
+        $link = \yii\helpers\Url::to(['/professional/application/download-cert', 'id' => $this->id], true);
+        
+        $message = <<<MSG
+            Dear {$this->user->first_name} {$this->user->last_name},
+            <p>Kindly note that your Accreditation request for $type has been approved by ICT Authority.
+                You can login in to the Authority's accreditation site using the link below to download your certificate.</p>
+            <p>$link</p>
+            <p>Thank you,<br>ICT Authority Accreditation.</p>
+                
+MSG;
+        \app\models\Utility::sendMail($this->user->usr->email, $header, $message);
     }
 }

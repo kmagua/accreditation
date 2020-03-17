@@ -1,15 +1,15 @@
 <?php
 
-namespace app\modules\professional\models;
+namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\professional\models\Education;
+use app\models\AccreditationType;
 
 /**
- * EducationSearch represents the model behind the search form of `app\modules\professional\models\Education`.
+ * AccreditationTypeSearch represents the model behind the search form of `app\models\AccreditationType`.
  */
-class EducationSearch extends Education
+class AccreditationTypeSearch extends AccreditationType
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class EducationSearch extends Education
     public function rules()
     {
         return [
-            [['id', 'level_id', 'user_id'], 'integer'],
-            [['course', 'institution', 'completion_date', 'date_created', 'date_modified'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'description', 'date_created', 'last_updated'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class EducationSearch extends Education
      */
     public function search($params)
     {
-        $query = Education::find();
+        $query = AccreditationType::find();
 
         // add conditions that should always apply here
 
@@ -49,9 +49,8 @@ class EducationSearch extends Education
         ]);
 
         $this->load($params);
-        
+
         if (!$this->validate()) {
-            
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
@@ -60,15 +59,12 @@ class EducationSearch extends Education
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'level_id' => $this->level_id,
-            'completion_date' => $this->completion_date,
             'date_created' => $this->date_created,
-            'date_modified' => $this->date_modified,
-            'user_id' => $this->user_id,
+            'last_updated' => $this->last_updated,
         ]);
 
-        $query->andFilterWhere(['like', 'course', $this->course])
-            ->andFilterWhere(['like', 'institution', $this->institution]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

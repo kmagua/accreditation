@@ -83,6 +83,8 @@ class Application extends \yii\db\ActiveRecord
             'declaration' => 'I declare that the information given here is correct to the best of my knowledge.',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
+            'app_company_experience' => 'Select company work experience to include in this application',
+            'app_staff' => 'Select Staff Members to inlucde in this application'
         ];
     }
 
@@ -215,7 +217,7 @@ class Application extends \yii\db\ActiveRecord
         foreach ($this->app_staff as $staff_id){
             $rec = ApplicationStaff::find()->where(['application_id' => $this->id, 'staff_id' => $staff_id])->one();
             if(!$rec){
-                \Yii::$app->db->createCommand()->insert('accreditation.application_staff',[
+                \Yii::$app->db->createCommand()->insert('application_staff',[
                     'staff_id'=> $staff_id, 'application_id'=> $this->id,
                     'role' => CompanyStaff::findOne($staff_id)->staff_type
                 ])->execute();
@@ -233,7 +235,7 @@ class Application extends \yii\db\ActiveRecord
         foreach ($this->app_company_experience as $company_exp_id){
             $rec = ApplicationCompanyExperience::find()->where(['application_id'=>$this->id, 'experience_id' =>$company_exp_id])->one();
             if(!$rec){                
-                \Yii::$app->db->createCommand()->insert('accreditation.application_company_experience',[
+                \Yii::$app->db->createCommand()->insert('application_company_experience',[
                     'experience_id'=>  $company_exp_id, 'application_id'=>  $this->id
                 ])->execute();
             }
@@ -309,13 +311,13 @@ class Application extends \yii\db\ActiveRecord
     {
         switch($this->status){
             case 'ApplicationWorkflow/draft':
-                return $this->paymentConfirmation(1);
-            case 'ApplicationWorkflow/application-paid':
+                return $this->assignCommitee(1);
+            /*case 'ApplicationWorkflow/application-paid':
                 return $this->processConfirmPayment(1);
             case 'ApplicationWorkflow/application-payment-confirmed':
                 return $this->assignCommitee(1);
             case 'ApplicationWorkflow/application-payment-rejected':
-                return $this->processApplicationFeeRejected();
+                return $this->processApplicationFeeRejected();*/
             case 'ApplicationWorkflow/at-secretariat':
                 return $this->processInternalCommittee(1);
             case 'ApplicationWorkflow/assign-approval-committee':
@@ -537,14 +539,14 @@ MSG;
      */
     public function sendApprovalEmail($event)
     {
-        $header = "Your accreditation request has been approved by ICT Authority";
+        $header = "Your Company's accreditation request has been approved by ICT Authority";
         $type = $this->accreditationType->name;
         $link = \yii\helpers\Url::to(['application/download-cert', 'id' => $this->id], true);
         
         $message = <<<MSG
                 Dear {$this->user->full_name},
                 <p>Kindly note that your Accreditation request for $type has been approved by ICT Authority.
-                    You can login in to the accreditation site to download your certificate or use the link below.</p>
+                    You can login in to the Authority's accreditation site using the link below to download your certificate.</p>
                 <p>$link</p>
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
@@ -567,5 +569,22 @@ MSG;
         }else{
             return false;
         }
+    }
+    
+    public static function canApprove($level, $id)
+    {
+        if(\Yii::$app->user->identity->isAdmin()){
+            return true;
+        }
+        $sql = "SELECT icm.user_id, app.status  FROM `icta_committee_member` icm 
+            JOIN `application_committe_member` acm ON acm.`committee_member_id` = icm.`id`
+            JOIN `application` app ON app.`id` = acm.`application_id`
+            WHERE `committee_id` = $level AND icm.user_id = " . \Yii::$app->user->identity->id . "
+                AND acm.application_id = $id";
+        $recs = \Yii::$app->db->createCommand($sql)->queryOne();
+        if($recs && in_array($recs['status'], ['ApplicationWorkflow/at-committee', 'ApplicationWorkflow/at-secretariat'])){
+            return true;
+        }
+        return false;
     }
 }
