@@ -396,7 +396,8 @@ class Application extends \yii\db\ActiveRecord
      */
     public function processInternalCommittee($level)
     {
-        if(\Yii::$app->user->identity->isInternal()){  
+        $group = ($level == 1)?'Secretariat':'Committee member';
+        if(\Yii::$app->user->identity->inGroup($group)){
             $title = ($level == 1) ? 'Scoring by ICTA Acceditation Secretariat' : 'Scoring by ICTA Approving Committee';
             return Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
                 'application/approval', 'id' => $this->id, 'level'=> $level], 
@@ -570,7 +571,12 @@ MSG;
             return false;
         }
     }
-    
+    /**
+     * Check if the logged in user can approve a request. Have to be selected for the level.
+     * @param type $level
+     * @param type $id
+     * @return boolean
+     */
     public static function canApprove($level, $id)
     {
         if(\Yii::$app->user->identity->isAdmin()){

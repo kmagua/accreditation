@@ -343,10 +343,11 @@ MSG;
     public function inGroup($group)
     {
         $grp = strtolower($group);
-        if($grp == 'admin'){
+        $usr_grp = strtolower(Yii::$app->user->identity->group);
+        if($usr_grp == 'admin'){
             return true;
         }
-        return Yii::$app->user->identity->group == $grp;
+        return $usr_grp == $grp;
     }
     
     /**
