@@ -5,9 +5,10 @@ $db = require __DIR__ . '/db.php';
 $db2 = require __DIR__ . '/db2.php';
 
 $config = [
-    'id' => 'basic',
+    'id' => 'accreditation',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'defaultRoute' => 'site/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -52,10 +53,12 @@ $config = [
         
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
+            'showScriptName' => false,            
+                'rules' => [
+                '' => 'site/index',
+                '<action>'=>'site/<action>',
             ],
-        ],          
+        ],
     ],
     'modules' => [
         'gridview' =>  [

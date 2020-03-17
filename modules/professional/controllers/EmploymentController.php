@@ -8,6 +8,7 @@ use app\modules\professional\models\EmploymentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * EmploymentController implements the CRUD actions for Employment model.
@@ -20,6 +21,46 @@ class EmploymentController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create-ajax', 'my-employment'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['pid'])){
+                                return Yii::$app->user->identity->isInternal() 
+                                    || \app\modules\professional\models\PersonalInformation::canAccess(Yii::$app->request->get()['pid']);
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['update-ajax', 'view'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){                                
+                                $emp = Employment::findOne(Yii::$app->request->get()['id']);
+                                if($emp){
+                                    return Yii::$app->user->identity->isInternal() 
+                                        || \app\modules\professional\models\PersonalInformation::canAccess($emp->user_id);
+                                }
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return Yii::$app->user->identity->isInternal();
+                        }
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

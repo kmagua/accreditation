@@ -67,6 +67,9 @@ $this->title = 'ICT Authority Accreditation System';
         <div class="row">
             <div class="col-lg-4">&nbsp;</div>
             <div class="col-lg-8">
+                <h2 style="color: #c11d35">Professional Accreditation Requirements</h2>
+                <h5 style="font-style: italic"><b>The following are the different professional accreditations and their requirements</b></h5>
+
                 <?= GridView::widget([
                 'dataProvider' => (new \app\modules\professional\models\CategorySearch())->search([]),
                 //'filterModel' => $searchModel,

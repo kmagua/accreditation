@@ -13,7 +13,7 @@ $this->title = "Login";
 
 <div class="container" style="margin-top:6%;background-color:white;margin-left:-2%" id="Log">
     <div class="col-md-5 col-md-offset-3 alert alert-info" style="background-color:white;border:solid 1px  #009933;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;">
-        <div style="text-align:center;"><img src="../../web/images/icta.png" height="60"; width="100" /></div>
+        <div style="text-align:center;"><img src="<?= Yii::getAlias('@web') ?>/images/icta.png" height="60"; width="100" /></div>
         <br />
     
         <div class="row">

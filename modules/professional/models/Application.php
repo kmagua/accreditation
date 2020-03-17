@@ -63,9 +63,9 @@ class Application extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'category_id' => 'Category ID',
+            'category_id' => 'Accreditation Category',
             'status' => 'Status',
-            'declaration' => 'I declare that the information given here is correct to the best of my knowledge.',
+            'declaration' => 'I declare that the information provided is correct to the best of my knowledge.',
             'initial_approval_date' => 'Initial Approval Date',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',

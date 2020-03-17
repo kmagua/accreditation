@@ -8,6 +8,7 @@ use app\modules\professional\models\ProfessionalRegBodiesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ProfessionalRegBodiesController implements the CRUD actions for ProfessionalRegBodies model.
@@ -20,6 +21,46 @@ class ProfessionalRegBodiesController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create-ajax', 'my-memberships'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['pid'])){
+                                return Yii::$app->user->identity->isInternal() 
+                                    || \app\modules\professional\models\PersonalInformation::canAccess(Yii::$app->request->get()['pid']);
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['update-ajax', 'view'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){                                
+                                $prb = ProfessionalRegBodies::findOne(Yii::$app->request->get()['id']);
+                                if($prb){
+                                    return Yii::$app->user->identity->isInternal() 
+                                        || \app\modules\professional\models\PersonalInformation::canAccess($prb->user_id);
+                                }
+                            }
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return Yii::$app->user->identity->isInternal();
+                        }
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
