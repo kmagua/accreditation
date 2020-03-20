@@ -305,6 +305,9 @@ class Application extends \yii\db\ActiveRecord
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/completed'),
             [$this, 'sendApprovalEmail'], 'completed'
     	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approved'),
+            [$this, 'sendPaymentRequestEmail'], 'approved'
+    	);
     }
     
     public function getApplicationProgress()
@@ -343,8 +346,9 @@ class Application extends \yii\db\ActiveRecord
      */
     public function paymentConfirmation($level)
     {
-        if($this->checkUserCanAccess()){
-            return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented")']) . ' &nbsp;&nbsp; '. Html::a(Icon::show('receipt', ['class' => 'fas',
+        if($this->checkUserCanAccess()){            
+            //return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented"); return false;']) . ' &nbsp;&nbsp; '. 
+            return Html::a('Upload Payment Receipt ' . Icon::show('receipt', ['class' => 'fas',
                 'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> $level], 
                     ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
         }
@@ -398,8 +402,8 @@ class Application extends \yii\db\ActiveRecord
     {
         $group = ($level == 1)?'Secretariat':'Committee member';
         if(\Yii::$app->user->identity->inGroup($group)){
-            $title = ($level == 1) ? 'Scoring by ICTA Acceditation Secretariat' : 'Scoring by ICTA Approving Committee';
-            return Html::a(Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
+            $title = ($level == 1) ? 'Score by ICTA Acceditation Secretariat' : 'Score by ICTA Approving Committee';
+            return Html::a("Score " .Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
                 'application/approval', 'id' => $this->id, 'level'=> $level], 
                     ['data-pjax'=>'0', 'title' => $title]);
         }else{
@@ -441,11 +445,11 @@ class Application extends \yii\db\ActiveRecord
      * 
      * @param type $level Internal Approval Level : 1 = Secretariat, 2 = Committee
      */
-    public function getPayableAtLevel($level)
+    public function getPayableAtLevel($level='')
     {
-        if($level == 1){
+        /*if($level == 1){
             return 1500;
-        }
+        }*/
         $ac = ApplicationClassification::find()->where(['application_id'=>$this->id, 'icta_committee_id' => 2])->one();
         if($ac){
             return AccreditationLevel::findOne(['name' => $ac->classification])->accreditation_fee;
@@ -549,6 +553,24 @@ MSG;
                 <p>Kindly note that your Accreditation request for $type has been approved by ICT Authority.
                     You can login in to the Authority's accreditation site using the link below to download your certificate.</p>
                 <p>$link</p>
+                <p>Thank you,<br>ICT Authority Accreditation.</p>
+                
+MSG;
+        Utility::sendMail($this->company->company_email, $header, $message, $this->user->email);
+    }
+    
+    public function sendPaymentRequestEmail($event)
+    {
+        $header = "ICT Authority - Payment Request for Company Accreditation";
+        $type = $this->accreditationType->name;
+        $link = \yii\helpers\Url::to(['company-profile/view', 'id' => $this->company_id], true);
+        
+        $message = <<<MSG
+                Dear {$this->user->full_name},
+                <p>Kindly note that your Accreditation request for $type has been reviewed and approved by ICT Authority.
+                    You are now required to make payment of KES: {$this->getPayableAtLevel()} to: <br>CITIBANK,<br>Name: ICT Authority,<br>Account No: 0300085016,<br>Branch: Upper Hill (code: 16000).
+                        </p>
+                <p>After payment, login to the system using this link $link and upload your receipt. You will get a notification email to download your certificate once payment is confirmed.</p>
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;

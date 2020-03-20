@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int|null $user_id
  * @property int|null $committee_id
+ * @property int $status
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -35,7 +36,7 @@ class IctaCommitteeMember extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'committee_id'], 'integer'],
+            [['user_id', 'committee_id', 'status'], 'integer'],
             [['date_created', 'last_updated', 'committee_members'], 'safe'],
             [['committee_id'], 'exist', 'skipOnError' => true, 'targetClass' => IctaCommittee::className(), 'targetAttribute' => ['committee_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -95,12 +96,15 @@ class IctaCommitteeMember extends \yii\db\ActiveRecord
             $rec = IctaCommitteeMember::find()->where(['committee_id'=>$this->committee_id, 'user_id' =>$member])->one();
             if(!$rec){                
                 \Yii::$app->db->createCommand()->insert('icta_committee_member',[
-                    'committee_id'=> $this->committee_id, 'user_id'=>  $member
+                    'committee_id'=> $this->committee_id, 'user_id'=> $member, 'status' => 1
                 ])->execute();
+            }else{
+                $rec->status = 1;
+                $rec->save(false);
             }
         }
         $cm = implode(",", $this->committee_members); 
-        IctaCommitteeMember::deleteAll("user_id not in ($cm) AND committee_id={$this->committee_id}");   
+        IctaCommitteeMember::updateAll(['status' => 0],"user_id not in ($cm) AND committee_id={$this->committee_id}");   
         return true;
     }
     
@@ -116,6 +120,10 @@ class IctaCommitteeMember extends \yii\db\ActiveRecord
         }
     }
     
+    /**
+     * 
+     * @param type $committee_id
+     */
     public function getIctaCommitteeMembers($committee_id)
     {
         IctaCommitteeMember::find()->where(['committee_id' => $committee_id])->all();

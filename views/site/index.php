@@ -65,7 +65,14 @@ $this->title = 'ICT Authority Accreditation System';
         </div>
         
         <div class="row">
-            <div class="col-lg-4">&nbsp;</div>
+            <div class="col-lg-4">
+                <h2>Bank Details</h2>
+                Account Name: <strong>CITIBANK</strong><br/>
+                Bank Name: <strong>ICT Authority</strong><br/>
+                Account Number: <strong>0300085016</strong><br/>
+                Branch: <strong>Upper Hill (code: 16000)</strong><br/>
+                SWIFT Code: <strong>CITIKENA</strong><br/>
+            </div>
             <div class="col-lg-8">
                 <h2 style="color: #c11d35">Professional Accreditation Requirements</h2>
                 <h5 style="font-style: italic"><b>The following are the different professional accreditations and their requirements</b></h5>

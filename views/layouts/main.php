@@ -71,7 +71,10 @@ AppAsset::register($this);
                     ['label' => 'Professional Accreditation Categories', 'url' => ['/professional/category/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                     ['label' => 'Accreditation Type', 'url' => ['/accreditation-type/index'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']], 
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'Approval Levels', 'url' => ['/icta-committee/index'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],
@@ -135,7 +138,7 @@ echo '<div class="modal-footer">
 yii\bootstrap\Modal::end();
 ?>
 <?php $this->endBody() ?>
-<?= Yii::$app->request->absoluteUrl ?>
+
 <?php
 $js = <<<JS
 $('#accreditation-modal').on('hidden.bs.modal', function () {

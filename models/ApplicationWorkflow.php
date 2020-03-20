@@ -17,7 +17,7 @@ class ApplicationWorkflow implements \raoul2000\workflow\source\file\IWorkflowDe
     public function getDefinition() 
     {
         return [
-            'initialStatusId' => 'at-secretariat',
+            'initialStatusId' => 'draft',
             'status' => [
                 'draft' => [
                     'transition' => ['at-secretariat']
