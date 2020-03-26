@@ -81,6 +81,7 @@ class DocumentTypeController extends Controller
         $model = new DocumentType();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->saveCompanyTypeDocument();
             return $this->redirect(['index']);
         }
 
@@ -99,9 +100,11 @@ class DocumentTypeController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->loadCompanyTypeDocument();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $model->saveCompanyTypeDocument();
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
