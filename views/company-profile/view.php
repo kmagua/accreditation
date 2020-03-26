@@ -59,13 +59,13 @@ $cpDataProvider = $searchCP->search([]);
         [
             'label' => 'Staff Details',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['company-staff/staff-data', 'cid'=>$model->id])],
-            'headerOptions' => ['style'=>'font-weight:bold'],
+            //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'company_data_tab'],
         ],
         [
             'label' => 'Applications',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['application/applications', 'cid'=>$model->id])],
-            'headerOptions' => ['style'=>'font-weight:bold'],
+            //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'application_data_tab'],
         ],
         /*[

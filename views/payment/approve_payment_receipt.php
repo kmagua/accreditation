@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
             'action' => ['application/approve-payment', 'id'=>$model->application_id, 'l'=>$model->level],
             'options' => ['enctype' => 'multipart/form-data'
         ]]); ?>
-    
+    <h3><?= $model->getReceipt() ?> </h3>
     <div class="row"> 
         <div class="col-md-8">
             <?= $form->field($model, 'status')->dropDownList(['confirmed'=>'Confirmed', 'rejected'=>'Rejected'], ['prompt'=>'']) ?>

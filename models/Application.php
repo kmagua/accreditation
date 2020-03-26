@@ -50,9 +50,9 @@ class Application extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'accreditation_type_id', 'cash_flow'], 'required'],
+            [['company_id', 'accreditation_type_id', 'cash_flow', 'financial_status_link', 'turnover'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id'], 'integer'],
-            [['app_company_experience','app_staff'], 'required','on'=>'create_update'],
+            [['app_company_experience','app_staff', 'cash_flow', 'financial_status_link', 'turnover'], 'required','on'=>'create_update'],
             [['cash_flow', 'turnover'], 'number'],
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
@@ -308,6 +308,9 @@ class Application extends \yii\db\ActiveRecord
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approved'),
             [$this, 'sendPaymentRequestEmail'], 'approved'
     	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/rejected'),
+            [$this, 'sendRejectedEmail'], 'rejected'
+    	);
     }
     
     public function getApplicationProgress()
@@ -378,7 +381,7 @@ class Application extends \yii\db\ActiveRecord
     public function assignCommitee($level, $message = 'Assign secretariat members.')
     {
         if(\Yii::$app->user->identity->isInternal()){
-            return Html::a(Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
+            return Html::a("Assign Members ". Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
                 'application/committee-members', 'id' => $this->id, 'l'=> $level], 
                     ['data-pjax'=>'0', 'title' => $message]);
         }
@@ -526,15 +529,13 @@ MSG;
      */
     public static function progressOnCommitteeApproval($id, $status, $level)
     {
+        $app = Application::findOne($id);
         if($level == 1 && $status == 1){
-            \Yii::$app->db->createCommand()
-                ->update('application', ['status' => "ApplicationWorkflow/assign-approval-committee"], ['id'=>$id])->execute();
+            $app->progressWorkFlowStatus('assign-approval-committee');
         }else if($level == 2 && $status == 1){
-            \Yii::$app->db->createCommand()
-                ->update('application', ['status' => "ApplicationWorkflow/approved"], ['id'=>$id])->execute();
+            $app->progressWorkFlowStatus('approved');            
         }else{
-            \Yii::$app->db->createCommand()
-                ->update('application', ['status' => "ApplicationWorkflow/draft"], ['id'=>$id])->execute();
+            $app->progressWorkFlowStatus('rejected');
         }
     }
     
@@ -557,6 +558,30 @@ MSG;
                 
 MSG;
         Utility::sendMail($this->company->company_email, $header, $message, $this->user->email);
+    }
+    
+        /**
+     * Send email to applicant after application has been approved by ICTA
+     * @param type $event
+     */
+    public function sendRejectedEmail($event)
+    {
+        $header = "Your Company's accreditation request has been Rejected by ICT Authority";
+        $type = $this->accreditationType->name;
+        $link = \yii\helpers\Url::to(['application/view', 'id' => $this->id], true);
+        $app_categorization = ApplicationClassification::find()->where(['application_id' => $this->id])->
+            orderBy('application_id desc')->one();
+        $comment = ($app_categorization)?$app_categorization->rejection_comment:"";
+        $message = <<<MSG
+                Dear {$this->user->full_name},
+                <p>Kindly note that your Accreditation request for $type has been REJECTED by ICT Authority because of the following reason.</p>
+                <p>$comment</p>
+                <p>$link</p>
+                <p>Thank you,<br>ICT Authority Accreditation.</p>
+                
+MSG;
+        Utility::sendMail($this->company->company_email, $header, $message, $this->user->email);
+        
     }
     
     public function sendPaymentRequestEmail($event)

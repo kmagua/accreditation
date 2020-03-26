@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-staff-index">
     <?= Html::a('Add Staff', ['new', 'cid'=>$searchModel->company_id], ['class' => 'btn btn-success', 'onclick'=>'getDataForm(this.href); return false;']) ?>
-    
+    <h4 style="color:red">Use icon links on 'Actions' column to add academic certificates, certifications and work experience details for a staff.</h4>
     <?php Pjax::begin(['id' => 'staff-data-list', 'timeout' => false, 'enablePushState' => false]); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

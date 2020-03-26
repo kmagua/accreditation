@@ -84,7 +84,7 @@ foreach ($application_scores as $index => $application_score) {
             }else{
                 //echo '<pre>'; print_r($application_score[$index]); exit;
                 echo Html::checkbox("ApplicationScore[$index][score]", 
-                    ($application_score->score > 0)?true: false , ['id' => "applicationscore-{$index}-score"]);
+                    ($application_score->score > 0)?true: false , ['id' => "applicationscore-{$index}-score", 'class'=>$class]);
                 //echo 'Hapa', $application_score->score;
                 //echo $form->field($application_score, "[$index]score")->checkbox($class)->label(false);
             }            
@@ -109,7 +109,8 @@ foreach ($application_scores as $index => $application_score) {
 <div class ="row" style="margin-top: 10px; margin-bottom: 10px ">
     <div class="col-md-4">
         <?= Html::label("Score", 'applicationscore-committee_score') ?>
-        <?= Html::textInput("ApplicationScore[committee_score]", $ac_score, ['class'=>'form-control','id'=>'applicationscore-committee_score', 'readonly'=>true]); ?>
+        <?= Html::textInput("ApplicationScore[committee_score]", $ac_score, ['class'=>'form-control','id'=>'applicationscore-committee_score',
+            'readonly'=>true]); ?>
     </div>
     <div class="col-md-5">
         <?= Html::label("Category Assigned", 'applicationscore-classification') ?>
@@ -117,7 +118,8 @@ foreach ($application_scores as $index => $application_score) {
             'ICTA 1' => 'ICTA 1', 'ICTA 2' => 'ICTA 2', 'ICTA 3' => 'ICTA 3', 'ICTA 4' => 'ICTA 4',
             'ICTA 5' => 'ICTA 5', 'ICTA 6' => 'ICTA 6', 'ICTA 7' => 'ICTA 7', 'ICTA 8' => 'ICTA 8',
             'reapply' => 'Re-apply'
-        ], ['prompt' => '', 'class' => 'form-control', 'id' => 'applicationscore-classification', 'readonly'=>true]) ?>
+        ], ['prompt' => '', 'class' => 'form-control', 'id' => 'applicationscore-classification',
+            'readonly'=>true, 'style'=>'pointer-events: none;']) ?>
     </div>
     
     
@@ -129,7 +131,7 @@ foreach ($application_scores as $index => $application_score) {
         <?= Html::dropDownList("ApplicationScore[status]", $app_status, [
             1 => 'Approved', 0 => 'Rejected'
         ], ['prompt' => '', 'class' => 'form-control', 'id' => 'applicationscore-status',
-            'readonly'=>true]) ?>
+            'readonly'=>true, 'style'=>'pointer-events: none;']) ?>
     </div>
     
     <div class="col-md-5">

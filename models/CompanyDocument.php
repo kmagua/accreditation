@@ -36,6 +36,7 @@ class CompanyDocument extends \yii\db\ActiveRecord
     {
         return [
             [['company_id', 'company_type_doc_id'], 'integer'],
+            [['company_id', 'company_type_doc_id'], 'required'],
             [['date_created', 'last_updated'], 'safe'],
             [['upload_file'], 'string'],
             [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,pdf,doc, jpg'],
@@ -52,7 +53,7 @@ class CompanyDocument extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'company_id' => 'Company ID',
-            'company_type_doc_id' => 'Document Type ID',
+            'company_type_doc_id' => 'Document Type',
             'upload_file' => 'Document/Certificate', 
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',

@@ -23,7 +23,7 @@ $data = \app\models\IctaCommitteeMember::findCommitteeMembersArray($level);
             'pluginOptions' => [
                 'allowClear' => true
             ],
-        ]);
+        ])->label(($level ==1)?'Secretariat Member(s)':'Committee Member(s)');
     ?>
 
     <div class="form-group">

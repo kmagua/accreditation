@@ -27,6 +27,13 @@ function calculateCategoty(score){
         $('#applicationscore-classification').val("reapply");
         $('#applicationscore-status').val(0);
     }
+    
+    /*$('#applicationscore-classification').attr("style", "pointer-events: none;");
+    $('#applicationscore-status').attr("style", "pointer-events: none;");
+    $('#applicationscore-classification option:not(:selected)').prop('disabled', true);
+    $('#applicationscore-status option:not(:selected)').prop('disabled', true);
+    $('#applicationscore-classification option(:selected)').prop('disabled', false);
+    $('#applicationscore-status option(:selected)').prop('disabled', false);*/
 }
 
 function clearInSimilarClass(cur_element){

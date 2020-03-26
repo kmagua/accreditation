@@ -112,4 +112,16 @@ class Payment extends \yii\db\ActiveRecord
         }
         $this->application->progressWorkFlowStatus($status);
     }
+    
+    public function getReceipt()
+    {
+        if($this->receipt != ''){
+            /*$text = ($icon== true)?"<span class='glyphicon glyphicon-download-alt' title='Download - {$this->upload_file}'></span>" :
+                \yii\helpers\Html::encode($this->upload_file);*/
+            $path = Yii::getAlias('@web') .'/';
+            return \yii\helpers\Html::a('Download Receipt',$path . $this->receipt,['data-pjax'=>"0", 'target'=>'_blank']);
+        }else{
+            return '';
+        }
+    }
 }

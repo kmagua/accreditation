@@ -60,7 +60,7 @@ $this->title = 'ICT Authority Accreditation System';
                    <li>  Recent bank statement from the last financial year together with the audited accounts of the same</li>
                    <li>  Partnership certificates if any</li>                   
                 </ol>
-                
+                <p style='color:red'>There are 8 categories for Company Accreditation. Click <?= Html::a('Here', ['site/company-accreditation-prerequisites'], ['class' =>'btn btn-success']) ?> to see the prerequisites for each.</p>
             </div>
         </div>
         

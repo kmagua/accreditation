@@ -50,7 +50,7 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
             'id' => 'ID',
             'application_id' => 'Application ID',
             'committee_member_id' => 'Committee Member ID',
-            'committee_member_ids' => 'Committee Member(s)',
+            'committee_member_ids' => 'Member(s)',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
         ];

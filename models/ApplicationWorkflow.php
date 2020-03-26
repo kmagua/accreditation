@@ -32,13 +32,16 @@ class ApplicationWorkflow implements \raoul2000\workflow\source\file\IWorkflowDe
                     'transition' => ['draft']
                 ],*/
                 'at-secretariat' => [
-                    'transition' => ['assign-approval-committee', 'draft']
+                    'transition' => ['assign-approval-committee', 'rejected']
                 ],
                 'assign-approval-committee' => [
                     'transition' => ['at-committee']
                 ],
                 'at-committee' => [
-                    'transition' => ['approved', 'draft']
+                    'transition' => ['approved', 'rejected']
+                ],
+                'rejected' => [
+                    'transition' => ['at-secretariat', 'at-committee']
                 ],
                 'approved' => [
                     'transition' => ['certificate-paid']
