@@ -26,30 +26,31 @@ $xpSearchModel->staff_id = $model->id;
 $xpDataProvider = $xpSearchModel->search(Yii::$app->request->queryParams);
 ?>
 <div class="company-staff-view">
+<?= $model->first_name . ' ' . $model->last_name .' (' . $model->staff_type . ')'?>
 <?= TabsX::widget([
     'items' => [
         [
             'label' => 'Personal Information',
-            'options' => ['id' => 'staff-personal-details-tab'],
+            'options' => ['id' => 'staff-personal-details-tab' . $model->id],
             'content' => $this->render('_view', ['model'=>$model]),
         ],
         [
             'label' => 'Academic Qualifications',
-            'options' => ['id' => 'staff-academic-qualifications-tab'],
+            'options' => ['id' => 'staff-academic-qualifications-tab_' . $model->id],
             'content' => $this->render('../academic-qualification/gridview', 
                 ['searchModel'=>$acSearchModel, 'dataProvider'=>$acDataProvider]
             ),
         ],
         [
             'label' => 'Professional Certifications',
-            'options' => ['id' => 'staff-professional-certifications-tab'],
+            'options' => ['id' => 'staff-professional-certifications-tab' . $model->id],
             'content' => $this->render('../professional-certification/gridview', 
                 ['searchModel'=>$pcSearchModel, 'dataProvider'=>$pcDataProvider]
             ),
         ],
         [
             'label' => 'Work Experience',
-            'options' => ['id' => 'staff-staff-experience-tab'],
+            'options' => ['id' => 'staff-staff-experience-tab' . $model->id],
             'content' => $this->render('../staff-experience/gridview', 
                 ['searchModel'=>$xpSearchModel, 'dataProvider'=>$xpDataProvider]
             ),

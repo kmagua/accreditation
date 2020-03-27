@@ -53,7 +53,15 @@ foreach ($application_scores as $index => $application_score) {
             if($current_category != $application_score->scoreItem->category){
                 $current_category = $application_score->scoreItem->category;
             ?>
-            <?= $application_score->scoreItem->category ?>
+            <?php if($application_score->scoreItem->content_link != ''){
+                echo Html::a($application_score->scoreItem->category, 
+                        ['/application/get-data', 'id' => $app_id, 
+                            'sec'=>$application_score->scoreItem->content_link], 
+                        ['onclick' => 'getDataForm(this.href, "<h3>' . $application_score->scoreItem->category. '</h3>");return false;']);
+            }else{
+                echo $application_score->scoreItem->category;
+            }
+            ?>
             <?php } ?>
         </div>
         
@@ -149,6 +157,7 @@ foreach ($application_scores as $index => $application_score) {
 ActiveForm::end();
 
 $js = <<<JS
+var refresh_on_close = false;
 $( document ).ready(function() {
     var score = $ac_score;
         
@@ -191,3 +200,4 @@ $( document ).ready(function() {
 JS;
 $this->registerJs($js,yii\web\View::POS_END, 'calculate_application_score');
 $this->registerJsFile('../js/application_scoring.js', ['position'=>yii\web\View::POS_END]);
+$this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);

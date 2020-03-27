@@ -53,7 +53,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'committee-members'],
+                        'actions' => ['index', 'approve-payment', 'committee-members', 'get-data'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -373,5 +373,20 @@ class ApplicationController extends Controller
     public function actionRenewCert($id)
     {
         echo "TBD"; exit;
+    }
+    
+    public function actionGetData($id, $sec)
+    {
+        $application = $this->findModel($id);
+        switch($sec){
+            case 'staff_directors';
+                return $this->renderAjax('view_staff_data', ['app_id'=>$application->id, 's'=>1]);
+            case 'staff_staff';
+                return $this->renderAjax('view_staff_data', ['app_id'=>$application->id, 's'=>2]);
+            case 'financial_status';
+                return $this->renderAjax('view_fin_status', ['model'=>$application]);
+            case 'company_exp';
+                return $this->renderAjax('view_company_exp', ['app_id'=>$application->id]);
+        }
     }
 }

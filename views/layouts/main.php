@@ -142,7 +142,9 @@ yii\bootstrap\Modal::end();
 <?php
 $js = <<<JS
 $('#accreditation-modal').on('hidden.bs.modal', function () {
-    location.reload();
+    if (typeof refresh_on_close === 'undefined') {
+        location.reload();
+    }
 })
 JS;
 

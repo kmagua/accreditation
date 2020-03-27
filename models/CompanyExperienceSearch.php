@@ -17,8 +17,8 @@ class CompanyExperienceSearch extends CompanyExperience
     public function rules()
     {
         return [
-            [['id', 'company_id'], 'integer'],
-            [['organization_type', 'project_name', 'start_date', 'end_date', 'status', 'attachment', 'date_created', 'last_updated'], 'safe'],
+            [['company_id'], 'integer'],
+            [['id','organization_type', 'project_name', 'start_date', 'end_date', 'status', 'attachment', 'date_created', 'last_updated'], 'safe'],
             [['project_cost'], 'number'],
         ];
     }
@@ -52,6 +52,7 @@ class CompanyExperienceSearch extends CompanyExperience
         $this->load($params);
 
         if (!$this->validate()) {
+            throw new \Exception(print_r($this->errors, true));
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;

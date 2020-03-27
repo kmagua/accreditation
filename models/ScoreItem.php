@@ -15,6 +15,7 @@ use Yii;
  * @property int $checkboxes
  * @property int $each_checkbox_marks
  * @property string|null $group
+ * @property string|null $content_link
  * @property int|null $status
  * @property string $date_created
  * @property string $last_updated
@@ -41,7 +42,7 @@ class ScoreItem extends \yii\db\ActiveRecord
             [['maximum_score'],'number'],
             [['date_created', 'last_updated'], 'safe'],
             [['category'], 'string', 'max' => 50],
-            [['group'], 'string', 'max' => 20],
+            [['group', 'content_link'], 'string', 'max' => 20],
             [['specific_item'], 'string', 'max' => 70],
             [['score_item'], 'string', 'max' => 500],
         ];
