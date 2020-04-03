@@ -105,11 +105,14 @@ class Payment extends \yii\db\ActiveRecord
      */
     public function updateApplicationPaymentStatus()
     {
-        if($this->level == 1){
+        /*if($this->level == 1){
             $status = $this->status == 'confirmed'?'application-payment-confirmed':'application-payment-rejected';
         }else{
             $status = $this->status == 'confirmed'?'completed':'approval-payment-rejected';
-        }
+        }*/
+        $status = $this->status == 'confirmed'?'completed':'approval-payment-rejected';
+        $this->application->initial_approval_date = date("Y-m-d");
+        $this->application->certificate_serial = strtoupper(dechex($this->application->id * 100000027));
         $this->application->progressWorkFlowStatus($status);
     }
     

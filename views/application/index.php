@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'user_id',
             [
                 'attribute' => 'status',
-                'contentOptions' => ['style' => 'width: 8%'],
+                'contentOptions' => ['style' => 'width: 12%'],
                 'content' => function($model){
                     return $model->getApplicationProgress();
                 },

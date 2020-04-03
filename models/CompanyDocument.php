@@ -40,7 +40,7 @@ class CompanyDocument extends \yii\db\ActiveRecord
             [['date_created', 'last_updated'], 'safe'],
             [['upload_file'], 'string'],
             [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,pdf,doc, jpg'],
-            [['company_type_doc_id'], 'exist', 'skipOnError' => true, 'targetClass' => DocumentType::className(), 'targetAttribute' => ['company_type_doc_id' => 'id']],
+            [['company_type_doc_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyTypeDocument::className(), 'targetAttribute' => ['company_type_doc_id' => 'id']],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
         ];
     }
@@ -115,5 +115,6 @@ class CompanyDocument extends \yii\db\ActiveRecord
            $transaction->rollBack();
            throw $e;
         }
+        return true;
     }
 }

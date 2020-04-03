@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+
 $form = ActiveForm::begin();
 
 $current_category = $current_specific_item =  $ac_classification = $app_status = "";

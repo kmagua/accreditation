@@ -40,10 +40,12 @@ class CompanyExperience extends \yii\db\ActiveRecord
     {
         return [
             [['company_id'], 'integer'],
+            [['company_id', 'project_cost', 'project_name', 'organization_type'], 'required'],
             [['organization_type', 'status'], 'string'],
             [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, pdf, doc, jpg'],
             [['start_date', 'end_date', 'date_created', 'last_updated'], 'safe'],
             [['project_cost'], 'number'],
+            [['upload_file'],'required', 'on' => 'create'],
             [['project_name', 'attachment'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
         ];
@@ -107,6 +109,10 @@ class CompanyExperience extends \yii\db\ActiveRecord
         }
     }
     
+    /**
+     * 
+     * @throws \Exception
+     */
     public function saveCompanyExperience()
     {
         $transaction = \Yii::$app->db->beginTransaction();
@@ -125,6 +131,7 @@ class CompanyExperience extends \yii\db\ActiveRecord
            $transaction->rollBack();
            throw $e;
         }
+        return true;
     }
     
     /**

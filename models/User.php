@@ -53,7 +53,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['password'], 'required', 'on'=>['register', 'password_update']],
             [['email', 'kra_pin_number'], 'unique'],
             [['date_created', 'last_updated'], 'safe'],
-            [['email'], 'string', 'max' => 30],
+            [['email'], 'string', 'max' => 60],
             ['email', 'email'],
             [['first_name', 'last_name', 'kra_pin_number'], 'string', 'max' => 20],
             [['password', 'password_repeat'], 'string', 'max' => 100],

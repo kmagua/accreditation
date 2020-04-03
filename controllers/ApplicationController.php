@@ -335,7 +335,7 @@ class ApplicationController extends Controller
             throw new \yii\web\HttpException(403, "You cannot download a certificate until it is approved.");
         }
         $app_classification = \app\models\ApplicationClassification::find()->where(['application_id'=>$id])->orderBy("id desc")->one();
-        $sn = bin2hex($id * 53);
+        //$sn = bin2hex($id * 53);
         $content = $this->renderPartial('certificate', ['application' => $application, 'app_class' => $app_classification]);
         $filename = "cert- " .$application->id . ".pdf";
 
@@ -361,7 +361,7 @@ class ApplicationController extends Controller
             'options' => ['title' => 'Krajee Report Title'],
              // call mPDF methods on the fly
             'methods' => [ 
-                'SetHeader'=>['SN: '. $sn], 
+                'SetHeader'=>['SN: '. $application->certificate_serial], 
                 'SetFooter'=>['{PAGENO}'],
             ]
         ]);

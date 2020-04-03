@@ -94,12 +94,12 @@ class CompanyTypeDocument extends \yii\db\ActiveRecord
      */
     public static function getApplicableDocumentTypes($cti)
     {
+        $exp = new \yii\db\Expression("min(ctd.id) id, dt.name `name`, dt.id dt_id");
         $data = CompanyTypeDocument::find()
-            ->select("ctd.id, dt.name name")
+            ->select($exp)
             ->from('company_type_document ctd')
-            ->join('JOIN', 'company_type ct', 'ct.id = ctd.company_type_id')
             ->join('JOIN', 'document_type dt', 'dt.id = ctd.document_type_id')
-            ->where(['ct.id'=>[$cti, -1000]])->all();
+            ->where(['ctd.company_type_id'=>[$cti, -1000]])->groupBy('dt_id')->all();
         return $data;
     }
 }

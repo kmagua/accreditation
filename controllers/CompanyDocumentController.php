@@ -92,16 +92,17 @@ class CompanyDocumentController extends Controller
         $model = new CompanyDocument();
         $model->company_id = $cid;
 
-        if ($model->load(Yii::$app->request->post())){
-            $model->saveCompanyDocument();
-        }
+        if ($model->load(Yii::$app->request->post()) && $model->saveCompanyDocument()){
+            \Yii::$app->session->setFlash('cd_added','Document added successfully!');
+            $model = null;
+        }        
         $searchModel = new CompanyDocumentSearch();
         $searchModel->company_id = $cid;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
-        return $this->renderAjax('index', [
+        return $this->renderAjax('index_with_form', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model'=> $model,
         ]);
     }
 
@@ -136,9 +137,7 @@ class CompanyDocumentController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->saveCompanyDocument();            
-            
+        if ($model->load(Yii::$app->request->post()) && $model->saveCompanyDocument()) {
             $searchModel = new CompanyDocumentSearch();
             $searchModel->company_id = $model->company_id;
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);

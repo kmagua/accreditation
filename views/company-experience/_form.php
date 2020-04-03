@@ -9,7 +9,11 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="company-experience-form">
-
+    <?php if(Yii::$app->session->hasFlash('ce_added')): ?>
+    <div class="alert alert-success alert-dismissable">
+        <h4><?php echo Yii::$app->session->getFlash('ce_added'); ?></h4>
+    </div>
+    <?php endif; ?> 
     <?php $form = ActiveForm::begin(['id' =>'company-experience-form',
         'action' => ($model->isNewRecord) ? ['company-experience/create-ajax', 'cid'=>$model->company_id] : 
             ['company-experience/update-ajax', 'id'=>$model->id],

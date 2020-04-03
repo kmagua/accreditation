@@ -18,6 +18,7 @@ use raoul2000\workflow\events\WorkflowEvent;
  * @property string|null $financial_status_link
  * @property int|null $user_id
  * @property string|null $status
+ * @property string|null $certificate_serial
  * @property int|null $declaration
  * @property string $initial_approval_date
  * @property string $date_created
@@ -57,8 +58,8 @@ class Application extends \yii\db\ActiveRecord
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
-            [['status'], 'string', 'max' => 50],
-            [['date_created', 'last_updated','app_company_experience','app_staff', 'initial_approval_date'], 'safe'],
+            [['status', 'certificate_serial'], 'string', 'max' => 50],
+            [['date_created', 'last_updated', 'app_company_experience', 'app_staff', 'initial_approval_date'], 'safe'],
             [['financial_status_link'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -381,9 +382,12 @@ class Application extends \yii\db\ActiveRecord
     public function assignCommitee($level, $message = 'Assign secretariat members.')
     {
         if(\Yii::$app->user->identity->isInternal()){
-            return Html::a("Assign Members ". Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
-                'application/committee-members', 'id' => $this->id, 'l'=> $level], 
-                    ['data-pjax'=>'0', 'title' => $message]);
+            $grp = ($level==1)?"Secretariat":"Committee member";
+            if(\Yii::$app->user->identity->inGroup($grp)){
+                return Html::a("Assign Members ". Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
+                    'application/committee-members', 'id' => $this->id, 'l'=> $level], 
+                        ['data-pjax'=>'0', 'title' => $message]);
+            }return "Pending assignment of " . (($level==1)?"secretariat members.":"committee members.");
         }
         return "Pending";
     }

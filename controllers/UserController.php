@@ -96,6 +96,7 @@ class UserController extends Controller
     {
         $model = new User();
         $model->setScenario('register');
+        $model->status = 0;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->session->setFlash('user_registration','Your account has been registered and an activation email sent to your email.');

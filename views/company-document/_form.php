@@ -8,10 +8,17 @@ use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model app\models\CompanyDocument */
 /* @var $form yii\widgets\ActiveForm */
+
 ?>
 
 <div class="company-document-form">    
-        
+    
+    <?php if(Yii::$app->session->hasFlash('cd_added')): ?>
+    <div class="alert alert-success alert-dismissable">
+        <h4><?= Yii::$app->session->getFlash('cd_added'); ?></h4>
+    </div>
+    <?php endif; ?>
+    
     <?php $form = ActiveForm::begin(['id' =>'company-document-form',
         'action' => ($model->isNewRecord) ? ['company-document/create-ajax', 'cid'=>$model->company_id] : 
             ['company-document/update-ajax', 'id'=>$model->id],
