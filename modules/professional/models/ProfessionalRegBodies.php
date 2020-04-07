@@ -43,7 +43,8 @@ class ProfessionalRegBodies extends \yii\db\ActiveRecord
     {
         return [
             [['date_created', 'date_modified'], 'safe'],
-            [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, pdf'],
+            [['name', 'membership_no'],'required'],
+            [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'pdf'], 'maxSize'=> 1024*1024*2],
             [['user_id'], 'integer'],
             [['name', 'upload'], 'string', 'max' => 100],
             [['membership_no'], 'string', 'max' => 20],
@@ -93,12 +94,31 @@ class ProfessionalRegBodies extends \yii\db\ActiveRecord
             }
             if($this->save()){
                 ($this->upload_file)? $this->upload_file->saveAs($this->upload):null;
+                $transaction->commit();
+                return true;
             }
-            $transaction->commit();
+            
         }catch (\Exception $e) {
            $transaction->rollBack();
-           throw $e;
+           throw $e;           
         }
-        return true;
+        return false;
+    }
+    
+    /**
+     * return the link to a protocol file
+     * @author kmagua
+     * @return string
+     */
+    public function fileLink($icon = false)
+    {
+        if($this->upload != ''){
+            $text = ($icon== true)?"<span class='glyphicon glyphicon-download-alt' title='Download - {$this->upload}'></span>" :
+                \yii\helpers\Html::encode($this->upload);
+            $path = Yii::getAlias('@web') ."/";
+            return \yii\helpers\Html::a($text,$path . $this->upload,['data-pjax'=>"0", 'target'=>'_blank']);
+        }else{
+            return '';
+        }
     }
 }

@@ -39,7 +39,7 @@ class ProfessionalCertification extends \yii\db\ActiveRecord
             [['date_created', 'last_updated'], 'safe'],
             [['qualification_type', 'other_description'], 'string', 'max' => 50],
             [['certificate'], 'string', 'max' => 250],
-            [['certificate_upload'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, pdf'],
+            [['certificate_upload'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'pdf'], 'maxSize'=> 1024*1024*2],
             [['staff_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyStaff::className(), 'targetAttribute' => ['staff_id' => 'id']],
         ];
     }
@@ -103,11 +103,13 @@ class ProfessionalCertification extends \yii\db\ActiveRecord
             }
             if($this->save()){
                 ($this->certificate_upload)? $this->certificate_upload->saveAs($this->certificate):null;
-            }
-            $transaction->commit();
+                $transaction->commit();
+                return true;
+            }            
         }catch (\Exception $e) {
            $transaction->rollBack();
            throw $e;
         }
+        return false;
     }
 }

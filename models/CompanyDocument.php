@@ -39,7 +39,7 @@ class CompanyDocument extends \yii\db\ActiveRecord
             [['company_id', 'company_type_doc_id'], 'required'],
             [['date_created', 'last_updated'], 'safe'],
             [['upload_file'], 'string'],
-            [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,pdf,doc, jpg'],
+            [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png','pdf','doc', 'jpg'] , 'maxSize'=> 1024*1024*2],
             [['company_type_doc_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyTypeDocument::className(), 'targetAttribute' => ['company_type_doc_id' => 'id']],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
         ];

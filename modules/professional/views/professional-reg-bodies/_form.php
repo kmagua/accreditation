@@ -21,7 +21,7 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'membership_no')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'upload_file')->fileInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'upload_file')->fileInput() ?>
 
     <div class="form-group" style="padding-left: 120px">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 

@@ -42,7 +42,7 @@ class CompanyExperience extends \yii\db\ActiveRecord
             [['company_id'], 'integer'],
             [['company_id', 'project_cost', 'project_name', 'organization_type'], 'required'],
             [['organization_type', 'status'], 'string'],
-            [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, pdf, doc, jpg'],
+            [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'pdf', 'doc', 'jpg'], 'maxSize'=> 1024*1024*2],
             [['start_date', 'end_date', 'date_created', 'last_updated'], 'safe'],
             [['project_cost'], 'number'],
             [['upload_file'],'required', 'on' => 'create'],
@@ -125,13 +125,14 @@ class CompanyExperience extends \yii\db\ActiveRecord
             }
             if($this->save()){
                 ($this->upload_file)? $this->upload_file->saveAs($this->attachment):null;
-            }
-            $transaction->commit();
+                $transaction->commit();
+                return true;
+            }            
         }catch (\Exception $e) {
            $transaction->rollBack();
            throw $e;
         }
-        return true;
+        return false;
     }
     
     /**

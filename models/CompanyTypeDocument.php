@@ -89,7 +89,7 @@ class CompanyTypeDocument extends \yii\db\ActiveRecord
     }
     
     /**
-     * 
+     *
      * @param type $cti CompanyTypeID
      */
     public static function getApplicableDocumentTypes($cti)

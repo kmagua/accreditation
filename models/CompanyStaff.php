@@ -160,17 +160,17 @@ class CompanyStaff extends \yii\db\ActiveRecord
     public function getStaffDetailsLinks($editable=1)
     {       
         $ac_url = yii\helpers\Url::to(['academic-qualification/data', 'sid'=>$this->id, 'e'=>$editable]);
-        $ac_link = \yii\helpers\Html::a(Icon::show('graduation-cap', ['class' => 'fas',
-            'framework' => Icon::FAS]), $ac_url, ['title' =>"Staff's Academic Qualifications",
+        $ac_link = \yii\helpers\Html::a('Academics ' . Icon::show('graduation-cap', ['class' => 'fas',
+            'framework' => Icon::FAS]) . ' |', $ac_url, ['title' =>"Staff's Academic Qualifications",
             'onclick'=>"getDataForm('$ac_url', '<h3>Academic Qualifications for " . $this->getNames() . "</h3>'); return false;"]);
         
         $pc_url = yii\helpers\Url::to(['professional-certification/data', 'sid'=>$this->id, 'e'=>$editable]);
-        $pc_link = \yii\helpers\Html::a(Icon::show('certificate', ['class' => 'fas',
-            'framework' => Icon::FAS]), $pc_url, ['title' =>"Professional Certification",
+        $pc_link = \yii\helpers\Html::a('Certifications ' . Icon::show('certificate', ['class' => 'fas',
+            'framework' => Icon::FAS]) . ' |', $pc_url, ['title' =>"Professional Certification",
             'onclick'=>"getDataForm('$pc_url', '<h3>Professional Certifications for " . $this->getNames() . "</h3>'); return false;"]);
         
         $xp_url = yii\helpers\Url::to(['staff-experience/data', 'sid'=>$this->id, 'e'=>$editable]);
-        $xp_link = \yii\helpers\Html::a(Icon::show('tasks', ['class' => 'fas',
+        $xp_link = \yii\helpers\Html::a('Work History ' . Icon::show('tasks', ['class' => 'fas',
             'framework' => Icon::FAS]), $xp_url, ['title' =>"Work Experience",
             'onclick'=>"getDataForm('$xp_url', '<h3>Work Experience for " . $this->getNames() . "</h3>'); return false;"]);
         

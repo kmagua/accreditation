@@ -24,8 +24,13 @@ use yii\grid\GridView;
             //'id',
             'name',
             'membership_no',
-            'upload',
-            'date_created',
+            [
+                'attribute' => 'upload',
+                'content' => function($data){
+                    return $data->fileLink(true);
+                },
+            ],
+            //'date_created',
             //'date_modified',
             //'user_id',
 

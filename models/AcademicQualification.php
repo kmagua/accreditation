@@ -36,7 +36,7 @@ class AcademicQualification extends \yii\db\ActiveRecord
         return [
             [['staff_id'], 'integer'],
             [['level', 'course_name', 'certificate'], 'required'],
-            [['certificate_upload'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, pdf'],
+            [['certificate_upload'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'pdf'], 'maxSize'=> 1024*1024*2],
             [['level'], 'string'],
             [['date_created', 'last_updated'], 'safe'],
             [['course_name', 'certificate'], 'string', 'max' => 100],
@@ -104,11 +104,14 @@ class AcademicQualification extends \yii\db\ActiveRecord
             }
             if($this->save()){
                 ($this->certificate_upload)? $this->certificate_upload->saveAs($this->certificate):null;
+                $transaction->commit();
+                return true;
             }
-            $transaction->commit();
+            
         }catch (\Exception $e) {
            $transaction->rollBack();
            throw $e;
         }
+        return false;
     }
 }

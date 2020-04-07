@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'membership_no',
             'upload',
-            'date_created',
+            //'date_created',
             //'date_modified',
             //'user_id',
 

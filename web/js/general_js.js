@@ -1,7 +1,9 @@
+
 function getDataForm(url, header='<h3>Add Staff</h3>'){
     $("#accreditation-modal").modal();
-    $('div#modalContent').html('<img src="../images/ajax-loader-blue.gif"/><p>Please wait ...</p>');
-    setTimeout(() => {  console.log("World!"); }, 5000);
+    //basePathWeb is defined in main.php layout file
+    $('div#modalContent').html('<img src="' + basePathWeb + '/images/ajax-loader-blue.gif"/><p>Please wait ...</p>');
+    //setTimeout(() => {  console.log("World!"); }, 5000);
     $.ajax({
         type: "GET",
         url: url,            
@@ -21,7 +23,8 @@ function saveDataForm(clickedButton, contentDivID=''){
     
     var url = $(clickedButton.form).attr('action');
     var data = new FormData(clickedButton.form);
-    $('div#modalContent').html('<img src="../images/ajax-loader-blue.gif"/> <p>Please wait ...</p>');
+    //basePathWeb is defined in main.php layout file
+    $('div#modalContent').html('<img src="' + basePathWeb + '/images/ajax-loader-blue.gif"/> <p>Please wait ...</p>');
     //console.log(data)
     //console.log(clickedButton.form.action)
     $.ajax({

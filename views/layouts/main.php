@@ -30,8 +30,7 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
     <div class="wrap">
-    <?php
-   
+    <?php   
     NavBar::begin([
         'brandImage' => Yii::getAlias("@web")."/images/ictabanntransparentlast.png",
         //'brandLabel' => Yii::$app->name, 
@@ -140,12 +139,15 @@ yii\bootstrap\Modal::end();
 <?php $this->endBody() ?>
 
 <?php
+$path = Yii::getAlias('@web');
 $js = <<<JS
+var basePathWeb = '$path'
 $('#accreditation-modal').on('hidden.bs.modal', function () {
     if (typeof refresh_on_close === 'undefined') {
         location.reload();
     }
 })
+
 JS;
 
 $this->registerJs($js,yii\web\View::POS_END, 'refresh_on_close_modal');
