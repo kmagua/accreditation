@@ -77,9 +77,29 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
                 ]);
             ?>            
         </div>
-        
-       
     </div>
+    
+    <div class="row">
+          <div class="col-md-6">
+            <?= $form->field($model, 'application_type')->dropDownList([
+                1 => 'Initial Application', 2=>'Annual Renewal'
+            ], ['prompt'=>'', 'onchange' => 'if(this.value ==1){'
+                . ' $("#application-previous_category").val("");'
+                . ' $("#application-previous_category").prop("disabled", true); }'
+                . 'else{ $("#application-previous_category").prop("disabled", false); }']) ?>
+       
+        </div> 
+        
+        <div class="col-md-6">
+            <?= $form->field($model, 'previous_category')->dropDownList([                
+                    'ICTA 1' => 'ICTA 1', 'ICTA 2' => 'ICTA 2', 'ICTA 3' => 'ICTA 3', 'ICTA 4' => 'ICTA 4',
+                    'ICTA 5' => 'ICTA 5', 'ICTA 6' => 'ICTA 6', 'ICTA 7' => 'ICTA 7', 'ICTA 8' => 'ICTA 8'                    
+                ],
+                ['prompt' => '', 'disabled'=>$model->application_type ==1]);
+            ?>            
+        </div>
+    </div>
+    
     <div class="row">
          <div class="col-md-6">
             <?= $form->field($model, 'declaration', ['options' => 

@@ -6,7 +6,9 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\modules\professional\models\Approval */
 /* @var $form yii\widgets\ActiveForm */
+$options = ($model->level == 1)? [1 => 'Secretariat']:[2 => 'Committee'];
 ?>
+
 
 <div class="approval-form">
 
@@ -14,7 +16,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'status')->dropDownList([1 => 'Approved', 2 => 'Rejected'], ['prompt' => '']) ?>
     
-    <?= $form->field($model, 'level')->dropDownList([1 => 'Secretariat', 2 => 'Committee'], ['prompt' => '']) ?>
+    <?= $form->field($model, 'level')->dropDownList($options) ?>
     
     <?= $form->field($model, 'comment')->textarea(['rows' =>3]) ?>
 

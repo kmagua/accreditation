@@ -25,12 +25,26 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             'user.first_name',
             'user.last_name',
+            'user.idno',
+            'user.gender',
             'category.name',
-            'status',
-            /*[
-                'attribute' => 'declaration',
-                'label' => 'Declaration',
-            ],*/
+            //'status',
+            [
+                'attribute' => 'status',
+                'content' => function($data){
+                    if($data->status == 1){
+                        return 'Approved';
+                    }else if($data->status == 2){
+                        return 'Rejected';
+                    }
+                    return 'Pending';
+                },
+                'filter' => [
+                    1 => 'Approved',
+                    2 => 'Rejected',
+                    10 => 'Pending',
+                ]
+            ],
             //'initial_approval_date',
             //'date_created',
             //'last_updated',

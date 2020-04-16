@@ -14,7 +14,7 @@ $model->company_id = $searchModel->company_id;
     <p>
         <?= '' /*Html::a('Submit Application', ['new','cid'=>$model->company_id], ['class' => 'btn btn-success',
             'onclick'=>'getDataForm(this.href); return false;'])*/ ?>
-        <?= Html::a('Submit Application', ['create','cid'=>$model->company_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Submit a new Application', ['create','cid'=>$model->company_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <div id="application_form_div" style="display: none">

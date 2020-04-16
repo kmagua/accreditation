@@ -87,4 +87,17 @@ class Approval extends \yii\db\ActiveRecord
     {
         return $this->hasOne(\app\models\User::className(), ['id' => 'user_id']);
     }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function beforeValidate() 
+    {
+        parent::beforeValidate();
+        if($this->status == 2 && $this->comment==''){
+            $this->addError('comment', 'Comment cannot be empty for a rejected application.');
+        }
+        return true;
+    }
 }

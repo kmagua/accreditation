@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 
 $form = ActiveForm::begin();
 
-$current_category = $current_specific_item =  $ac_classification = $app_status = "";
+$current_category = $current_specific_item =  $ac_classification = $app_status = $ac_comment = "";
 $ac_score =0;
 $level_val = ($level == 2)?1:$level;
 $app_classification = app\models\ApplicationClassification::find()->where(['application_id'=>$app_id, 'icta_committee_id'=>$level_val])->one();
@@ -17,6 +17,13 @@ if($app_classification){
     $ac_score = $app_classification->score;
     $ac_classification = $app_classification->classification;
     $app_status = $app_classification->status;
+    $ac_comment = $app_classification->rejection_comment;
+}
+$cur_application = app\models\Application::findOne($app_id);
+$renewal_levl = '';
+if($cur_application->application_type == 2){    
+    $renewal_levl = '<span style="color:red"> Previous was ' . $cur_application->previous_category .'(<i>by applicant</i>)</span>';
+    echo '<h3 style="color:red">THIS IS A RENEWAL. Previos Category (<i>From Applicant</i>) was ' . $cur_application->previous_category . '</h3>';
 }
 ?>
 <div class="row" style="margin-top:30px;">
@@ -39,7 +46,6 @@ if($app_classification){
         <h4>Comment</h4><hr>
     </div>
 </div>
-
 
 <?php
 foreach ($application_scores as $index => $application_score) {
@@ -122,7 +128,7 @@ foreach ($application_scores as $index => $application_score) {
             'readonly'=>true]); ?>
     </div>
     <div class="col-md-5">
-        <?= Html::label("Category Assigned", 'applicationscore-classification') ?>
+        <?= Html::label("Category Assigned $renewal_levl", 'applicationscore-classification') ?>
         <?=Html::dropDownList("ApplicationScore[classification]", $ac_classification, [
             'ICTA 1' => 'ICTA 1', 'ICTA 2' => 'ICTA 2', 'ICTA 3' => 'ICTA 3', 'ICTA 4' => 'ICTA 4',
             'ICTA 5' => 'ICTA 5', 'ICTA 6' => 'ICTA 6', 'ICTA 7' => 'ICTA 7', 'ICTA 8' => 'ICTA 8',
@@ -145,7 +151,7 @@ foreach ($application_scores as $index => $application_score) {
     
     <div class="col-md-5">
         <?= Html::label("Comment", 'applicationscore-rejection_comment') ?>
-        <?= Html::textarea("ApplicationScore[rejection_comment]", '', ['class' => 'form-control', 'id' => 'applicationscore-rejection_comment']) ?>
+        <?= Html::textarea("ApplicationScore[rejection_comment]", $ac_comment, ['class' => 'form-control', 'id' => 'applicationscore-rejection_comment']) ?>
     </div>
 </div>
 

@@ -15,9 +15,27 @@ use yii\widgets\DetailView;
             //'id',
             'user_id',
             'category_id',
-            'status',
-            'declaration',
-            'initial_approval_date',
+            [
+                'attribute' => 'status',
+                'value' => function($model){
+                    if($model->status == 1){
+                        return 'Approved';
+                    }else if($model->status == 2){
+                        return 'Rejected';
+                    }
+                    return 'Pending';
+                },                
+            ],
+            [
+                'attribute' => 'declaration',
+                'value' => function($model){
+                    if($model->declaration == 1){
+                        return 'Yes';
+                    }
+                    return 'No';
+                },                
+            ],
+            //'initial_approval_date',
             'date_created',
             'last_updated',
         ],

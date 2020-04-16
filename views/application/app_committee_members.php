@@ -19,7 +19,7 @@ $data = \app\models\IctaCommitteeMember::findCommitteeMembersArray($level);
     
     <?= $form->field($model, 'committee_member_ids')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\app\models\IctaCommitteeMember::findCommitteeMembersArray($level),'id','full_name'),
-            'options' => ['placeholder' => 'Select a state ...', 'multiple'=>'true'],
+            'options' => ['placeholder' => 'Select a member(s) ...', 'multiple'=>'true'],
             'pluginOptions' => [
                 'allowClear' => true
             ],

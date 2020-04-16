@@ -95,17 +95,19 @@ class Application extends \yii\db\ActiveRecord
     /**
      * 
      */
-    public function notifyUserOfApproval()
+    public function notifyUserOfApproval($status, $comment)
     {
-        $header = "Your accreditation request has been approved by ICT Authority";
+        $approval_status = ($status == 1)?'Approved':'Rejected';
+        $header = "Your Professional accreditation request has been $approval_status by ICT Authority";
         $type = $this->category->name;
         $link = \yii\helpers\Url::to(['/professional/application/download-cert', 'id' => $this->id], true);
-        
+        $msg_status = ($status == 1)?"You can login in to the Authority's accreditation 
+            site using the link below to download your certificate.</p>
+            <p>$link</p>": "Below is the stated reason for rejection</p>. <p><i>$comment</i></p>";
         $message = <<<MSG
             Dear {$this->user->first_name} {$this->user->last_name},
-            <p>Kindly note that your Accreditation request for $type has been approved by ICT Authority.
-                You can login in to the Authority's accreditation site using the link below to download your certificate.</p>
-            <p>$link</p>
+            <p>Kindly note that your Accreditation request for $type has been $approval_status by ICT Authority.
+              $msg_status  
             <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;

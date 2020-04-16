@@ -25,11 +25,39 @@ class ApprovalController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','update','create-ajax', 'view'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
                             return Yii::$app->user->identity->isInternal();
+                        }
+                    ],
+                    [
+                        'actions' => ['create-ajax'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['l'])){
+                                $grp = (Yii::$app->request->get()['l'] == 1)?'Secretariat':'Committee member';                                
+                                if(\Yii::$app->user->identity->inGroup($grp)){
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['update-ajax'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){
+                                $app = Approval::findOne(Yii::$app->request->get()['id']);
+                                if($app && ($app->user_id == Yii::$app->user->identity->id)){
+                                    return true;
+                                }
+                            }
+                            return false;
                         }
                     ],
                 ],
@@ -94,17 +122,23 @@ class ApprovalController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreateAjax($app_id)
+    public function actionCreateAjax($app_id, $l)
     {
         $model = new Approval();
         $model->application_id = $app_id;
         $model->user_id = \Yii::$app->user->identity->id;
+        $model->level = $l;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             if($model->level == 2){
                 $model->application->status = $model->status;
+                if($model->status == 1){
+                    $model->application->initial_approval_date = date('Y-m-d');
+                }
                 $model->application->save(false);
-                $model->application->notifyUserOfApproval();
+                $model->application->notifyUserOfApproval($model->status, $model->comment);
+            }else if($model->level == 1 && $model->status == 2){
+                $model->application->notifyUserOfApproval($model->status, $model->comment);
             }
             return "<h3>Approval Record Saved.</h3>";
         }
@@ -130,6 +164,34 @@ class ApprovalController extends Controller
         }
 
         return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+    
+    /**
+     * Creates a new Approval model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionUpdateAjax($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if($model->level == 2){
+                $model->application->status = $model->status;
+                if($model->status == 1){
+                    $model->application->initial_approval_date = date('Y-m-d');
+                }else{
+                    $model->application->initial_approval_date = null;
+                }
+                $model->application->save(false);
+                $model->application->notifyUserOfApproval($model->status, $model->comment);
+            }
+            return "<h3>Approval Record Saved.</h3>";
+        }
+
+        return $this->renderAjax('_form', [
             'model' => $model,
         ]);
     }

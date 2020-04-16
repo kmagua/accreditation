@@ -32,7 +32,7 @@ use yii\grid\GridView;
 
             [
                 'label' => '',
-                'headerOptions' => ['style' => 'width:8%'],
+                'headerOptions' => ['style' => 'width:14%'],
                 'content' => function($data){
                     return $data->staff->getStaffDetailsLinks(0);
                 }

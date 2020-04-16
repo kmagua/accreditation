@@ -21,6 +21,9 @@ use raoul2000\workflow\events\WorkflowEvent;
  * @property string|null $certificate_serial
  * @property int|null $declaration
  * @property string $initial_approval_date
+ * @property int $application_type
+ * @property string $previous_category
+ * @property int|null $parent_id
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -51,14 +54,16 @@ class Application extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'accreditation_type_id', 'cash_flow', 'financial_status_link', 'turnover'], 'required'],
-            [['company_id', 'accreditation_type_id', 'user_id'], 'integer'],
+            [['company_id', 'accreditation_type_id', 'cash_flow', 'financial_status_link', 'turnover', 'application_type'], 'required'],
+            [['company_id', 'accreditation_type_id', 'user_id', 'application_type', 'parent_id'], 'integer'],
             [['app_company_experience','app_staff', 'cash_flow', 'financial_status_link', 'turnover'], 'required','on'=>'create_update'],
             [['cash_flow', 'turnover'], 'number'],
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             [['status', 'certificate_serial'], 'string', 'max' => 50],
+            [['previous_category'], 'string', 'max' => 20],
+            //[['company_id', 'accreditation_type_id'], 'unique', 'targetAttribute' => ['accreditation_type_id'], 'message' => 'You have already submitted an application for the selected Accreditation Category'],
             [['date_created', 'last_updated', 'app_company_experience', 'app_staff', 'initial_approval_date'], 'safe'],
             [['financial_status_link'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
@@ -75,7 +80,7 @@ class Application extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'company_id' => 'Company ID',
-            'accreditation_type_id' => 'Accediation Category',
+            'accreditation_type_id' => 'Accreditation Category',
             'cash_flow' => 'Cash Flow (KES)',
             'turnover' => 'Turnover (KES)',
             'financial_status_link' => 'Audited Accounts Document Link',
@@ -85,7 +90,9 @@ class Application extends \yii\db\ActiveRecord
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
             'app_company_experience' => 'Select company work experience to include in this application',
-            'app_staff' => 'Select Staff Members to inlucde in this application'
+            'app_staff' => 'Select Staff Members to inlucde in this application',
+            'previous_category' => 'Previously Assigned Category',
+            'application_type' => 'New or Annual Renewal'
         ];
     }
 
@@ -168,6 +175,29 @@ class Application extends \yii\db\ActiveRecord
         return $this->hasMany(Payment::className(), ['application_id' => 'id']);
     }
     
+    public function beforeValidate() 
+    {
+        parent::beforeValidate();
+        if($this->application_type == 2 && $this->previous_category ==''){
+            $this->addError('previous_category', 'Previous category cannot be blank for renewals.');
+        }
+        if($this->isNewRecord){
+            $other = Application::find()->where(['company_id' => $this->company_id,
+                'accreditation_type_id' => $this->accreditation_type_id, 'application_type'=>1
+            ])->one();
+            if($other){
+                if($this->application_type == 1){
+                    $this->addError('accreditation_type_id', 'You have already submitted an application for the selected Accreditation Category.');
+                }else{
+                    if($this->parent_id == ''){
+                        $this->addError('application_type', 'An existing record already exists for the category. Kindly renew from that application.');
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
     /**
      * Overridden function
      * @param type $insert
@@ -247,7 +277,6 @@ class Application extends \yii\db\ActiveRecord
     
     /**
      * Sets app_company_experience to values of selected experiences
-     * 
      */
     public function loadExperienceData()
     {
@@ -283,6 +312,9 @@ class Application extends \yii\db\ActiveRecord
         return true;
     }
     
+    /**
+     * 
+     */
     public function init()
     {
     	$this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-confirmed'),
@@ -387,7 +419,8 @@ class Application extends \yii\db\ActiveRecord
                 return Html::a("Assign Members ". Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
                     'application/committee-members', 'id' => $this->id, 'l'=> $level], 
                         ['data-pjax'=>'0', 'title' => $message]);
-            }return "Pending assignment of " . (($level==1)?"secretariat members.":"committee members.");
+            }
+            return "Pending assignment of " . (($level==1)?"secretariat members.":"committee members.");
         }
         return "Pending";
     }
@@ -459,7 +492,11 @@ class Application extends \yii\db\ActiveRecord
         }*/
         $ac = ApplicationClassification::find()->where(['application_id'=>$this->id, 'icta_committee_id' => 2])->one();
         if($ac){
-            return AccreditationLevel::findOne(['name' => $ac->classification])->accreditation_fee;
+            $field = ($this->application_type == 1)?'accreditation_fee':'renewal_fee';
+            $level_details = AccreditationLevel::findOne(['name' => $ac->classification]);
+            if($level_details){
+                return $level_details->{$field};
+            }
         }
         return "Invalid payment amount";
     }
@@ -486,7 +523,7 @@ class Application extends \yii\db\ActiveRecord
         if($outcome_array[2] == 'rejected'){
             $level = ($outcome_array[0] == 'application')? 1 : 2;
             $payment = Payment::find()->select('comment')->where(['application_id' => $this->id, 'level' => $level])->one();
-            $additional = ' for the flowwing reason "' . $payment->comment .".";
+            $additional = ' for the following reason "' . $payment->comment .".";
         }
         $message = <<<MSG
                 Dear {$this->user->full_name},
@@ -509,19 +546,21 @@ MSG;
         $score_items_data = \Yii::$app->db->createCommand($score_items_sql)->queryAll();
         foreach($score_items_data as $score_item_data){
             $score = null;
+            $comment = null;
             if($level->data == 2){
-                $level_one_sql = 'SELECT ifnull(score,0) score FROM application_score where '
+                $level_one_sql = 'SELECT ifnull(score,0) score, comment FROM application_score where '
                         . " application_id = {$this->id} and committee_id = 1 and score_item_id = {$score_item_data['id']}";
                 $level_one_score = \Yii::$app->db->createCommand($level_one_sql)->queryOne();
                 if($level_one_score){                    
                     $score = ($level_one_score['score'] > 0)? $level_one_score['score']:null;
+                    $comment = $level_one_score['comment'];
                 }
             }
-            $insert_sql = "INSERT INTO application_score (application_id, score_item_id, committee_id, user_id, score)
-                VALUES ({$this->id}, {$score_item_data['id']}, {$level->data}, $uid, :score)
+            $insert_sql = "INSERT INTO application_score (application_id, score_item_id, committee_id, user_id, score, comment)
+                VALUES ({$this->id}, {$score_item_data['id']}, {$level->data}, $uid, :score, :comment)
                 ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP";
                 
-            \Yii::$app->db->createCommand($insert_sql, [':score' => $score])->execute();
+            \Yii::$app->db->createCommand($insert_sql, [':score' => $score, ':comment' => $comment])->execute();
         }
     }
     
@@ -643,5 +682,21 @@ MSG;
             return true;
         }
         return false;
+    }
+    
+    /**
+     * 
+     * @param type $cid Company ID
+     * @return type
+     */
+    public static function getBizPermit($cid)
+    {
+        $sql = "SELECT cd.* FROM `company_document` cd 
+            JOIN `company_type_document` ctd ON cd.`company_type_doc_id`=ctd.id
+            JOIN `document_type` dt ON dt.id = ctd.`document_type_id`
+            WHERE dt.name = 'business permit' AND cd.company_id = $cid";
+        $query = CompanyDocument::findBySql($sql);
+        $provider = new \yii\data\ActiveDataProvider(['query' => $query]);
+        return $provider;
     }
 }

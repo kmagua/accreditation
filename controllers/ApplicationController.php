@@ -387,6 +387,9 @@ class ApplicationController extends Controller
                 return $this->renderAjax('view_fin_status', ['model'=>$application]);
             case 'company_exp';
                 return $this->renderAjax('view_company_exp', ['app_id'=>$application->id]);
+            case 'biz_permit';
+                return $this->renderAjax('view_biz_permit', ['app_id'=>$application->id,
+                    'cid' =>$application->company_id]);
         }
     }
 }

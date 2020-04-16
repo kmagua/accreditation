@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Payment */
@@ -13,9 +13,16 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
             'id' =>'payment-approval-form',
             'action' => ['application/approve-payment', 'id'=>$model->application_id, 'l'=>$model->level],
-            'options' => ['enctype' => 'multipart/form-data'
+            'options' => ['enctype' => 'multipart/form-data',
+            'layout' => 'horizontal',
         ]]); ?>
-    <h3><?= $model->getReceipt() ?> </h3>
+    <p><?= $model->getReceipt(TRUE) ?></p>
+    <div class="row"> 
+        <div class="col-md-8">
+            <h4>Applicable payment Amount KES: <?= $model->application->getPayableAtLevel(); ?></h4>
+        </div>
+    </div>
+    
     <div class="row"> 
         <div class="col-md-8">
             <?= $form->field($model, 'status')->dropDownList(['confirmed'=>'Confirmed', 'rejected'=>'Rejected'], ['prompt'=>'']) ?>
