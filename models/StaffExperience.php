@@ -54,7 +54,7 @@ class StaffExperience extends \yii\db\ActiveRecord
             'staff_id' => 'Staff ID',
             'organization' => 'Organization',
             'role' => 'Role',
-            'assignment' => 'Assignment/Duties',
+            'assignment' => 'Duties',
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
             'date_created' => 'Date Created',

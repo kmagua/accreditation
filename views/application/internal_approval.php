@@ -27,6 +27,7 @@ if($cur_application->application_type == 2){
 }
 ?>
 <div class="row" style="margin-top:30px;">
+    <div class="row" style="text-align: center !important;"><u><h5><?= $cur_application->company->company_name . '\'s ' . $cur_application->accreditationType->name ?> Accreditation Request</h5></u></div>
     <div class="col-md-2">
         <h4>Categoty</h4><hr>
     </div>

@@ -16,6 +16,7 @@ use yii\widgets\ActiveForm;
                 ['staff-experience/update-ajax', 'id'=>$model->id],
             //'options' => ['enctype' => 'multipart/form-data']
         ]); ?>
+    
     <div class="row"> 
         <div class="col-md-6">
             <?= $form->field($model, 'organization')->textInput() ?>
@@ -26,13 +27,6 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
     
-    <div class="row"> 
-        <div class="col-md-8">
-            <?= $form->field($model, 'assignment')->textarea(['rows' => 4, 'cols'=>70]) ?>
-        </div>
-            
-        
-    </div>
     <div class="row"> 
         <div class="col-md-6">
              <?= $form->field($model, 'start_date')->widget(\yii\jui\DatePicker::classname(), [
@@ -49,6 +43,7 @@ use yii\widgets\ActiveForm;
                 ]
             ]) ?>
         </div>
+        
         <div class="col-md-6">
              <?= $form->field($model, 'end_date')->widget(\yii\jui\DatePicker::classname(), [
                 //'language' => 'ru',
@@ -65,7 +60,14 @@ use yii\widgets\ActiveForm;
             ]) ?>
         </div>
     </div>
-
+    
+    <div class="row"> 
+        <div class="col-md-8">
+            <?= $form->field($model, 'assignment')->textarea(['rows' => 4, 'cols'=>70, 'maxlength' => true]) ?>
+        </div>        
+    </div>
+    max 200 characters<br>
+    
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'onclick'=>'saveDataForm(this); return false;']) ?>
     </div>

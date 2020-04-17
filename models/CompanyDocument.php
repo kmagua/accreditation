@@ -39,6 +39,7 @@ class CompanyDocument extends \yii\db\ActiveRecord
             [['company_id', 'company_type_doc_id'], 'required'],
             [['date_created', 'last_updated'], 'safe'],
             [['upload_file'], 'string'],
+            [['company_id', 'company_type_doc_id'], 'unique', 'targetAttribute' => ['company_id', 'company_type_doc_id'], 'message' => 'Document Type already uploaded.'],
             [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png','pdf','doc', 'jpg'] , 'maxSize'=> 1024*1024*2],
             [['company_type_doc_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyTypeDocument::className(), 'targetAttribute' => ['company_type_doc_id' => 'id']],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
@@ -107,14 +108,16 @@ class CompanyDocument extends \yii\db\ActiveRecord
                 $this->upload_file = 'uploads/company_documents/' . $this->company_id ."-" . $this->companyTypeDoc->documentType->name .'-'. microtime() .
                     '.' . $this->uploadFile->extension;
             }
-            if($this->save()){
+            if($this->save()){                
                 ($this->uploadFile)? $this->uploadFile->saveAs($this->upload_file):null;
+                $transaction->commit();
+                return true;
             }
-            $transaction->commit();
+            
         }catch (\Exception $e) {
            $transaction->rollBack();
            throw $e;
         }
-        return true;
+        return false;
     }
 }

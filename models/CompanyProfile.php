@@ -68,7 +68,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
             'id' => 'ID',
             'business_reg_no' => 'Business Reg No',
             'company_name' => 'Company Name',
-            'registration_date' => 'Company Registration Date',
+            'registration_date' => 'Business/Company Registration Date',
             'county' => 'County',
             'town' => 'Town',
             'building' => 'Building',

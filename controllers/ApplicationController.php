@@ -266,10 +266,11 @@ class ApplicationController extends Controller
         }
         
         if ($model->load(Yii::$app->request->post())) {
-            $model->savePayment();
-            $status = ($l == 1) ? "application-paid" : "certificate-paid";
-            $model->application->progressWorkFlowStatus($status);
-            return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";
+            if($model->savePayment()){
+                $status = ($l == 1) ? "application-paid" : "certificate-paid";
+                $model->application->progressWorkFlowStatus($status);
+                return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";
+            }
         }
         
         return $this->renderAjax('../payment/_form_receipt', [

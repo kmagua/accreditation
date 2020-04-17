@@ -130,9 +130,9 @@ yii\bootstrap\Modal::begin([
         'tabindex' => false
     ]
 ]);
-echo "<div id='modalContent'><div style='text-align:center'>" . Html::img('@web/images/radio.gif')  . "</div></div>";
+echo "<div id='modalContent'><div style='text-align:center'></div></div>";
 echo '<div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close Dialog</button>
       </div>';
 yii\bootstrap\Modal::end();
 ?>

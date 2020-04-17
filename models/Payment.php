@@ -40,7 +40,7 @@ class Payment extends \yii\db\ActiveRecord
             [['application_id', 'level'], 'integer'],
             [['billable_amount'], 'number'],
             [['date_created', 'last_update'], 'safe'],
-            [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
+            [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf', 'maxSize'=> 1024*1024*2],            
             [['receipt'], 'string', 'max' => 100],
             [['comment'], 'string', 'max' => 200],
             [['mpesa_code', 'status'], 'string', 'max' => 20],
@@ -92,6 +92,7 @@ class Payment extends \yii\db\ActiveRecord
             }
             if($this->save()){
                 ($this->upload_file)? $this->upload_file->saveAs($this->receipt):null;
+                return true;
             }
             $transaction->commit();
         }catch (\Exception $e) {
