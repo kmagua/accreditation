@@ -49,14 +49,18 @@ use yii\widgets\ActiveForm;
                 'dateFormat' => 'dd-MM-yyyy',
                 'clientOptions'=>[
                     'yearRange'=>(date('Y')-100).":".(date('Y')-18),
-                    'maxDate' => "18Y",
+                    'maxDate' => '-18year',
                     'changeYear' => true,
-                    'changeMonth' => 'true'
+                    'changeMonth' => true,
+                    'defaultDate' => '-18year',
                 ],
                 'options' =>[
                     'class' => 'form-control',
+                    'readonly' => 'readonly'
                 ]
             ]) ?>
+            
+            <?= '' //$form->field($model, 'dob')->textInput() ?>
         </div>
     </div>
     
@@ -87,3 +91,11 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$year_range = (date('Y')-100).":".(date('Y'));
+$js = <<<JS
+$( document ).ready(function() {    
+    $(document).unbind('focusin');
+});
+JS;
+$this->registerJs($js,yii\web\View::POS_END, 'this_is_date_field');

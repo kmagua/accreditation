@@ -9,8 +9,8 @@ use yii\grid\GridView;
 ?>
 <div class="education-index">
     <p>
-        <?= Html::a('Add Profession Membership Record', ['create-ajax', 'pid'=>$searchModel->user_id], ['class' => 'btn btn-success',
-            'onclick'=>'getDataForm(this.href, "<h3>Adding Professional Membership</h3>"); return false;']) ?>
+        <?= Html::a('Add Professional Certification Record', ['create-ajax', 'pid'=>$searchModel->user_id], ['class' => 'btn btn-success',
+            'onclick'=>'getDataForm(this.href, "<h3>Adding Professional Certification</h3>"); return false;']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -42,7 +42,7 @@ use yii\grid\GridView;
                     'update' => function ($url, $model) {
                         $url = \yii\helpers\Url::to(['professional-reg-bodies/update-ajax', 'id' =>$model->id]);
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
-                            'title' =>"Edit Education Details",
+                            'title' =>"Edit Certification Details",
                             'onclick'=>"getDataForm('$url', '<h3>Record Edit</h3>'); return false;"]);
                     },
                 ],

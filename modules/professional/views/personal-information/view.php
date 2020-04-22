@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'options' => ['id' => 'pi_empdata_tab'],
         ],
         [
-            'label' => 'Profesional Memberships',
+            'label' => 'Profesional Certifications',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['professional-reg-bodies/my-memberships', 'pid'=>$model->id])],
             //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'pi_regdata_tab'],

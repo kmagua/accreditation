@@ -508,7 +508,7 @@ class Application extends \yii\db\ActiveRecord
     public function progressWorkFlowStatus($status)
     {
         $this->sendToStatus($status);
-        $this->save(false);
+        return $this->save(false);
     }
     
     /**

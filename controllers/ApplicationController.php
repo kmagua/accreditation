@@ -267,9 +267,11 @@ class ApplicationController extends Controller
         
         if ($model->load(Yii::$app->request->post())) {
             if($model->savePayment()){
-                $status = ($l == 1) ? "application-paid" : "certificate-paid";
-                $model->application->progressWorkFlowStatus($status);
-                return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";
+                //$status = ($l == 1) ? "application-paid" : "certificate-paid";
+                if($model->application->progressWorkFlowStatus("certificate-paid")){
+                    return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";
+                }
+                return "Error updating payment details.";
             }
         }
         

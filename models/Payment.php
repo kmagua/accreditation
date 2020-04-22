@@ -92,13 +92,14 @@ class Payment extends \yii\db\ActiveRecord
             }
             if($this->save()){
                 ($this->upload_file)? $this->upload_file->saveAs($this->receipt):null;
+                $transaction->commit();
                 return true;
-            }
-            $transaction->commit();
+            }            
         }catch (\Exception $e) {
            $transaction->rollBack();
            throw $e;
         }
+        return false;
     }
     
     /**

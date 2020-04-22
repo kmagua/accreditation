@@ -70,7 +70,7 @@ class CompanyStaff extends \yii\db\ActiveRecord
             'national_id' => 'National ID',
             'kra_pin' => 'Kra Pin',
             'gender' => 'Gender',
-            'dob' => 'Dob',
+            'dob' => 'Date of Birth',
             'disability_status' => 'Disabled?',
             'title' => 'Title',
             'staff_type' => 'Staff Type',

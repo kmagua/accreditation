@@ -60,7 +60,7 @@ class ProfessionalRegBodies extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'membership_no' => 'Membership No',
+            'membership_no' => 'Certificate Number',
             'upload' => 'Upload',
             'date_created' => 'Date Created',
             'date_modified' => 'Date Modified',
