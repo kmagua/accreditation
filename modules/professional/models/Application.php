@@ -166,6 +166,6 @@ MSG;
         }else if($this->status == 5){
             return 'Payment Rejected';
         }
-        return 'Pending';
+        return 'Pending Approval';
     }
 }
