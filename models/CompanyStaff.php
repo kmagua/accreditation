@@ -45,7 +45,7 @@ class CompanyStaff extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'first_name', 'last_name'], 'required'],
+            [['company_id', 'first_name', 'last_name', 'gender', 'disability_status'], 'required'],
             //[['first_name', 'last_name'], 'match', 'pattern' => '/^[a-z]\w*$/i'],
             [['company_id', 'national_id'], 'integer'],
             [['gender', 'disability_status', 'staff_type', 'status'], 'string'],

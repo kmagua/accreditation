@@ -61,6 +61,19 @@ AppAsset::register($this);
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],
             [
+                'label' => 'Accreditations', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
+                'items' => [
+                    ['label' => 'Company/Supplier', 'url' => ['/company-profile/my-companies'],                        
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
+                    ['label' => 'Professional', 'url' => ['/professional/personal-information/my-profile'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'My Profile', 'url' => ['/user/my-profile'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    
+                ],
+                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))
+            ],
+            [
                 'label' => 'Administration', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
                 'items' => [
                     ['label' => 'Users', 'url' => ['/user/index'],                        
@@ -73,7 +86,6 @@ AppAsset::register($this);
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                     ['label' => 'Approval Levels', 'url' => ['/icta-committee/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                    
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],

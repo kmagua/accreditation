@@ -20,6 +20,22 @@ use yii\bootstrap\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'membership_no')->textInput(['maxlength' => true]) ?>
+    
+    <?= $form->field($model, 'award_date')->widget(\yii\jui\DatePicker::classname(), [
+        //'language' => 'ru',
+        'dateFormat' => 'dd-MM-yyyy',
+        'clientOptions'=>[
+            'yearRange'=>(date('Y')-50).":".(date('Y')),
+            'maxDate' => '+0day',
+            'changeYear' => true,
+            'changeMonth' => true,
+            //'defaultDate' => '-18year',
+        ],
+        'options' =>[
+            'class' => 'form-control',
+            'readonly' => 'readonly'
+        ]
+    ]) ?>
 
     <?= $form->field($model, 'upload_file')->fileInput() ?>
 

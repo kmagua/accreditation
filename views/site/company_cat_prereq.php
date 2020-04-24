@@ -1,7 +1,7 @@
 <div class=WordSection1>
 
 <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><u><span
-style='font-family:"Trebuchet MS",sans-serif'>PRE-REQUISITES FOR COMPANY ACCREDITATION CATEGORIES<o:p></o:p></span></u></b></p>
+style='font-family:"Trebuchet MS",sans-serif'>PRE-REQUISITES FOR SUPPLIER/COMPANY ACCREDITATION CATEGORIES<o:p></o:p></span></u></b></p>
 
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 width="100%"
  style='width:100.0%;border-collapse:collapse;border:none;mso-border-alt:solid black .5pt;

@@ -12,6 +12,7 @@ use Yii;
  * @property string|null $course
  * @property string|null $institution
  * @property string|null $completion_date
+ * @property string|null $upload
  * @property string|null $date_created
  * @property string|null $date_modified
  * @property int|null $user_id
@@ -21,6 +22,7 @@ use Yii;
  */
 class Education extends \yii\db\ActiveRecord
 {
+    public $upload_file;
     /**
      * {@inheritdoc}
      */
@@ -46,6 +48,7 @@ class Education extends \yii\db\ActiveRecord
             [['level_id', 'user_id'], 'integer'],
             [['level_id', 'user_id', 'institution', 'course', 'completion_date'], 'required'],
             [['completion_date', 'date_created', 'date_modified'], 'safe'],
+            [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'pdf'], 'maxSize'=> 1024*1024*2],
             [['course', 'institution'], 'string', 'max' => 100],
             [['level_id'], 'exist', 'skipOnError' => true, 'targetClass' => EducationLevel::className(), 'targetAttribute' => ['level_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => PersonalInformation::className(), 'targetAttribute' => ['user_id' => 'id']],

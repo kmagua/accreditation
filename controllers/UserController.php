@@ -41,7 +41,12 @@ class UserController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index','approval','approve-payment', 'committee-members', 'change-role'],
+                        'actions' => ['my-profile'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index','approval','approve-payment', 'committee-members', 'change-role', 'new'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -158,6 +163,12 @@ class UserController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
     
+    /**
+     * 
+     * @param type $id
+     * @param type $h
+     * @return type
+     */
     public function actionConfirmUserAccount($id, $h)
     {
         $pass_reset = \app\models\PasswordReset::findOne(['user_id' => $id, 'hash' => $h, 'status'=>0]);
@@ -171,7 +182,7 @@ class UserController extends Controller
             \Yii::$app->session->setFlash('user_confirmation','Your account has been activated. Login here.');
             return $this->redirect(['site/login']);
         }else{
-            echo "Invalid Account Comnfirmation Details"; exit;
+            echo "Invalid Account Confirmation Details"; exit;
         }
     }
     
@@ -221,6 +232,11 @@ class UserController extends Controller
         ]);
     }
     
+    /**
+     * 
+     * @param type $id
+     * @return type
+     */
     public function actionChangeRole($id)
     {
         $model = $this->findModel($id);
@@ -231,6 +247,39 @@ class UserController extends Controller
         }
 
         return $this->render('change_role', [
+            'model' => $model,
+        ]);
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function actionMyProfile()
+    {
+        //$model = $this->findModel(\Yii::$app->user->identity->user_id);
+        return $this->render('user_view', [
+            'model' => $this->findModel(\Yii::$app->user->identity->user_id),
+        ]);
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function actionNew()
+    {
+        $model = new User();
+        $model->setScenario('register_internal');
+        //$model->generateKRAPIN();
+        $model->status = 1;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('user_registration','Your account has been registered and an activation email sent to your email.');
+            return $this->redirect(['site/index']);
+        }
+
+        return $this->render('new_user_internal', [
             'model' => $model,
         ]);
     }

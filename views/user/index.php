@@ -12,7 +12,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <p>
+        <?= Html::a('New User', ['new'], ['class' => 'btn btn-success']) ?>
+    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,8 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'email:email',
             'first_name',
             'last_name',
-            'password',
-            //'role',
+            //'password',
+            'role',
             //'date_created',
             //'last_updated',
 

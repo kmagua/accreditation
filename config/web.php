@@ -3,6 +3,7 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $db2 = require __DIR__ . '/db2.php';
+$email_settings = require __DIR__ . '/email_settings.php';
 
 $config = [
     'id' => 'accreditation',
@@ -28,17 +29,7 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.gmail.com',
-                'username' => 'standards@ict.go.ke',
-                'password' => 'driuceycrebiwvlj',
-                'port' => '587',
-                'encryption' => 'tls',
-            ],
-        ],
+        'mailer' => $email_settings,
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

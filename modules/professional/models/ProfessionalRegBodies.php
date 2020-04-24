@@ -11,6 +11,7 @@ use Yii;
  * @property string|null $name
  * @property string|null $membership_no
  * @property string|null $upload
+ * @property string|null $award_date
  * @property string|null $date_created
  * @property string|null $date_modified
  * @property int|null $user_id
@@ -42,8 +43,8 @@ class ProfessionalRegBodies extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date_created', 'date_modified'], 'safe'],
-            [['name', 'membership_no'],'required'],
+            [['date_created', 'date_modified', 'award_date'], 'safe'],
+            [['name', 'membership_no', 'award_date'],'required'],
             [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'pdf'], 'maxSize'=> 1024*1024*2],
             [['user_id'], 'integer'],
             [['name', 'upload'], 'string', 'max' => 100],
@@ -76,6 +77,33 @@ class ProfessionalRegBodies extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(PersonalInformation::className(), ['id' => 'user_id']);
+    }
+    
+    /**
+     * 
+     * @param type $insert
+     * @return boolean
+     */
+    public function beforeSave($insert) 
+    {
+        parent::beforeSave($insert);
+        if($this->award_date != ''){
+            $this->award_date = date('Y-m-d', strtotime($this->award_date));
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function afterFind() 
+    {
+        parent::afterFind();
+        if($this->award_date != ''){
+            $this->award_date = date('d-m-Y', strtotime($this->award_date));
+        }
+        return true;
     }
     
     /**

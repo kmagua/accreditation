@@ -104,7 +104,7 @@ use yii\grid\GridView;
 
 <div class="employment-index">
     <h1>
-        Professional Memberships
+        Professional Certifications
     </h1>
     
     <?= GridView::widget([
@@ -117,7 +117,13 @@ use yii\grid\GridView;
 
             'name',
             'membership_no',
-            'upload',
+            'award_date',
+            [
+                'attribute' => 'upload',
+                'content' => function($data){
+                    return $data->fileLink(true);
+                }
+            ],
         ],
     ]); ?>
 </div>

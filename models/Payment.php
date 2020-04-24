@@ -77,6 +77,20 @@ class Payment extends \yii\db\ActiveRecord
     
     /**
      * 
+     * @param type $insert
+     * @return boolean
+     */
+    public function beforeSave($insert) 
+    {
+        parent::beforeSave($insert);
+        if($this->status == ''){
+            $this->status = NULL;
+        }
+        return true;
+    }
+    
+    /**
+     * 
      * @throws \Exception
      */
     public function savePayment()

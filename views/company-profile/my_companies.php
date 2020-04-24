@@ -5,7 +5,7 @@ use yii\helpers\Html;
 $this->title = 'My Companies';
 ?>
 <div class="company-profile-index">
-    <h4>Use the new Button below to register a new company or click the 'view' icon for further information.</h4>
+    <h4>Use the new Button below to register a new company or click the 'view' icon for further information on an already registered company.</h4>
     <?= Html::a('Add new Company', ['company-profile/create'], ['class' => 'btn btn-success']) ?>
 <?= GridView::widget([
     'dataProvider' => $dataProvider,

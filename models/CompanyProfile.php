@@ -46,7 +46,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['business_reg_no', 'company_name', 'registration_date', 'county', 'company_email', 'telephone_number'], 'required'],
+            [['business_reg_no', 'company_name', 'registration_date', 'county', 'company_email', 'telephone_number', 'company_categorization', 'company_type_id'], 'required'],
             [['registration_date', 'date_created', 'last_updated'], 'safe'],
             [['company_type_id', 'company_categorization'], 'string'],
             [['user_id'], 'integer'],

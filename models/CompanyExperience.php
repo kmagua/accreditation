@@ -40,7 +40,7 @@ class CompanyExperience extends \yii\db\ActiveRecord
     {
         return [
             [['company_id'], 'integer'],
-            [['company_id', 'project_cost', 'project_name', 'organization_type'], 'required'],
+            [['company_id', 'project_cost', 'project_name', 'organization_type', 'status'], 'required'],
             [['organization_type', 'status'], 'string'],
             [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'pdf', 'doc', 'jpg'], 'maxSize'=> 1024*1024*2],
             [['start_date', 'end_date', 'date_created', 'last_updated'], 'safe'],

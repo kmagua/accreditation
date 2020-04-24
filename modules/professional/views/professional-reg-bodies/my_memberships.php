@@ -30,7 +30,7 @@ use yii\grid\GridView;
                     return $data->fileLink(true);
                 },
             ],
-            //'date_created',
+            'award_date',
             //'date_modified',
             //'user_id',
 

@@ -50,7 +50,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['role'], 'string'],
             [['status'], 'number'],
             [['captcha', 'password'], 'required', 'on'=>'register'],
-            [['password'], 'required', 'on'=>['register', 'password_update']],
+            [['password'], 'required', 'on'=>['register', 'password_update', 'register_internal']],
             [['email', 'kra_pin_number'], 'unique'],
             [['date_created', 'last_updated'], 'safe'],
             [['email'], 'string', 'max' => 60],
@@ -58,7 +58,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['kra_pin_number'], 'string', 'max' => 11, 'min'=>11],
             [['first_name', 'last_name'], 'string', 'max' => 20],
             [['password', 'password_repeat'], 'string', 'max' => 100],
-            [['password_repeat'], 'validatePasswordRepeat', 'on'=>['register', 'password_update']],
+            [['password_repeat'], 'validatePasswordRepeat', 'on'=>['register', 'password_update', 'register_internal']],
         ];
     }
 
@@ -186,6 +186,18 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         ]);
     }
     
+    /**
+     * 
+     */
+    public function beforeValidate() 
+    {
+        parent::beforeValidate();
+        if($this->scenario == 'register_internal'){
+            $this->generateKRAPIN();
+        }
+        return true;
+    }
+    
     public function beforeSave($insert)
     {
         parent::beforeSave($insert);
@@ -204,7 +216,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        if($insert){
+        if($insert && $this->scenario == 'register'){
             $this->sendEmailConfirmationEmail();
         }
     }
@@ -341,11 +353,11 @@ MSG;
      * @param type $group
      * @return boolean
      */
-    public function inGroup($group)
+    public function inGroup($group, $include_adm = true)
     {
         $grp = strtolower($group);
         $usr_grp = strtolower(Yii::$app->user->identity->group);
-        if($usr_grp == 'admin'){
+        if($usr_grp == 'admin' && $include_adm == true){
             return true;
         }
         return $usr_grp == $grp;
@@ -376,5 +388,15 @@ MSG;
     public function getName()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+    
+    public function generateKRAPIN()
+    {
+        $new_pin = Utility::generateRandomString(11);
+        $user = User::findOne(['kra_pin_number'=> $new_pin]);
+        if($user){
+            $new_pin = $this->generateKRAPIN();
+        }
+        $this->kra_pin_number = $new_pin;
     }
 }

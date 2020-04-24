@@ -31,7 +31,7 @@ $this->title = 'ICT Authority Accreditation System';
                 
                 <?php if(!Yii::$app->user->isGuest && !Yii::$app->user->identity->isInternal()): ?>
                 <h2>Choose Your action Below</h2><hr>
-                <?= Html::a('Company Accreditation', ['company-profile/my-companies'], ['class' => 'btn btn-success']) ?><br><br>
+                <?= Html::a('Supplier/Company Accreditation', ['company-profile/my-companies'], ['class' => 'btn btn-success']) ?><br><br>
                 <?= Html::a('ICT Professional Certification', ['professional/personal-information/my-profile'], ['class' => 'btn btn-success']) ?>
                 
                 <?php elseif(!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()): ?>
@@ -46,7 +46,7 @@ $this->title = 'ICT Authority Accreditation System';
                 Email: <a href="mailto:standards@ict.go.ke" target="_top">standards@ict.go.ke</a>
             </div>
             <div class="col-lg-8">
-                <h2 style="color: #c11d35">Supplier Accreditation Requirements</h2>
+                <h2 style="color: #c11d35">Supplier/Company Accreditation Requirements</h2>
                 <h5 style="font-style: italic"><b>The following documents are required during Accreditation</b></h5>
 
                 <ol >
@@ -60,7 +60,7 @@ $this->title = 'ICT Authority Accreditation System';
                    <li>  Recent bank statement from the last financial year together with the audited accounts of the same</li>
                    <li>  Partnership certificates if any</li>                   
                 </ol>
-                <p style='color:red'>There are 8 categories for Company Accreditation. Click <?= Html::a('Here', ['site/company-accreditation-prerequisites'], ['class' =>'btn btn-success']) ?> to see the prerequisites for each.</p>
+                <p style='color:red'>There are 8 categories for Supplier/Company Accreditation. Click <?= Html::a('Here', ['site/company-accreditation-prerequisites'], ['class' =>'btn btn-success']) ?> to see the prerequisites for each.</p>
             </div>
         </div>
         
