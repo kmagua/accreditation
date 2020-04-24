@@ -31,7 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'course',
             'institution',
             'completion_date',
-            //'date_created',
+            [
+                'attribute' => 'upload',
+                'content' => function($data){
+                    return $data->fileLink(true);
+                },
+            ],
             //'date_modified',
             //'user_id',
 

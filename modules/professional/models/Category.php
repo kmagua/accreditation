@@ -12,6 +12,8 @@ use Yii;
  * @property string|null $description
  * @property string|null $date_created
  * @property string|null $date_modified
+ * @property float|null $application_fee
+ * @property float|null $renewal_fee
  *
  * @property Application[] $applications
  */
@@ -41,6 +43,7 @@ class Category extends \yii\db\ActiveRecord
         return [
             [['date_created', 'date_modified'], 'safe'],
             [['name'], 'string', 'max' => 50],
+            [['application_fee', 'renewal_fee'], 'number'],
             [['description'], 'string'],
         ];
     }
@@ -52,7 +55,7 @@ class Category extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Accreditation Category',
             'description' => 'Description / Requirements',
             'date_created' => 'Date Created',
             'date_modified' => 'Date Modified',

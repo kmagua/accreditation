@@ -13,6 +13,7 @@ use Yii;
  * @property string|null $status
  * @property string|null $declaration
  * @property string|null $initial_approval_date
+ * @property string|null $cert_serial
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -50,6 +51,7 @@ class Application extends \yii\db\ActiveRecord
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             [['initial_approval_date', 'date_created', 'last_updated'], 'safe'],
             [['status'], 'string', 'max' => 50],
+            [['cert_serial'], 'string', 'max' => 30],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => PersonalInformation::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
         ];
@@ -62,7 +64,7 @@ class Application extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
+            'user_id' => 'Name',
             'category_id' => 'Accreditation Category',
             'status' => 'Status',
             'declaration' => 'I declare that the information provided is correct to the best of my knowledge.',
@@ -100,9 +102,10 @@ class Application extends \yii\db\ActiveRecord
         $approval_status = ($status == 1)?'Approved':'Rejected';
         $header = "Your Professional accreditation request has been $approval_status by ICT Authority";
         $type = $this->category->name;
-        $link = \yii\helpers\Url::to(['/professional/application/download-cert', 'id' => $this->id], true);
+        $applicable_fee = $this->category->application_fee;
+        $link = \yii\helpers\Url::to(['/professional/personal-information/view', 'id' => $this->id], true);
         $msg_status = ($status == 1)?"You can login in to the Authority's accreditation 
-            site using the link below to download your certificate.</p>
+            site using the link below to upload your payment receipt for the applicable ayment of KES {$applicable_fee}.</p>
             <p>$link</p>": "Below is the stated reason for rejection</p>. <p><i>$comment</i></p>";
         $message = <<<MSG
             Dear {$this->user->first_name} {$this->user->last_name},
@@ -112,5 +115,57 @@ class Application extends \yii\db\ActiveRecord
                 
 MSG;
         \app\models\Utility::sendMail($this->user->usr->email, $header, $message);
+    }
+    
+    public function sendPaymentRequestEmail()
+    {
+        $header = "ICT Authority - Payment Request for Company Accreditation";
+        $type = $this->accreditationType->name;
+        $link = \yii\helpers\Url::to(['company-profile/view', 'id' => $this->company_id], true);
+        
+        $message = <<<MSG
+                Dear {$this->user->full_name},
+                <p>Kindly note that your Accreditation request for $type has been reviewed and approved by ICT Authority.
+                    You are now required to make payment of KES: {$this->getPayableAtLevel()} to: <br>CITIBANK,<br>Name: ICT Authority,<br>Account No: 0300085016,<br>Branch: Upper Hill (code: 16000).
+                        </p>
+                <p>After payment, login to the system using this link $link and upload your receipt. You will get a notification email to download your certificate once payment is confirmed.</p>
+                <p>Thank you,<br>ICT Authority Accreditation.</p>
+                
+MSG;
+        Utility::sendMail($this->company->company_email, $header, $message, $this->user->email);
+    }
+    
+    public function savePayment()
+    {
+        $pay = new Payment();
+        $pay->setAttributes([
+            'application_id' => $this->id,
+            'billable_amount' => $this->category->application_fee,
+            'status' => 'new'
+        ]);        
+        return $pay->save(false);
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getStatus()
+    {
+        if($this->status == 1){
+            return 'Pending Payment';
+        }else if($this->status == 2){
+            return 'Rejected';
+        }else if($this->status == 3){
+            return \yii\helpers\Html::a('Approve/Reject Payment', [
+                '/professional/application/approve-payment', 'id'=>$this->id
+            ], 
+            ['onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
+        }else if($this->status == 4){
+            return 'Complete';
+        }else if($this->status == 5){
+            return 'Payment Rejected';
+        }
+        return 'Pending';
     }
 }

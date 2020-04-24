@@ -39,7 +39,7 @@ use yii\grid\GridView;
             [
                 'attribute' => 'status',
                 'content' => function($data){
-                    return ($data->level == 1)?"Approved": "Rejected";
+                    return ($data->status == 1)?"Approved": "Rejected";
                 }
             ],
             [

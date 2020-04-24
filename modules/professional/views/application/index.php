@@ -31,13 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             //'status',
             [
                 'attribute' => 'status',
+                'format' => 'raw',
                 'content' => function($data){
-                    if($data->status == 1){
-                        return 'Approved';
-                    }else if($data->status == 2){
-                        return 'Rejected';
-                    }
-                    return 'Pending';
+                    return $data->getStatus();
                 },
                 'filter' => [
                     1 => 'Approved',
@@ -59,3 +55,5 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 </div>
+<?php
+$this->registerJsFile(Yii::getAlias('@web'). '/js/general_js.js', ['position'=>yii\web\View::POS_END]);

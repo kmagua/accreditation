@@ -39,6 +39,8 @@ use yii\helpers\ArrayHelper;
             'class' => 'form-control',
         ]
     ]) ?>
+    
+    <?= $form->field($model, 'upload_file')->fileInput() ?>
 
     <div class="form-group" style='padding-left:120px'>
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 

@@ -108,7 +108,7 @@ class EducationController extends Controller
         $model = new Education();
         $model->user_id = $pid;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->saveRecord()) {
             ///return $this->redirect(['view', 'id' => $model->id]);
             $model = new Education();
             $model->user_id = $pid;
@@ -129,7 +129,7 @@ class EducationController extends Controller
     {
         $model = new Education();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->saveRecord()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -149,7 +149,7 @@ class EducationController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->saveRecord()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -169,7 +169,7 @@ class EducationController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->saveRecord()) {
             \Yii::$app->session->setFlash('education_added','Education Record Saved Successfully!');
         }
 

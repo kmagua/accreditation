@@ -62,7 +62,7 @@ class ProfessionalRegBodies extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'membership_no' => 'Certificate Number',
-            'upload' => 'Upload',
+            'upload' => 'Certificate',
             'date_created' => 'Date Created',
             'date_modified' => 'Date Modified',
             'user_id' => 'User ID',

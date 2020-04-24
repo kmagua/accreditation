@@ -134,6 +134,10 @@ class ApprovalController extends Controller
                 $model->application->status = $model->status;
                 if($model->status == 1){
                     $model->application->initial_approval_date = date('Y-m-d');
+                    $model->application->cert_serial = strtoupper(dechex($model->application->id * 100000081));
+                    $model->application->savePayment();
+                }else{
+                    $model->application->initial_approval_date = null;
                 }
                 $model->application->save(false);
                 $model->application->notifyUserOfApproval($model->status, $model->comment);
@@ -182,10 +186,14 @@ class ApprovalController extends Controller
                 $model->application->status = $model->status;
                 if($model->status == 1){
                     $model->application->initial_approval_date = date('Y-m-d');
+                    //$model->application->cert_serial = strtoupper(dechex($model->application->id * 100000081));
+                    $model->application->savePayment();
                 }else{
                     $model->application->initial_approval_date = null;
                 }
                 $model->application->save(false);
+                $model->application->notifyUserOfApproval($model->status, $model->comment);
+            }else if($model->level == 1 && $model->status == 2){
                 $model->application->notifyUserOfApproval($model->status, $model->comment);
             }
             return "<h3>Approval Record Saved.</h3>";

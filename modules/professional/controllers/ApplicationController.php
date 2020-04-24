@@ -38,6 +38,21 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
+                        'actions' => ['upload-receipt'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){                                
+                                $application = Application::findOne(Yii::$app->request->get()['id']);
+                                if($application){
+                                    return \app\modules\professional\models\PersonalInformation::canAccess($application->user_id)
+                                        || Yii::$app->user->identity->inGroup('admin');
+                                }
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
                         'actions' => ['update-ajax', 'view', 'download-cert'],
                         'allow' => true,
                         'roles' => ['@'],
@@ -53,7 +68,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'approve-payment'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -117,6 +132,11 @@ class ApplicationController extends Controller
         ]);
     }
     
+    /**
+     * 
+     * @param type $pid
+     * @return type
+     */
     public function actionCreateAjax($pid)
     {
         $model = new Application();
@@ -206,6 +226,11 @@ class ApplicationController extends Controller
         return \yii\helpers\Json::encode($html);
     }
     
+    /**
+     * 
+     * @param type $id
+     * @return type
+     */
     public function actionDownloadCert($id)
     {
         $application = $this->findModel($id);
@@ -243,5 +268,57 @@ class ApplicationController extends Controller
 
         // return the pdf output as per the destination setting
         return $pdf->render(); 
+    }
+    /**
+     * 
+     * @param type $id
+     * @return string
+     */
+    public function actionUploadReceipt($id)
+    {
+        $model = \app\modules\professional\models\Payment::find()->where(['application_id' => $id])->one();
+        if(!$model){
+            $model = new \app\modules\professional\models\Payment;
+            $model->application_id = $id;            
+            $model->billable_amount = $model->application->category->accreditation_fee;
+        }
+        
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->savePayment()){
+                return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";
+            }
+            return "Error updating payment details.";
+        }
+        
+        return $this->renderAjax('../payment/_form_receipt', [
+            'model' => $model,
+        ]);
+    }
+    
+    /**
+     * 
+     * @param type $id Application ID
+     * @param type $l Internal Approval Level : 1 = Secretariat, 2 = Committee
+     */
+    public function actionApprovePayment($id)
+    {
+        $model = \app\modules\professional\models\Payment::find()->where(['application_id' => $id])->one();
+        if(!$model){
+            throw new \Exception("Record not found!");
+        }
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->application->initial_approval_date = date('Y-m-d');
+            $model->application->status =( $model->status =='confirmed')?4:5;
+            if($model->application->cert_serial == ''){
+                $model->application->cert_serial = strtoupper(dechex($model->application->id * 100000081));
+            }
+            $model->application->save(false);
+            return "Payment status updated successfully.";
+        }
+        
+        return $this->renderAjax('../payment/approve_payment_receipt', [
+            'model' => $model,
+        ]);
     }
 }

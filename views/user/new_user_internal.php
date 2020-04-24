@@ -13,7 +13,7 @@ $this->title = 'Internal User Registration';
 
 
 <div class="user-form">
-
+    <h3><?= $this->title ?></h3>
     <?php $form = ActiveForm::begin(); ?>    
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
