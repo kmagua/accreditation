@@ -275,7 +275,7 @@ class UserController extends Controller
         $model->status = 1;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('user_registration','Your account has been registered and an activation email sent to your email.');
+            \Yii::$app->session->setFlash('user_registration','User account successfully registered and is ready for use.');
             return $this->redirect(['site/index']);
         }
 

@@ -2,15 +2,21 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\professional\models\ProfessionalRegBodies */
+/* @var $searchModel app\modules\professional\models\Reference */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
 <div class="education-index">
+    Please provide the following:
+    <ul>
+        <li>Letters of reference from employer(s) covering the previous two years confirming professional integrity</li>
+        <li>Statements of two referees detailing their knowledge of you (the applicant).</li>
+    </ul>
     <p>
-        <?= Html::a('Add Professional Certification Record', ['create-ajax', 'pid'=>$searchModel->user_id], ['class' => 'btn btn-success',
-            'onclick'=>'getDataForm(this.href, "<h3>Adding Professional Certification</h3>"); return false;']) ?>
+        <?= Html::a('Add Reference Record', ['create-ajax', 'pid'=>$searchModel->user_id], ['class' => 'btn btn-success',
+            'onclick'=>'getDataForm(this.href, "<h3>Adding References</h3>"); return false;']) ?>
     </p>
 
     <?php Pjax::begin() ?>
@@ -22,16 +28,17 @@ use yii\grid\GridView;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'name',
-            'membership_no',
+            //'user_id',            
+            'type',            
+            //'last_updated',
             [
                 'attribute' => 'upload',
                 'content' => function($data){
                     return $data->fileLink(true);
                 },
             ],
-            'award_date',
-            //'date_modified',
+            'date_created',
+            'last_updated',
             //'user_id',
 
             ['class' => 'yii\grid\ActionColumn',
@@ -40,9 +47,9 @@ use yii\grid\GridView;
                 'template' => '{update}',
                 'buttons'=>[
                     'update' => function ($url, $model) {
-                        $url = \yii\helpers\Url::to(['professional-reg-bodies/update-ajax', 'id' =>$model->id]);
+                        $url = \yii\helpers\Url::to(['reference/update-ajax', 'id' =>$model->id]);
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
-                            'title' =>"Edit Certification Details",
+                            'title' =>"Edit Reference Details",
                             'onclick'=>"getDataForm('$url', '<h3>Record Edit</h3>'); return false;"]);
                     },
                 ],

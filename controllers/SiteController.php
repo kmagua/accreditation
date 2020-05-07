@@ -127,4 +127,26 @@ class SiteController extends Controller
     {
         return $this->render('company_cat_prereq');
     }
+    
+    public function actionValidate()
+    {
+        if (Yii::$app->request->post()) {
+            $cert_no = Yii::$app->request->post()['certificate_no'];
+            $company = \app\models\Application::find()->where(['certificate_serial' =>$cert_no])->one();
+            if($company){
+                $details = $company->company->company_name . ' - Registration No: ' . $company->company->business_reg_no;
+                Yii::$app->session->setFlash('cert_search', $details);
+            }else{
+                $staff = \app\modules\professional\models\Application::find()->where(['cert_serial' =>$cert_no])->one();
+                if($staff){
+                    $details = $staff->user->other_names . ' '. $staff->user->first_name 
+                        . ' ' . $staff->user->last_name . " - ID No." . $staff->user->idno;
+                    Yii::$app->session->setFlash('cert_search', $details);
+                }else{
+                    Yii::$app->session->setFlash('cert_search', 'Not found!!');
+                }
+            }
+        }
+        return $this->render('search');
+    }
 }

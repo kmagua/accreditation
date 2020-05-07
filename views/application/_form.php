@@ -42,7 +42,8 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
             <?= $form->field($model, 'turnover')->textInput() ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'financial_status_link')->textInput(['maxlength' => true])
+            <?= $form->field($model, 'financial_status_link')->textInput(['maxlength' => true,
+                'placeholder' => 'Upload the file somewhere like on your website/google drive and then provide the link to it',])
                 ->label(null, ['data-toggle' => 'tooltip','data-placement' =>'right',
                     'title' => 'Upload the file somewhere like on your website/google drive and then provide the link to it.']) ?>
         </div>

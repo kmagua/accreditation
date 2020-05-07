@@ -27,22 +27,28 @@ $this->params['breadcrumbs'][] = $this->title;
             'active' => true
         ],        
         [
-            'label' => 'Education Details',
+            'label' => 'Education',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['education/my-education', 'pid'=>$model->id])],
             //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'pi_edudata_tab'],
         ],
         [
-            'label' => 'Employment Details',
+            'label' => 'Employment History',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['employment/my-employment', 'pid'=>$model->id])],
             //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'pi_empdata_tab'],
         ],
         [
-            'label' => 'Profesional Certifications',
+            'label' => 'Certifications',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['professional-reg-bodies/my-memberships', 'pid'=>$model->id])],
             //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'pi_regdata_tab'],
+        ],
+        [
+            'label' => 'References',
+            'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['reference/my-references', 'pid'=>$model->id])],
+            //'headerOptions' => ['style'=>'font-weight:bold'],
+            'options' => ['id' => 'pi_reference_tab'],
         ],
         [
             'label' => 'Application',

@@ -197,7 +197,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         return true;
     }
-    
+    /**
+     * 
+     * @param type $insert
+     * @return boolean
+     */
     public function beforeSave($insert)
     {
         parent::beforeSave($insert);
@@ -369,16 +373,17 @@ MSG;
      */
     public function isInternal()
     {
-        return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committee member']);        
+        return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committee member', 'su']);        
     }
     
      /**
      * 
      * @return type
      */
-    public function isAdmin()
+    public function isAdmin($include_SU = true)
     {
-        return in_array(strtolower(Yii::$app->user->identity->group),['admin']);        
+        $grps = ($include_SU)?['admin', 'su']:['admin'];
+        return in_array(strtolower(Yii::$app->user->identity->group),$grps);        
     }
     
     /**
@@ -390,12 +395,15 @@ MSG;
         return $this->first_name . ' ' . $this->last_name;
     }
     
+    /**
+     * 
+     */
     public function generateKRAPIN()
     {
         $new_pin = Utility::generateRandomString(11);
         $user = User::findOne(['kra_pin_number'=> $new_pin]);
         if($user){
-            $new_pin = $this->generateKRAPIN();
+            $this->generateKRAPIN();
         }
         $this->kra_pin_number = $new_pin;
     }

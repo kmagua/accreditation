@@ -67,8 +67,7 @@ AppAsset::register($this);
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
                     ['label' => 'Professional', 'url' => ['/professional/personal-information/my-profile'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                    ['label' => 'My Profile', 'url' => ['/user/my-profile'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    
                     
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))
@@ -91,6 +90,9 @@ AppAsset::register($this);
             ],
             ['label' => 'Register', 'url' => ['/user/register'],
                 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],'visible'=>Yii::$app->user->isGuest],
+            ['label' => 'My Profile', 'url' => ['/user/my-profile'],
+                'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
+                'visible'=>(!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;']]
             ) : (

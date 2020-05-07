@@ -235,7 +235,7 @@ class ApplicationController extends Controller
     {
         $application = $this->findModel($id);
         
-        $sn = bin2hex($id * 53);
+        //$sn = $application->cert_serial;
         $content = $this->renderPartial('certificate', ['application' => $application]);
         $filename = "professional-cert- " .$application->id . ".pdf";
 
@@ -256,13 +256,13 @@ class ApplicationController extends Controller
             // enhanced bootstrap css built by Krajee for mPDF formatting 
             'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
             // any css to be embedded if required
-            'cssInline' => '.kv-heading-1{font-size:18px}', 
+            'cssInline' => '.kv-heading-1{font-size:14px}', 
              // set mPDF properties on the fly
             'options' => ['title' => 'Krajee Report Title'],
              // call mPDF methods on the fly
             'methods' => [ 
-                'SetHeader'=>['SN: '. $sn], 
-                'SetFooter'=>['{PAGENO}'],
+                //'SetHeader'=>['SN: '. $sn], 
+                'SetFooter'=>'|This certificate is valid for a period of three years from the date of issue|',
             ]
         ]);
 
