@@ -36,7 +36,7 @@ $model->company_id = $searchModel->company_id;
             'turnover',
             //'financial_status_link',
             
-             [
+            [
                 'attribute' => 'financial_status_link',
                 'contentOptions' => ['style' => 'width: 7%'],
                 'content' => function($model){

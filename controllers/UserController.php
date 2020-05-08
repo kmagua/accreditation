@@ -211,7 +211,7 @@ class UserController extends Controller
     public function actionSetNewPassword($id, $ph)
     {
         $pass_reset = \app\models\PasswordReset::find()->
-                where(['user_id' => $id, 'hash' => $ph, 'status'=>0])->one();
+            where(['user_id' => $id, 'hash' => $ph, 'status'=>0])->one();
         if(!$pass_reset){
             throw new \yii\web\HttpException(403, "Access denied");
         }

@@ -223,6 +223,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         if($insert && $this->scenario == 'register'){
             $this->sendEmailConfirmationEmail();
         }
+        $this->addToInternalCommittee();
+        return true;
     }
 
     /**
@@ -406,5 +408,29 @@ MSG;
             $this->generateKRAPIN();
         }
         $this->kra_pin_number = $new_pin;
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function addToInternalCommittee()
+    {
+        $role = strtolower($this->role);        
+        if(in_array($role, ['secretariat','committee member'])){
+            $level = ($role == 'secretariat') ? 1:2;
+            $rec = IctaCommitteeMember::find()->where(['committee_id'=> $level, 'user_id' =>$this->id])->one();
+            if(!$rec){
+                \Yii::$app->db->createCommand()->insert('icta_committee_member',[
+                    'committee_id'=> $level, 'user_id'=> $this->id, 'status' => 1
+                ])->execute();
+            }else{
+                $rec->status = 1;
+                $rec->save(false);
+            }
+            return;
+        }
+        //echo $this->id, ' - ', $level; exit;
+        IctaCommitteeMember::updateAll(['status' => 0],"user_id  = {$this->id}");
     }
 }

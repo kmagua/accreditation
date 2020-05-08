@@ -562,6 +562,36 @@ MSG;
                 
             \Yii::$app->db->createCommand($insert_sql, [':score' => $score, ':comment' => $comment])->execute();
         }
+        $this->sendReviewersEmail($level->data);
+    }
+    
+    /**
+     * 
+     * @param type $level
+     */
+    public function sendReviewersEmail($level)
+    {
+        $sql = "SELECT `email` FROM `application_committe_member` acm 
+            JOIN `icta_committee_member` icm ON icm.id=acm.`committee_member_id`
+            JOIN `user` u ON u.id=icm.user_id
+            WHERE `committee_id` = {$level} AND `application_id` = {$this->id}";
+        $assigned_members = User::findBySql($sql)->all();
+        if(!$assigned_members){
+            return;
+        }
+        $emails = \yii\helpers\ArrayHelper::getColumn($assigned_members, 'email');
+        $header = "Accreditation review/score invitation";
+        //$type = $this->accreditationType->name;
+        $link = \yii\helpers\Url::to(['/application/view', 'id' => $this->id], true);
+        $score_link = \yii\helpers\Url::to(['/application/approval', 'id' => $this->id, 'level' => $level], true);
+        $message = <<<MSG
+        Dear All,
+        <p>Kindly note that you have been selected to review/score an application for accreditation.</p>
+        <p>Use this ($link) link to view the application details.</p>
+        <p>Use this ($score_link) link to score the application.</p>
+        <p>Thank you,<br>ICT Authority Accreditation.</p>                
+MSG;
+        Utility::sendMail($emails, $header, $message);
     }
     
     /**
@@ -590,7 +620,7 @@ MSG;
     {
         $header = "Your Company's accreditation request has been approved by ICT Authority";
         $type = $this->accreditationType->name;
-        $link = \yii\helpers\Url::to(['application/download-cert', 'id' => $this->id], true);
+        $link = \yii\helpers\Url::to(['/application/download-cert', 'id' => $this->id], true);
         
         $message = <<<MSG
                 Dear {$this->user->full_name},
@@ -611,7 +641,7 @@ MSG;
     {
         $header = "Your Company's accreditation request has been Rejected by ICT Authority";
         $type = $this->accreditationType->name;
-        $link = \yii\helpers\Url::to(['application/view', 'id' => $this->id], true);
+        $link = \yii\helpers\Url::to(['/application/view', 'id' => $this->id], true);
         $app_categorization = ApplicationClassification::find()->where(['application_id' => $this->id])->
             orderBy('application_id desc')->one();
         $comment = ($app_categorization)?$app_categorization->rejection_comment:"";
@@ -631,7 +661,7 @@ MSG;
     {
         $header = "ICT Authority - Payment Request for Company Accreditation";
         $type = $this->accreditationType->name;
-        $link = \yii\helpers\Url::to(['company-profile/view', 'id' => $this->company_id], true);
+        $link = \yii\helpers\Url::to(['/company-profile/view', 'id' => $this->company_id], true);
         
         $message = <<<MSG
                 Dear {$this->user->full_name},

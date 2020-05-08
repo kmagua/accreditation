@@ -41,7 +41,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ],            
             'cash_flow',
             'turnover',
-            'financial_status_link',
+            [
+                'attribute' => 'financial_status_link',
+                'label' => 'Audited Accounts',
+                'contentOptions' => ['style' => 'width: 4%'],
+                'content' => function($model){
+                    return "<a href='{$model->financial_status_link}'>open</a>";
+                },
+            ],
             //'user_id',
             [
                 'attribute' => 'status',

@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'change_role' => function ($url, $model) {
                         return Html::a('', ['user/change-role', 'id' => $model->id], ['class' => 'glyphicon glyphicon-lock',
-                            'title' =>"Chnage User Role"]);
+                            'title' =>"Change User Role"]);
                     },
                 ],
             ],
