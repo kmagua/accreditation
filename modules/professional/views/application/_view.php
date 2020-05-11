@@ -31,7 +31,7 @@ use yii\grid\GridView;
             'status',
             'declaration',
             'initial_approval_date',
-            'date_created',
+            //'date_created',
             //'last_updated',
         ],
     ]) ?>

@@ -149,4 +149,9 @@ class SiteController extends Controller
         }
         return $this->render('search');
     }
+    
+    public function actionCodeOfConduct()
+    {
+        return $this->render('code_of_conduct');
+    }
 }

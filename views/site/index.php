@@ -66,6 +66,7 @@ $this->title = 'ICT Authority Accreditation System';
                         //['class' => 'yii\grid\ActionColumn'],
                     ],
                 ]); ?>
+                <p style='color:red'>Click <?= Html::a('Here for ',['/site/code-of-conduct']) ?>Code of professional conduct</p>
             </div>
         </div>
         

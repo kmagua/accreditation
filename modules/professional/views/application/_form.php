@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 
 <div class="application-form" id="individual_app_div">
     <h3>Refer to the homepage for information on requirements for each category.</h3>
+    <h4 style='color:red'>Click <?= Html::a('Here for ',['/site/code-of-conduct'], ['target'=>'_blank']) ?>Code of professional conduct</h4>
     <hr>
 
     <?php $form = ActiveForm::begin(['layout'=>'horizontal', 

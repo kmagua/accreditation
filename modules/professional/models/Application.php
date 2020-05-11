@@ -67,7 +67,7 @@ class Application extends \yii\db\ActiveRecord
             'user_id' => 'Name',
             'category_id' => 'Accreditation Category',
             'status' => 'Status',
-            'declaration' => 'I declare that the information provided is correct to the best of my knowledge.',
+            'declaration' => 'I agree to abide by the code of Professional Conduct.',
             'initial_approval_date' => 'Initial Approval Date',
             'date_created' => 'Date Submitted',
             'last_updated' => 'Last Updated',
