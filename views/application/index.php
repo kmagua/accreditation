@@ -35,20 +35,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'company',
                 'value' => 'company.company_name',
             ],
+            'company.business_reg_no',
             [
                 'attribute' => 'accreditationType',
                 'value' => 'accreditationType.name',
             ],            
             'cash_flow',
             'turnover',
-            [
+            //''
+            /*[
                 'attribute' => 'financial_status_link',
                 'label' => 'Audited Accounts',
                 'contentOptions' => ['style' => 'width: 4%'],
                 'content' => function($model){
                     return "<a href='{$model->financial_status_link}'>open</a>";
                 },
-            ],
+            ],*/
             //'user_id',
             [
                 'attribute' => 'status',
@@ -56,6 +58,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'content' => function($model){
                     return $model->getApplicationProgress();
                 },
+                'filter' => [
+                    'draft' => 'New/Pending Secretariat Assignment',
+                    'at-secretariat' => 'At Secretariat',
+                    'assign-approval-committee' => 'Pending Committee Assignment',
+                    'sec-rejected' => 'Rejected at Secretariat',
+                    'at-committee' => 'At Committee',
+                    'approved' => 'approved',
+                    'com-rejected' => 'Rejected at Committee',
+                    'certificate-paid' => 'Pending Payment Confirmation',
+                    'approval-payment-rejected' => 'Payment Rejected',
+                    'completed' => 'Completed',
+                    'renewal' => 'Pending Renewal'
+                ]
             ],
             
             ['class' => 'yii\grid\ActionColumn',

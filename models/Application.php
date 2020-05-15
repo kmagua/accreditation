@@ -40,12 +40,50 @@ class Application extends \yii\db\ActiveRecord
 {
     public $app_company_experience; // to capture selected company experience for this application
     public $app_staff; // to capture selected company staff for this application
+    public $revert_rejection; //used to capture rejection reversion declaration
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return 'application';
+    }
+    
+    /**
+     * 
+     */
+    public function init()
+    {
+    	$this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-confirmed'),
+            [$this, 'sendPaymentApprovalEmail'],'application-payment-confirmed'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-rejected'),
+            [$this, 'sendPaymentApprovalEmail'],'application-payment-rejected'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approval-payment-confirmed'),
+            [$this, 'sendPaymentApprovalEmail'],'approval-payment-confirmed'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approval-payment-rejected'),
+            [$this, 'sendPaymentApprovalEmail'],'approval-payment-rejected'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/at-secretariat'),
+            [$this, 'loadApplicationScores'], 1
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/at-committee'),
+            [$this, 'loadApplicationScores'], 2
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/completed'),
+            [$this, 'sendApprovalEmail'], 'completed'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approved'),
+            [$this, 'sendPaymentRequestEmail'], 'approved'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/sec-rejected'),
+            [$this, 'sendRejectedEmail'], 'rejected'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/com-rejected'),
+            [$this, 'sendRejectedEmail'], 'rejected'
+    	);
     }
 
     /**
@@ -59,6 +97,8 @@ class Application extends \yii\db\ActiveRecord
             [['app_company_experience','app_staff', 'cash_flow', 'financial_status_link', 'turnover'], 'required','on'=>'create_update'],
             [['cash_flow', 'turnover'], 'number'],
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
+            ['revert_rejection', 'required', 'on' => ['revert_rejection'], 'requiredValue' => 1, 
+                'message' => 'You must confirm to have addressed issues raised in the rejection comment.'],
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             [['status', 'certificate_serial'], 'string', 'max' => 50],
@@ -87,6 +127,7 @@ class Application extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'status' => 'Status',
             'declaration' => 'I declare that the information given here is correct to the best of my knowledge.',
+            'revert_rejection' => 'I confirm that issues raised in the rejection comment have been addressed.',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
             'app_company_experience' => 'Select company work experience to include in this application',
@@ -175,10 +216,14 @@ class Application extends \yii\db\ActiveRecord
         return $this->hasMany(Payment::className(), ['application_id' => 'id']);
     }
     
+    /**
+     * 
+     * @return boolean
+     */
     public function beforeValidate() 
     {
         parent::beforeValidate();
-        if($this->application_type == 2 && $this->previous_category ==''){
+        if($this->application_type == 2 && $this->previous_category =='' && $this->parent_id == ''){
             $this->addError('previous_category', 'Previous category cannot be blank for renewals.');
         }
         if($this->isNewRecord){
@@ -194,7 +239,9 @@ class Application extends \yii\db\ActiveRecord
                     }
                 }
             }
+            $this->checkDuplicates();
         }
+        
         return true;
     }
     
@@ -313,50 +360,29 @@ class Application extends \yii\db\ActiveRecord
     }
     
     /**
-     * 
+     * check for duplicate applications using accreditation type and company ID
      */
-    public function init()
+    public function checkDuplicates()
     {
-    	$this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-confirmed'),
-            [$this, 'sendPaymentApprovalEmail'],'application-payment-confirmed'
-    	);
-        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-rejected'),
-            [$this, 'sendPaymentApprovalEmail'],'application-payment-rejected'
-    	);
-        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approval-payment-confirmed'),
-            [$this, 'sendPaymentApprovalEmail'],'approval-payment-confirmed'
-    	);
-        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approval-payment-rejected'),
-            [$this, 'sendPaymentApprovalEmail'],'approval-payment-rejected'
-    	);
-        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/at-secretariat'),
-            [$this, 'loadApplicationScores'], 1
-    	);
-        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/at-committee'),
-            [$this, 'loadApplicationScores'], 2
-    	);
-        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/completed'),
-            [$this, 'sendApprovalEmail'], 'completed'
-    	);
-        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approved'),
-            [$this, 'sendPaymentRequestEmail'], 'approved'
-    	);
-        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/rejected'),
-            [$this, 'sendRejectedEmail'], 'rejected'
-    	);
+        if($this->parent_id == ''){
+            $application = Application::find()->where(['company_id' => $this->company_id, 
+                'accreditation_type_id' => $this->accreditation_type_id])->one();
+            if($application){
+                $this->addError('accreditation_type_id', 
+                    "Your company already has an application for {$this->accreditationType->name}");
+            }
+        }
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function getApplicationProgress()
     {
         switch($this->status){
             case 'ApplicationWorkflow/draft':
-                return $this->assignCommitee(1);
-            /*case 'ApplicationWorkflow/application-paid':
-                return $this->processConfirmPayment(1);
-            case 'ApplicationWorkflow/application-payment-confirmed':
-                return $this->assignCommitee(1);
-            case 'ApplicationWorkflow/application-payment-rejected':
-                return $this->processApplicationFeeRejected();*/
+                return $this->assignCommitee(1);            
             case 'ApplicationWorkflow/at-secretariat':
                 return $this->processInternalCommittee(1);
             case 'ApplicationWorkflow/assign-approval-committee':
@@ -365,6 +391,10 @@ class Application extends \yii\db\ActiveRecord
                 return $this->processInternalCommittee(2);
             case 'ApplicationWorkflow/approved':
                 return $this->paymentConfirmation(2);
+            case 'ApplicationWorkflow/sec-rejected':
+                return $this->processRejected(1);
+            case 'ApplicationWorkflow/com-rejected':
+                return $this->processRejected(2);
             case 'ApplicationWorkflow/certificate-paid':
                 return $this->processConfirmPayment(2);           
             case 'ApplicationWorkflow/approval-payment-rejected':
@@ -418,7 +448,8 @@ class Application extends \yii\db\ActiveRecord
             if(\Yii::$app->user->identity->inGroup($grp)){
                 return Html::a("Assign Members ". Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
                     'application/committee-members', 'id' => $this->id, 'l'=> $level], 
-                        ['data-pjax'=>'0', 'title' => $message]);
+                        ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Application {$grp} Members</h3>'); return false;",
+                            'title' => $message]);
             }
             return "Pending assignment of " . (($level==1)?"secretariat members.":"committee members.");
         }
@@ -465,7 +496,11 @@ class Application extends \yii\db\ActiveRecord
      * @return type
      */
     public function processCompleted()
-    {
+    {        
+        $latest = Application::find()->where(['parent_id' => $this->id])->orderBy('id desc')->one();
+        if($latest){
+            return $latest->getApplicationProgress();
+        }
         return Html::a('Download Certificate',[
             'application/download-cert', 'id' => $this->id], 
                 ['data-pjax'=>'0', 'title' =>'Certificate Download']);
@@ -477,8 +512,12 @@ class Application extends \yii\db\ActiveRecord
      */
     public function processRenewal()
     {
-        return Html::a("Renew certificate", ['application/cert-renewal', 'id' => $this->id], 
-            ['data-pjax'=>'0']);
+        if($this->checkUserCanAccess()){ 
+            return Html::a("Renew certificate", ['application/renew-cert', 'id' => $this->id,
+                'cid' =>$this->company_id, 't' =>$this->accreditation_type_id], ['data-pjax'=>'0']
+            );
+        }
+        return 'Pending Renewal';
     }
     
     /**
@@ -509,6 +548,22 @@ class Application extends \yii\db\ActiveRecord
     {
         $this->sendToStatus($status);
         return $this->save(false);
+    }
+    
+    /**
+     * 
+     * @param type $level 1=>Sec, 2 => Committee
+     * @return type
+     */
+    public function processRejected($level)
+    {
+        return Html::a("Revert After Rejection", 
+            ['application/revert-rejection', 'id' => $this->id, 'l'=> $level], 
+            [
+                'data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Revert After Rejection</h3>'); return false;",
+                'title' => 'Confirm that all issues during Rejection of application are resolved.'
+            ]
+        );
     }
     
     /**
@@ -545,8 +600,7 @@ MSG;
         $uid = \Yii::$app->user->identity->user_id;
         $score_items_data = \Yii::$app->db->createCommand($score_items_sql)->queryAll();
         foreach($score_items_data as $score_item_data){
-            $score = null;
-            $comment = null;
+            $score = $comment = null;
             if($level->data == 2){
                 $level_one_sql = 'SELECT ifnull(score,0) score, comment FROM application_score where '
                         . " application_id = {$this->id} and committee_id = 1 and score_item_id = {$score_item_data['id']}";
@@ -562,7 +616,8 @@ MSG;
                 
             \Yii::$app->db->createCommand($insert_sql, [':score' => $score, ':comment' => $comment])->execute();
         }
-        $this->sendReviewersEmail($level->data);
+        //throw new \Exception(print_r($level->getStartStatus()->getId(), true));
+        $this->sendReviewersEmail($level);
     }
     
     /**
@@ -571,10 +626,9 @@ MSG;
      */
     public function sendReviewersEmail($level)
     {
-        $sql = "SELECT `email` FROM `application_committe_member` acm 
-            JOIN `icta_committee_member` icm ON icm.id=acm.`committee_member_id`
-            JOIN `user` u ON u.id=icm.user_id
-            WHERE `committee_id` = {$level} AND `application_id` = {$this->id}";
+        $prev_status = $level->getStartStatus()->getId();
+        $sql = "SELECT `email` FROM `application_committe_member` acm JOIN `icta_committee_member` icm ON icm.id=acm.`committee_member_id`
+            JOIN `user` u ON u.id=icm.user_id WHERE `committee_id` = {$level->data} AND `application_id` = {$this->id}";
         $assigned_members = User::findBySql($sql)->all();
         if(!$assigned_members){
             return;
@@ -583,10 +637,12 @@ MSG;
         $header = "Accreditation review/score invitation";
         //$type = $this->accreditationType->name;
         $link = \yii\helpers\Url::to(['/application/view', 'id' => $this->id], true);
-        $score_link = \yii\helpers\Url::to(['/application/approval', 'id' => $this->id, 'level' => $level], true);
+        $score_link = \yii\helpers\Url::to(['/application/approval', 'id' => $this->id, 'level' => $level->data], true);
+        $main_paragraph = ($prev_status != 'ApplicationWorkflow/sec-rejected')?"Kindly note that you have been selected to review/score an application for accreditation.":
+            "Kindly note that an application that you(group) had rejected has been updated by the applicant. Kindly log on to the system to review again.";
         $message = <<<MSG
         Dear All,
-        <p>Kindly note that you have been selected to review/score an application for accreditation.</p>
+        <p>$main_paragraph</p>
         <p>Use this ($link) link to view the application details.</p>
         <p>Use this ($score_link) link to score the application.</p>
         <p>Thank you,<br>ICT Authority Accreditation.</p>                
@@ -608,7 +664,8 @@ MSG;
         }else if($level == 2 && $status == 1){
             $app->progressWorkFlowStatus('approved');            
         }else{
-            $app->progressWorkFlowStatus('rejected');
+            $new_status = ($level == 1)? 'sec-rejected' : 'com-rejected';
+            $app->progressWorkFlowStatus($new_status);
         }
     }
     
@@ -649,7 +706,7 @@ MSG;
                 Dear {$this->user->full_name},
                 <p>Kindly note that your Accreditation request for $type has been REJECTED by ICT Authority because of the following reason.</p>
                 <p>$comment</p>
-                <p>$link</p>
+                <p>You can revert the application after updating your application according to the above comment(s).</p><br>$link
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;
@@ -728,5 +785,28 @@ MSG;
         $query = CompanyDocument::findBySql($sql);
         $provider = new \yii\data\ActiveDataProvider(['query' => $query]);
         return $provider;
+    }
+    
+    /**
+     * 
+     * @param type $parent_id
+     * @param type $cid
+     * @param type $t
+     */
+    public function initRenewal($parent_id,$cid, $t)
+    {
+        $classification = null;
+        $ac = ApplicationClassification::find()->where(['application_id' => $parent_id, 'icta_committee_id' => 2])->orderBy('id desc')->one();
+        if($ac){
+            $classification = $ac->classification;
+        }
+        $this->setAttributes([
+            'parent_id' => $parent_id,
+            'company_id' => $cid,
+            'accreditation_type_id' => $t,
+            'status' => 'ApplicationWorkflow/draft',
+            'application_type' => 2,
+            'previous_category'=> $classification,
+        ]);
     }
 }

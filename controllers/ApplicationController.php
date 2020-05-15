@@ -39,7 +39,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['update','view', 'upload-receipt', 'download-cert', 'renew-cert'],
+                        'actions' => ['update','view', 'upload-receipt', 'download-cert', 'renew-cert', 'revert-rejection'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -314,14 +314,16 @@ class ApplicationController extends Controller
         $model = new \app\models\ApplicationCommitteMember();
         $model->application_id = $id;
         $model->loadApplicationCommitteeMembers($l);
-                
+        
         if ($model->load(Yii::$app->request->post()) && $model->saveApplicationCommitteeMembers($l)) {
             $next_step = ($l == 1) ? 'at-secretariat': 'at-committee';
-            $model->application->progressWorkFlowStatus($next_step);           
-            $this->redirect(['index']);
+            if($model->application->progressWorkFlowStatus($next_step)){
+                \Yii::$app->session->setFlash('members_added','Members assigned successfully!');
+            }
+            //$this->redirect(['index']);
         }
         
-        return $this->render('app_committee_members', [
+        return $this->renderAjax('app_committee_members', [
             'model' => $model, 'level' => $l
         ]);
     }
@@ -373,9 +375,22 @@ class ApplicationController extends Controller
         return $pdf->render(); 
     }
     
-    public function actionRenewCert($id)
+    public function actionRenewCert($id, $cid, $t)
     {
-        echo "TBD"; exit;
+        $model = new Application();
+        $model->initRenewal($id, $cid, $t);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->db->createCommand()->update('accreditcomp.application',
+                ['status' => 'ApplicationWorkflow/completed'], ['id' =>$model->parent_id])->execute();
+            
+            \Yii::$app->session->setFlash('application_submitted','Application Renewal Submitted Successfully!');
+            $this->redirect(['company-profile/view','id'=>$cid,'#'=>'application_data_tab']);
+        }
+        
+        return $this->render('_renewal_form', [
+            'model' => $model,
+        ]);
     }
     
     public function actionGetData($id, $sec)
@@ -394,5 +409,28 @@ class ApplicationController extends Controller
                 return $this->renderAjax('view_biz_permit', ['app_id'=>$application->id,
                     'cid' =>$application->company_id]);
         }
+    }
+    
+    /**
+     * 
+     * @param type $id
+     * @param type $l
+     * @return type
+     */
+    public function actionRevertRejection($id, $l)
+    {
+        $model = $this->findModel($id);
+        $model->setScenario('revert_rejection');
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $next_step = ($l == 1) ? 'at-secretariat': 'at-committee';
+            if($model->progressWorkFlowStatus($next_step)){
+                //\Yii::$app->session->setFlash('rejection_reversed','Application status updated!');
+                return "Application status updated!";
+            }            
+        }
+        
+        return $this->renderAjax('revert_rejection', [
+            'model' => $model
+        ]);
     }
 }

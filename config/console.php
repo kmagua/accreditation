@@ -2,7 +2,8 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
-
+$db2 = require __DIR__ . '/db2.php';
+$email_settings = require __DIR__ . '/email_settings_console.php';
 $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
@@ -26,6 +27,22 @@ $config = [
             ],
         ],
         'db' => $db,
+        'db2' => $db2,
+        'mailer' => $email_settings,
+        'urlManager' => [
+            'baseUrl' => 'https://accreditation.icta.go.ke/',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,            
+                'rules' => [
+                '' => 'site/index',
+                '<action>'=>'site/<action>',
+            ],
+        ],
+    ],
+    'modules' => [
+        'professional' => [
+            'class' => 'app\modules\professional\Professional',
+        ],
     ],
     'params' => $params,
     /*

@@ -12,7 +12,7 @@ $this->title = "Members";
 $data = \app\models\IctaCommitteeMember::findCommitteeMembersArray($level);
 ?>
 
-<div class="document-type-form" style = 'margin-top: 50px'>
+<div class="document-type-form">
 
     <?php $form = ActiveForm::begin(['id' =>'icta-committee-member-form',
             'action' => ['application/committee-members', 'id' => $model->application_id, 'l' => $level]]); ?>
@@ -27,7 +27,7 @@ $data = \app\models\IctaCommitteeMember::findCommitteeMembersArray($level);
     ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'onclick'=>'saveDataForm(this); return false;']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

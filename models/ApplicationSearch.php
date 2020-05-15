@@ -68,10 +68,10 @@ class ApplicationSearch extends Application
             'cash_flow' => $this->cash_flow,
             'turnover' => $this->turnover,
             'user_id' => $this->user_id,
-            //'date_created' => $this->date_created,
+            
             //'last_updated' => $this->last_updated,
         ]);
-
+        $query->andWhere(['is', 'parent_id', new \yii\db\Expression('NULL')]);
         $query->andFilterWhere(['like', 'financial_status_link', $this->financial_status_link])
             ->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'company_profile.company_name', $this->company])
