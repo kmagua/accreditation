@@ -25,7 +25,7 @@ use yii\bootstrap\ActiveForm;
         //'language' => 'ru',
         'dateFormat' => 'dd-MM-yyyy',
         'clientOptions'=>[
-            'yearRange'=>(date('Y')-50).":".(date('Y')),
+            'yearRange'=>(date('Y')-10).":".(date('Y')),
             'maxDate' => '+0day',
             'changeYear' => true,
             'changeMonth' => true,

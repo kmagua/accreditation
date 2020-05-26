@@ -53,7 +53,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['update-ajax', 'view', 'download-cert'],
+                        'actions' => ['update-ajax', 'view', 'download-cert', 'renewal'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -68,7 +68,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment'],
+                        'actions' => ['index', 'approve-payment', 'committee-members'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -280,7 +280,7 @@ class ApplicationController extends Controller
         if(!$model){
             $model = new \app\modules\professional\models\Payment;
             $model->application_id = $id;            
-            $model->billable_amount = $model->application->category->accreditation_fee;
+            $model->billable_amount = $model->application->category->application_fee;
         }
         
         if ($model->load(Yii::$app->request->post())) {
@@ -306,6 +306,7 @@ class ApplicationController extends Controller
         if(!$model){
             throw new \Exception("Record not found!");
         }
+        $model->confirmed_by = Yii::$app->user->identity->user_id;
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->application->initial_approval_date = date('Y-m-d');
@@ -319,6 +320,37 @@ class ApplicationController extends Controller
         
         return $this->renderAjax('../payment/approve_payment_receipt', [
             'model' => $model,
+        ]);
+    }
+    
+    public function actionRenewal($id)
+    {
+        //$application = 
+    }
+    
+    /**
+     * 
+     * @param type $id
+     * @param type $l
+     * @return string
+     * @throws \Exception
+     */
+    public function actionCommitteeMembers($id, $l)
+    {
+        $model = new \app\modules\professional\models\ApplicationCommitteMember();
+        $model->application_id = $id;
+        $model->loadApplicationCommitteeMembers($l);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->saveApplicationCommitteeMembers($l)) {
+            $model->application->status = ($l == 1) ? 8: 9;
+            if($model->application->save(false)){
+                \Yii::$app->session->setFlash('members_added','Members assigned successfully!');
+            }
+            //$this->redirect(['index']);
+        }
+        
+        return $this->renderAjax('app_committee_members', [
+            'model' => $model, 'level' => $l
         ]);
     }
 }

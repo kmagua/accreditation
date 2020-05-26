@@ -9,7 +9,7 @@ use kartik\select2\Select2;
 /* @var $model app\models\IctaCommitteeMember */
 /* @var $form yii\widgets\ActiveForm */
 $this->title = "Members";
-$data = \app\models\IctaCommitteeMember::findCommitteeMembersArray($level);
+//$data = \app\models\IctaCommitteeMember::findCommitteeMembersArray($level);
 ?>
 
 <div class="document-type-form">

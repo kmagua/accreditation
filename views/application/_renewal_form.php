@@ -18,14 +18,7 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
 
 ?>
 <div class="application-create">
-
-    <?php if(Yii::$app->session->hasFlash('members_added')): ?>
-    <div class="alert alert-success alert-dismissable">
-        <h4><?= Yii::$app->session->getFlash('members_added'); ?></h4>
-    </div>
-    <?php endif; ?> 
-
-    <div class="application-form">
+    <div class="application-form" style="margin-top:10px">
 
         <?php $form = ActiveForm::begin([
                 'id' =>'application-form',
@@ -40,7 +33,6 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
             <div class="col-md-6">
                 <?= $form->field($model, 'turnover')->textInput() ?>
             </div>
-
         </div>
 
         <div class="row">
@@ -53,12 +45,10 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
             <div class="col-md-6">
                 
             </div>
-
-
         </div>
 
         <div class="row">
-              <div class="col-md-6">
+            <div class="col-md-6">
                 <?= $form->field($model, 'app_company_experience')->widget(Select2::classname(), [
                         'data' => $comp_exp_data,
                         'language' => 'en',
@@ -108,7 +98,7 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
         </div>-->
 
         <div class="row">
-             <div class="col-md-6">
+            <div class="col-md-6">
                 <?= $form->field($model, 'declaration', ['options' => 
                     ['tag' => 'span'],'template' => "{input}"])->checkbox(['checked' => false, 'required' => true])
                         ->label("I declare that the information given here is correct to the best of my knowledge") ?>

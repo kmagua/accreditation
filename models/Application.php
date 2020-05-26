@@ -809,4 +809,46 @@ MSG;
             'previous_category'=> $classification,
         ]);
     }
+    
+    /**
+     * assign the initial approval date
+     */
+    public function getInitApprovalDate()
+    {
+        if($this->parent_id == ''){
+            $this->initial_approval_date = date('Y-m-d');
+        }else{
+            $sql = "SELECT * FROM accreditcomp.application WHERE
+                (parent_id = {$this->parent_id} or id = {$this->parent_id})
+                 AND initial_approval_date is not null order by id desc limit 1";
+            //latest approved application
+            $laa = Application::findBySql($sql)->one();
+            if($laa){
+                $expiry = strtotime($laa->initial_approval_date . ' + 1 year');
+                if($expiry > strtotime('now')){
+                    $this->initial_approval_date = date('Y-m-d', $expiry);
+                }else{
+                    $this->initial_approval_date = date('Y-m-d');
+                }
+            }else{
+                //it should never have to get here but if it does, well!!
+                $this->initial_approval_date = date('Y-m-d');
+            }
+        }
+    }
+    
+    /**
+     * get latest accreditation category for the application, based on child parent relationship of applications
+     * @return type
+     */
+    public function getLatestCategory()
+    {
+        $parent_id = $this->parent_id;
+        $sql = "SELECT `classification` FROM accreditcomp.application app 
+            JOIN accreditcomp.`application_classification` ac ON ac.`application_id` = app.id  
+            WHERE (app.parent_id = $parent_id OR app.id = $parent_id) AND `icta_committee_id` = 2
+            ORDER BY app.id DESC LIMIT 1";
+        $data = \Yii::$app->db->createCommand($sql)->queryScalar();
+        return $data;
+    }
 }

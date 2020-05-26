@@ -28,6 +28,13 @@ class RenewalController extends Controller
     public function actionIndex($message = 'hello world')
     {
         //allow this to be run several days
+        $this->companyAccreditationRenewals();
+        $this->professionalAccreditationRenewals();
+        return ExitCode::OK;
+    }
+    
+    public function companyAccreditationRenewals()
+    {
         $sql = "SELECT id, parent_id, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 1 YEAR) ,NOW()) date_diff  FROM `accreditcomp`.`application`
             WHERE STATUS = 'ApplicationWorkflow/completed'
             HAVING date_diff IN(40, 39, 38, 37, 36, 35)";
@@ -52,7 +59,34 @@ class RenewalController extends Controller
                 }
             }
         }
-        return ExitCode::OK;
+    }
+    
+    public function professionalAccreditationRenewals()
+    {
+        $sql = "SELECT id, parent_id, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 1 YEAR) ,NOW()) date_diff  FROM `accreditcomp`.`application`
+            WHERE STATUS = 4
+            HAVING date_diff IN(40, 39, 38, 37, 36, 35)";
+        $applications = \app\models\Application::findBySql($sql)->all();
+        foreach($applications as $application){
+            $app_id = $application->id;
+            if($application->parent_id != ''){
+                $app_id = $application->parent_id;
+            }
+            $sql2 = "SELECT id, parent_id,date_created,  DATEDIFF(NOW(), `date_created` ) date_diff  FROM `accreditcomp`.`application`
+                WHERE parent_id = {$app_id}
+                HAVING date_diff <20;";
+            //echo "Hapa\n"; 
+            $latest_app = \app\models\Application::findBySql($sql2)->one();
+            if(!$latest_app){
+                //echo "Hapa ndani\n"; 
+                $original_app = \app\models\Application::findOne($app_id);
+                if($original_app->status == 'ApplicationWorkflow/completed'){
+                    $original_app->status = 'ApplicationWorkflow/renewal';
+                    $original_app->save(false);
+                    $this->sendEmail($original_app);
+                }
+            }
+        }
     }
     
     /**

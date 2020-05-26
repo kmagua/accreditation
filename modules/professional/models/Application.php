@@ -14,6 +14,7 @@ use Yii;
  * @property string|null $declaration
  * @property string|null $initial_approval_date
  * @property string|null $cert_serial
+ * @property int|null $parent_id
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -44,7 +45,7 @@ class Application extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'category_id'], 'integer'],
+            [['user_id', 'category_id', 'parent_id'], 'integer'],
             //[['declaration'], 'string'],
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
@@ -152,20 +153,155 @@ MSG;
      */
     public function getStatus()
     {
-        if($this->status == 1){
-            return 'Pending Payment';
-        }else if($this->status == 2){
-            return 'Rejected';
-        }else if($this->status == 3){
-            return \yii\helpers\Html::a('Approve/Reject Payment', [
-                '/professional/application/approve-payment', 'id'=>$this->id
-            ], 
-            ['onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
-        }else if($this->status == 4){
-            return 'Complete';
-        }else if($this->status == 5){
-            return 'Payment Rejected';
+        switch($this->status){
+            case 1:
+                return $this->getPaymentLink();
+            case 2:
+                return 'Rejected at Secretariat';
+            case 3:
+                return $this->confirmPayment();
+            case 4:
+                return \yii\helpers\Html::a('Download Certificate', [
+                    '/professional/application/download-cert', 'id'=>$this->id
+                ]);
+            case 5:
+                return 'Payment Rejected';
+            case 6:
+                return 'Pending renewal';
+            case 7:
+                return 'Rejected at Committee';
+            case 8:
+                return $this->getApprovalLink(1);
+            case 9:
+                return $this->getApprovalLink(2);
+            case 10:
+                return $this->committeeMembersLink(2, 'Assign Committee Members');
+            default :
+                return $this->committeeMembersLink(1);
+        }
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getUserStatus()
+    {
+        switch($this->status){
+            case 1:
+                return $this->getPaymentLink();
+            case 2:
+                return 'Rejected';
+            case 3:
+                return 'Pending Confirmation of Payment';
+            case 4:
+                return \yii\helpers\Html::a('Download Certificate', [
+                    '/professional/application/download-cert', 'id'=>$this->id
+                ]);
+            case 5:
+                return 'Payment Rejected';
+            case 6:
+                return $this->renewalLink();
+            case 7:
+                return 'Rejected';
+            default :
+                return 'Pending Approval';
+        }
+    }
+    
+    /**
+     * creates an approval link
+     */
+    public function getApprovalLink($level)
+    {
+        //latest approval
+        //$approval = Approval::find()->where(['application_id' => $this->id])->orderBy('id desc')->one();
+        /*if($approval){
+            if($approval->level == 1 && $approval->status == 1 && \Yii::$app->user->identity->inGroup(2)){                
+                return \yii\helpers\Html::a('Approve at Committee', [
+                        '/professional/approval/create-ajax', 'app_id'=>$this->id, 'l' => 2
+                    ], 
+                    ['onclick' => "getDataForm(this.href, '<h3>Application Approval at Committee</h3>'); return false;"]
+                );
+            }else if($approval->status == 0){
+                return \yii\helpers\Html::a('Revert for reconsideration', [
+                        '/professional/approval/create-ajax', 'app_id'=>$this->id, 'l' => 2
+                    ], 
+                    ['onclick' => "getDataForm(this.href, '<h3>Application Approval at Committee</h3>'); return false;"]
+                );
+            }
+        }else{
+            if(\Yii::$app->user->identity->inGroup(1)){
+                return \yii\helpers\Html::a('Approve at Secretariat', [
+                        '/professional/approval/create-ajax', 'app_id'=>$this->id, 'l' => 1
+                    ], 
+                    ['onclick' => "getDataForm(this.href, '<h3>Application Approval at Secretariat</h3>'); return false;"]
+                );
+            }
+        }*/
+        $grp = ($level==1)?"Secretariat":"Committee member";
+        if(\Yii::$app->user->identity->inGroup($grp)){
+            $l = ($level == 1)?"Secretariat":"Committee";
+            return \yii\helpers\Html::a("Approve at $l", [
+                    '/professional/approval/create-ajax', 'app_id'=>$this->id, 'l' => $level
+                ], 
+                ['onclick' => "getDataForm(this.href, '<h3>Application Approval at {$l}</h3>'); return false;"]
+            );
         }
         return 'Pending Approval';
+    }
+    
+    public function getPaymentLink()
+    {
+        if(PersonalInformation::canAccess($this->user_id)
+            || Yii::$app->user->identity->inGroup('admin')){
+            return \yii\helpers\Html::a('Upload Payment Receipt', [
+                    '/professional/application/upload-receipt', 'id'=>$this->id
+                ], 
+                ['onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]
+            );
+        }
+        return 'Pending Payment';
+    }
+    
+    /**
+     * 
+     * @param type $level
+     * @param type $message
+     * @return string
+     */
+    public function committeeMembersLink($level, $message = 'Assign secretariat members')
+    {
+        if(\Yii::$app->user->identity->isInternal()){
+            $grp = ($level==1)?"Secretariat":"Committee member";
+            if(\Yii::$app->user->identity->inGroup($grp)){
+                return \yii\helpers\Html::a("Assign Members ". \kartik\icons\Icon::show('users', ['class' => 'fa', 'framework' => \kartik\icons\Icon::FA]), [
+                    '/professional/application/committee-members', 'id' => $this->id, 'l'=> $level], 
+                        ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Application {$grp} Members</h3>'); return false;",
+                            'title' => $message]);
+            }
+            return "Pending assignment of " . (($level==1)?"secretariat members.":"committee members.");
+        }
+        return "Pending";
+    }
+    
+    public function confirmPayment()
+    {
+        if(\Yii::$app->user->identity->isInternal()){
+            return \yii\helpers\Html::a("Confirm Payment ", [
+                '/professional/application/approve-payment', 'id' => $this->id], 
+                    ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Payment Confirmation</h3>'); return false;",
+                        'title' => 'Confirm application\' payment']);
+        }
+    }
+    
+    public function renewalLink()
+    {
+        if(PersonalInformation::canAccess($this->user_id)){
+            return \yii\helpers\Html::a('Renew Certificate', [
+                '/professional/application/renewal', 'id'=>$this->id
+            ]);
+        }
+        return 'Pending Renewal';
     }
 }

@@ -36,9 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data->getStatus();
                 },
                 'filter' => [
-                    1 => 'Approved',
+                    1 => 'Pending Payment',
                     2 => 'Rejected',
-                    10 => 'Pending',
+                    3 => 'Pending Payment Confirmation',
+                    4 => 'Complete',
+                    5 => 'Payment Rejected',
+                    6 => 'Pending Renewal',
                 ]
             ],
             //'initial_approval_date',

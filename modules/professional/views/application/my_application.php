@@ -24,23 +24,7 @@ use yii\widgets\DetailView;
                 'label' => 'status',
                 'format' => 'raw',
                 'value' => function($model){
-                    if($model->status == 1){
-                        return Html::a('Upload Payment Receipt', [
-                            '/professional/application/upload-receipt', 'id'=>$model->id
-                        ], 
-                        ['onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
-                    }else if($model->status == 2){
-                        return 'Rejected';
-                    }else if($model->status == 3){
-                        return 'Pending Confirmation of Payment';
-                    }else if($model->status == 4){
-                        return Html::a('Download Certificate', [
-                            '/professional/application/download-cert', 'id'=>$model->id
-                        ]);
-                    }else if($model->status == 5){
-                        return 'Payment Rejected';
-                    }
-                    return 'Pending Approval';
+                    return $model->getUserStatus();
                 },                
             ],
             [

@@ -127,11 +127,10 @@ class Payment extends \yii\db\ActiveRecord
             $status = $this->status == 'confirmed'?'completed':'approval-payment-rejected';
         }*/
         $status = $this->status == 'confirmed'?'completed':'approval-payment-rejected';
-        $this->application->initial_approval_date = date("Y-m-d");
+        $this->application->getInitApprovalDate();
         //only set serial # for the original application
-        if($this->application->parent_id == ''){
-            $this->application->certificate_serial = strtoupper(dechex($this->application->id * 100000027));
-        }
+        $cert_serial_id = ($this->application->parent_id == '') ? $this->application->id : $this->application->parent_id;
+        $this->application->certificate_serial = strtoupper(dechex($cert_serial_id * 100000027));
         $this->application->progressWorkFlowStatus($status);
     }
     

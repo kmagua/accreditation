@@ -15,9 +15,7 @@ $options = ($model->level == 1)? [1 => 'Secretariat']:[2 => 'Committee'];
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'status')->dropDownList([1 => 'Approved', 2 => 'Rejected'], ['prompt' => '']) ?>
-    
-    <?= $form->field($model, 'level')->dropDownList($options) ?>
-    
+        
     <?= $form->field($model, 'comment')->textarea(['rows' =>3]) ?>
 
     <div class="form-group">

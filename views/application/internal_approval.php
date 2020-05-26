@@ -13,7 +13,7 @@ $current_category = $current_specific_item =  $ac_classification = $app_status =
 $ac_score =0;
 $level_val = ($level == 2)?1:$level;
 $app_classification = app\models\ApplicationClassification::find()->where(['application_id'=>$app_id, 'icta_committee_id'=>$level_val])->one();
-if($app_classification){    
+if($app_classification){
     $ac_score = $app_classification->score;
     $ac_classification = $app_classification->classification;
     $app_status = $app_classification->status;
@@ -21,13 +21,27 @@ if($app_classification){
 }
 $cur_application = app\models\Application::findOne($app_id);
 $renewal_levl = '';
-if($cur_application->application_type == 2){    
-    $renewal_levl = '<span style="color:red"> Previous was ' . $cur_application->previous_category .'(<i>by applicant</i>)</span>';
-    echo '<h3 style="color:red">THIS IS A RENEWAL. Previos Category (<i>From Applicant</i>) was ' . $cur_application->previous_category . '</h3>';
+//ONLY FOR Renewals
+if($cur_application->application_type == 2){
+    if($cur_application->parent_id != ''){
+        $category = $cur_application->getLatestCategory();
+        $renewal_levl = '<span style="color:red"> Previous was ' . $category .'</span>';
+        echo '<h3 style="color:red">THIS IS A RENEWAL. Previos Category was ' . $category . '</h3>';
+    }else{
+        $renewal_levl = '<span style="color:red"> Previous was ' . $cur_application->previous_category .'(<i>by applicant</i>)</span>';
+        echo '<h3 style="color:red">THIS IS A RENEWAL. Previos Category (<i>From Applicant</i>) was ' . $cur_application->previous_category . '</h3>';
+    }
 }
 ?>
 <div class="row" style="margin-top:30px;">
-    <div class="row" style="text-align: center !important;"><u><h5><?= $cur_application->company->company_name . '\'s ' . $cur_application->accreditationType->name ?> Accreditation Request</h5></u></div>
+    <div class="row" style="text-align: center !important;">
+        <u>
+            <h5>
+                <?= $cur_application->company->company_name . '\'s ' . $cur_application->accreditationType->name ?> Accreditation Request
+            </h5>
+        </u>
+    </div>
+    
     <div class="col-md-2">
         <h4>Categoty</h4><hr>
     </div>

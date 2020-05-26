@@ -136,12 +136,16 @@ class ApprovalController extends Controller
                     $model->application->initial_approval_date = date('Y-m-d');
                     $model->application->cert_serial = strtoupper(dechex($model->application->id * 100000081));
                     $model->application->savePayment();
+                    $model->application->status = 1;
                 }else{
+                    $model->application->status = 7;
                     $model->application->initial_approval_date = null;
                 }
                 $model->application->save(false);
                 $model->application->notifyUserOfApproval($model->status, $model->comment);
-            }else if($model->level == 1 && $model->status == 2){
+            }else if($model->level == 1){
+                $model->application->status = ($model->status == 2)? 2:10;
+                $model->application->save(false);
                 $model->application->notifyUserOfApproval($model->status, $model->comment);
             }
             return "<h3>Approval Record Saved.</h3>";
@@ -188,12 +192,16 @@ class ApprovalController extends Controller
                     $model->application->initial_approval_date = date('Y-m-d');
                     //$model->application->cert_serial = strtoupper(dechex($model->application->id * 100000081));
                     $model->application->savePayment();
+                    $model->application->status = 1;
                 }else{
+                    $model->application->status = 7;
                     $model->application->initial_approval_date = null;
                 }
                 $model->application->save(false);
                 $model->application->notifyUserOfApproval($model->status, $model->comment);
             }else if($model->level == 1 && $model->status == 2){
+                $model->status = 2;
+                $model->application->save(false);
                 $model->application->notifyUserOfApproval($model->status, $model->comment);
             }
             return "<h3>Approval Record Saved.</h3>";

@@ -15,6 +15,7 @@ use Yii;
  * @property int|null $level
  * @property string $status
  * @property string|null $comment
+ * @property int|null $confirmed_by
  * @property string $date_created
  * @property string|null $last_update
  *
@@ -45,7 +46,7 @@ class Payment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['application_id', 'level'], 'integer'],
+            [['application_id', 'level', 'confirmed_by'], 'integer'],
             [['billable_amount'], 'number'],
             [['status'], 'string'],
             [['date_created', 'last_update'], 'safe'],
