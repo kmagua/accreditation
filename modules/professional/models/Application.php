@@ -97,6 +97,35 @@ class Application extends \yii\db\ActiveRecord
     
     /**
      * 
+     * @param type $insert
+     */
+    public function beforeSave($insert) 
+    {
+        if($this->status == ''){
+            $this->status = null;
+        }        
+        parent::beforeSave($insert);
+        return true;
+    }
+    
+    /**
+     * 
+     * @param int $pid \app\modules\professional\models\PersonalInformation ID
+     * @return \app\modules\professional\models\Application
+     */
+    public static function getAppModel($pid)
+    {
+        $sql = "SELECT * FROM `accreditprof`.`application` WHERE user_id = $pid and parent_id is null order by id";
+        if (($model = Application::findBySql($sql)->one()) === null) {
+            $model = new Application();
+            $model->user_id = $pid;
+        }
+        return $model;
+    }
+
+
+    /**
+     * 
      */
     public function notifyUserOfApproval($status, $comment)
     {
@@ -162,12 +191,12 @@ MSG;
                 return $this->confirmPayment();
             case 4:
                 return \yii\helpers\Html::a('Download Certificate', [
-                    '/professional/application/download-cert', 'id'=>$this->id
+                    '/professional/application/download-cert', 'id' => $this->id
                 ]);
             case 5:
                 return 'Payment Rejected';
             case 6:
-                return 'Pending renewal';
+                return $this->renewalLink();
             case 7:
                 return 'Rejected at Committee';
             case 8:
@@ -176,6 +205,8 @@ MSG;
                 return $this->getApprovalLink(2);
             case 10:
                 return $this->committeeMembersLink(2, 'Assign Committee Members');
+            case 12:
+                return $this->renewalLink();
             default :
                 return $this->committeeMembersLink(1);
         }
@@ -204,6 +235,8 @@ MSG;
                 return $this->renewalLink();
             case 7:
                 return 'Rejected';
+            case 12:
+                return $this->renewalLink();
             default :
                 return 'Pending Approval';
         }
@@ -214,31 +247,6 @@ MSG;
      */
     public function getApprovalLink($level)
     {
-        //latest approval
-        //$approval = Approval::find()->where(['application_id' => $this->id])->orderBy('id desc')->one();
-        /*if($approval){
-            if($approval->level == 1 && $approval->status == 1 && \Yii::$app->user->identity->inGroup(2)){                
-                return \yii\helpers\Html::a('Approve at Committee', [
-                        '/professional/approval/create-ajax', 'app_id'=>$this->id, 'l' => 2
-                    ], 
-                    ['onclick' => "getDataForm(this.href, '<h3>Application Approval at Committee</h3>'); return false;"]
-                );
-            }else if($approval->status == 0){
-                return \yii\helpers\Html::a('Revert for reconsideration', [
-                        '/professional/approval/create-ajax', 'app_id'=>$this->id, 'l' => 2
-                    ], 
-                    ['onclick' => "getDataForm(this.href, '<h3>Application Approval at Committee</h3>'); return false;"]
-                );
-            }
-        }else{
-            if(\Yii::$app->user->identity->inGroup(1)){
-                return \yii\helpers\Html::a('Approve at Secretariat', [
-                        '/professional/approval/create-ajax', 'app_id'=>$this->id, 'l' => 1
-                    ], 
-                    ['onclick' => "getDataForm(this.href, '<h3>Application Approval at Secretariat</h3>'); return false;"]
-                );
-            }
-        }*/
         $grp = ($level==1)?"Secretariat":"Committee member";
         if(\Yii::$app->user->identity->inGroup($grp)){
             $l = ($level == 1)?"Secretariat":"Committee";
@@ -251,6 +259,10 @@ MSG;
         return 'Pending Approval';
     }
     
+    /**
+     * 
+     * @return string
+     */
     public function getPaymentLink()
     {
         if(PersonalInformation::canAccess($this->user_id)
@@ -275,7 +287,7 @@ MSG;
         if(\Yii::$app->user->identity->isInternal()){
             $grp = ($level==1)?"Secretariat":"Committee member";
             if(\Yii::$app->user->identity->inGroup($grp)){
-                return \yii\helpers\Html::a("Assign Members ". \kartik\icons\Icon::show('users', ['class' => 'fa', 'framework' => \kartik\icons\Icon::FA]), [
+                return \yii\helpers\Html::a("Assign {$grp} Members ". \kartik\icons\Icon::show('users', ['class' => 'fa', 'framework' => \kartik\icons\Icon::FA]), [
                     '/professional/application/committee-members', 'id' => $this->id, 'l'=> $level], 
                         ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Application {$grp} Members</h3>'); return false;",
                             'title' => $message]);
@@ -285,6 +297,10 @@ MSG;
         return "Pending";
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function confirmPayment()
     {
         if(\Yii::$app->user->identity->isInternal()){
@@ -295,13 +311,82 @@ MSG;
         }
     }
     
+    /**
+     * 
+     * @return string
+     */
     public function renewalLink()
     {
-        if(PersonalInformation::canAccess($this->user_id)){
+        if(PersonalInformation::canAccess($this->user_id) || \Yii::$app->user->identity->inGroup('admin')){
             return \yii\helpers\Html::a('Renew Certificate', [
-                '/professional/application/renewal', 'id'=>$this->id
+                '/professional/application/renewal', 'id'=>$this->id, 'piid' => $this->user_id
             ]);
         }
         return 'Pending Renewal';
+    }
+    /**
+     * 
+     * @param type $parent_id
+     * @param type $piid
+     * @return \app\modules\professional\models\Application
+     * @throws \Exception
+     */
+    public static function getRenewal($parent_id, $piid)
+    {
+        $sql = "SELECT *  
+            FROM `accreditprof`.`application`
+            WHERE parent_id = $parent_id AND (status <> 4 OR status IS NULL) ORDER BY id DESC";
+        $application = Application::findBySql($sql)->one();
+        if(!$application){
+            $parent = Application::findOne($parent_id);
+            $application = new Application();
+            $application->setAttributes(['parent_id' => $parent_id, 'user_id' => $piid,
+                'category_id' => $parent->category_id, 'declaration' => 1, 'status' => 12
+            ]);
+            $transaction = \Yii::$app->db->beginTransaction();
+            try{
+                $parent->status = 4;
+                if($application->save(false) && $parent->save(false)){
+                    $transaction->commit();
+                }else{
+                    throw new \Exception('Could not Create your Renewal.');
+                }       
+            }catch(\Exception $e){
+                $transaction->rollBack();
+            }
+        }
+        return $application;
+    }
+    
+    /**
+     * link to download certificate
+     * @return type
+     */
+    public function processCompleted()
+    {  
+        return Html::a('Download Certificate',[
+            'application/download-cert', 'id' => $this->id], 
+                ['data-pjax'=>'0', 'title' =>'Certificate Download']);
+    }
+    
+    /**
+     * 
+     * @param type $mother_app_id
+     * @return \yii\data\ActiveDataProvider
+     */
+    public static function getRenewals($mother_app_id)
+    {
+        $apps = Application::find()->select('id')->where(['parent_id' => $mother_app_id])->all();
+        
+        $query = RenewalCpd::find();
+        
+        $dataProvider = new \yii\data\ActiveDataProvider([
+            'query' => $query,
+        ]);
+        if($apps){
+            $app_ids = array_column($apps, 'id');
+            $query->andFilterWhere(['in', 'renewal_id', $app_ids]);
+        }
+        return $dataProvider;
     }
 }

@@ -53,7 +53,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'committee-members', 'get-data'],
+                        'actions' => ['index', 'approve-payment', 'committee-members', 'get-data', 'renewals'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -431,6 +431,18 @@ class ApplicationController extends Controller
         
         return $this->renderAjax('revert_rejection', [
             'model' => $model
+        ]);
+    }
+    
+    public function actionRenewals()
+    {
+        $searchModel = new ApplicationSearch();
+        $dataProvider = $searchModel->searchRenewals(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'is_renewal' => 'yes'
         ]);
     }
 }

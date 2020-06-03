@@ -497,10 +497,10 @@ class Application extends \yii\db\ActiveRecord
      */
     public function processCompleted()
     {        
-        $latest = Application::find()->where(['parent_id' => $this->id])->orderBy('id desc')->one();
+        /*$latest = Application::find()->where(['parent_id' => $this->id])->orderBy('id desc')->one();
         if($latest){
             return $latest->getApplicationProgress();
-        }
+        }*/
         return Html::a('Download Certificate',[
             'application/download-cert', 'id' => $this->id], 
                 ['data-pjax'=>'0', 'title' =>'Certificate Download']);

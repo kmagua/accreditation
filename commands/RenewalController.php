@@ -61,29 +61,34 @@ class RenewalController extends Controller
         }
     }
     
+    /**
+     * 
+     */
     public function professionalAccreditationRenewals()
     {
-        $sql = "SELECT id, parent_id, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 1 YEAR) ,NOW()) date_diff  FROM `accreditcomp`.`application`
+        $sql = "SELECT id, parent_id, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 3 YEAR) ,NOW()) date_diff 
+            FROM `accreditprof`.`application`
             WHERE STATUS = 4
             HAVING date_diff IN(40, 39, 38, 37, 36, 35)";
-        $applications = \app\models\Application::findBySql($sql)->all();
+        $applications = \app\modules\professional\models\Application::findBySql($sql)->all();
         foreach($applications as $application){
             $app_id = $application->id;
             if($application->parent_id != ''){
                 $app_id = $application->parent_id;
             }
-            $sql2 = "SELECT id, parent_id,date_created,  DATEDIFF(NOW(), `date_created` ) date_diff  FROM `accreditcomp`.`application`
+            $sql2 = "SELECT id, parent_id,date_created,  DATEDIFF(NOW(), `date_created` ) date_diff
+                FROM `accreditprof`.`application`
                 WHERE parent_id = {$app_id}
                 HAVING date_diff <20;";
             //echo "Hapa\n"; 
-            $latest_app = \app\models\Application::findBySql($sql2)->one();
+            $latest_app = \app\modules\professional\models\Application::findBySql($sql2)->one();
             if(!$latest_app){
                 //echo "Hapa ndani\n"; 
-                $original_app = \app\models\Application::findOne($app_id);
-                if($original_app->status == 'ApplicationWorkflow/completed'){
-                    $original_app->status = 'ApplicationWorkflow/renewal';
+                $original_app = \app\modules\professional\models\Application::findOne($app_id);
+                if( $original_app->status == 4 ){
+                    $original_app->status = 6;
                     $original_app->save(false);
-                    $this->sendEmail($original_app);
+                    $this->sendProfessionalEmail($original_app);
                 }
             }
         }
@@ -103,12 +108,36 @@ class RenewalController extends Controller
                 Dear {$application->user->full_name},
                 <p>Kindly note that your Accreditation by ICT Authority for $type is approaching the annual renewal period.
                     You will need to start the renewal process using the link below to ensure validity of your certificate.
-                    The link to renew is on the 'status' column in the Applications tab after opening the link below.</p>
+                    The renew link is on the 'status' column in the Applications tab after opening the link below.</p>
                         
                 <p>$link</p>
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;
         \app\models\Utility::sendMail($application->company->company_email, $header, $message, $application->user->email);
+    }
+    
+    /**
+     * @var $application app\modules\professional\models\Application
+     * @param type $application app\modules\professional\models\Application
+     */
+    public function sendProfessionalEmail($application)
+    {        
+        $type = $application->category->name;
+        $header = 'ICT Authority: ' . $type . " - RENEWAL REQUEST NOTIFICATION";
+        
+        $link = \yii\helpers\Url::to(['/professional/personal-information/view', 'id' => $application->user_id], true);
+        $name = $application->user->getNames();
+        $message = <<<MSG
+            Dear {$name},
+            <p>Kindly note that your Accreditation by ICT Authority for $type is approaching the triennial renewal period.
+                You will need to start the renewal process using the link below to ensure validity of your certificate.
+                The renew link is on the 'status' column in the Application's tab after opening the link below.</p>
+
+            <p>$link</p>
+            <p>Thank you,<br>ICT Authority Accreditation.</p>
+                
+MSG;
+        \app\models\Utility::sendMail($application->user->usr->email, $header, $message);
     }
 }

@@ -19,8 +19,8 @@ class ApplicationSearch extends Application
     public function rules()
     {
         return [
-            [['id', 'company_id', 'accreditation_type_id', 'user_id'], 'integer'],
-            [['cash_flow','turnover'], 'number'],
+            [['id', 'company_id', 'accreditation_type_id', 'user_id', 'parent_id'], 'integer'],
+            [['cash_flow', 'turnover'], 'number'],
             [['financial_status_link', 'status', 'declaration', 'date_created', 'last_updated', 'company', 'accreditationType'], 'safe'],
         ];
     }
@@ -72,6 +72,56 @@ class ApplicationSearch extends Application
             //'last_updated' => $this->last_updated,
         ]);
         $query->andWhere(['is', 'parent_id', new \yii\db\Expression('NULL')]);
+        $query->andFilterWhere(['like', 'financial_status_link', $this->financial_status_link])
+            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['like', 'company_profile.company_name', $this->company])
+            ->andFilterWhere(['like', 'accreditation_type.name', $this->accreditationType])
+            ->andFilterWhere(['like', 'declaration', $this->declaration]);
+        
+        $query->orderBy("id desc");
+
+        return $dataProvider;
+    }
+    
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchRenewals($params)
+    {
+        $query = Application::find();
+
+        // add conditions that should always apply here
+
+        $query->joinWith(['accreditationType', 'company']);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'company_id' => $this->company_id,
+            'accreditation_type_id' => $this->accreditation_type_id,
+            'cash_flow' => $this->cash_flow,
+            'turnover' => $this->turnover,
+            'user_id' => $this->user_id,
+            'parent_id' => $this->parent_id,
+            
+            //'last_updated' => $this->last_updated,
+        ]);
+        $query->andWhere(['is not', 'parent_id', new \yii\db\Expression('NULL')]);
         $query->andFilterWhere(['like', 'financial_status_link', $this->financial_status_link])
             ->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'company_profile.company_name', $this->company])

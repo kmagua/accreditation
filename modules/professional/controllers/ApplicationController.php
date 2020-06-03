@@ -53,7 +53,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['update-ajax', 'view', 'download-cert', 'renewal'],
+                        'actions' => ['update-ajax', 'view', 'download-cert', 'renewal', 'update-renewal'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -68,7 +68,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'committee-members'],
+                        'actions' => ['index', 'approve-payment', 'committee-members', 'renewals'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -173,6 +173,24 @@ class ApplicationController extends Controller
             'model' => $model,
         ]);
     }
+    
+    /**
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function actionUpdateRenewal($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return "CPD Submitted Successfully.";
+        }
+
+        return $this->renderAjax('_form_renewal', [
+            'model' => $model,
+        ]);
+    }
 
     /**
      * Deletes an existing Application model.
@@ -210,10 +228,7 @@ class ApplicationController extends Controller
      */
     public function actionMyApplication($pid)
     {
-        if (($model = Application::findOne(['user_id' => $pid])) === null) {
-            $model = new Application();
-            $model->user_id = $pid;
-        }
+        $model = Application::getAppModel($pid);
         if($model->isNewRecord){
             $html = $this->renderPartial('_form', [
                 'model' => $model
@@ -308,9 +323,9 @@ class ApplicationController extends Controller
         }
         $model->confirmed_by = Yii::$app->user->identity->user_id;
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ( $model->load(Yii::$app->request->post()) && $model->save() ) {
             $model->application->initial_approval_date = date('Y-m-d');
-            $model->application->status =( $model->status =='confirmed')?4:5;
+            $model->application->status =( $model->status == 'confirmed' )?4:5;
             if($model->application->cert_serial == ''){
                 $model->application->cert_serial = strtoupper(dechex($model->application->id * 100000081));
             }
@@ -323,9 +338,23 @@ class ApplicationController extends Controller
         ]);
     }
     
-    public function actionRenewal($id)
+    /**
+     * 
+     * @param type $id
+     * @param type $piid PersonalInformation ID
+     * @return string
+     */
+    public function actionRenewal($id, $piid)
     {
-        //$application = 
+        $application = Application::getRenewal($id, $piid);
+        if (isset(Yii::$app->request->post()['xyz'])) {            
+            return "Payment status updated successfully.";
+        }
+        
+        return $this->render('renewal', [
+            'mother_app_id' => $id, 'renewal_id' => $application->id, 'piid' => $piid,
+            'renewal' => $application
+        ]);
     }
     
     /**
@@ -342,7 +371,7 @@ class ApplicationController extends Controller
         $model->loadApplicationCommitteeMembers($l);
         
         if ($model->load(Yii::$app->request->post()) && $model->saveApplicationCommitteeMembers($l)) {
-            $model->application->status = ($l == 1) ? 8: 9;
+            $model->application->status = ( $l == 1 ) ? 8: 9;
             if($model->application->save(false)){
                 \Yii::$app->session->setFlash('members_added','Members assigned successfully!');
             }
@@ -351,6 +380,21 @@ class ApplicationController extends Controller
         
         return $this->renderAjax('app_committee_members', [
             'model' => $model, 'level' => $l
+        ]);
+    }
+    /**
+     * 
+     * @return type
+     */
+    public function actionRenewals()
+    {
+        $searchModel = new ApplicationSearch();
+        $dataProvider = $searchModel->searchRenewals(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'is_renewal' => 'yes'
         ]);
     }
 }

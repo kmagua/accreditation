@@ -11,14 +11,24 @@ Icon::map($this, Icon::FAS);
 /* @var $searchModel app\models\ApplicationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Applications';
+$this->title = 'Supplier Applications';
+if(isset($is_renewal)){
+    $this->title = 'Supplier Application Renewals';
+    $this->params['breadcrumbs'][] = ['label' => 'Applications', 'url' => ['/application/index']];
+}
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="application-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php if(isset($is_renewal)){
+        echo Html::a('<< Original Applications', ['/application/index'], 
+            ['class' => 'btn btn-primary', 'title' =>"Original Applications"]);
+    }else{
+        echo Html::a('>> Supplier Renewals', ['/application/renewals'], 
+            ['class' => 'btn btn-primary', 'title' =>"Renewals"]);
+    }?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -73,7 +83,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             ],
             
-            ['class' => 'yii\grid\ActionColumn',
+            [
+                'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 4%'],
                 //'visible'=> Yii::$app->user->isGuest ? false : true,
                 'template' => '{view}',
