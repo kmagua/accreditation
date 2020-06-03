@@ -85,6 +85,8 @@ AppAsset::register($this);
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                     ['label' => 'Approval Levels', 'url' => ['/icta-committee/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'Reports', 'url' => ['/site/reports'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],

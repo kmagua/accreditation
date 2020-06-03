@@ -154,4 +154,9 @@ class SiteController extends Controller
     {
         return $this->render('code_of_conduct');
     }
+    
+    public function actionReports()
+    {
+        return $this->render('reports');
+    }
 }
