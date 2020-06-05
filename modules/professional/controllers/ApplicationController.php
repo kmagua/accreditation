@@ -57,7 +57,7 @@ class ApplicationController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            if(isset(Yii::$app->request->get()['id'])){                                
+                            if(isset(Yii::$app->request->get()['id'])){     
                                 $application = Application::findOne(Yii::$app->request->get()['id']);
                                 if($application){
                                     return Yii::$app->user->identity->isInternal() 
@@ -68,7 +68,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'committee-members', 'renewals'],
+                        'actions' => ['index', 'approve-payment', 'committee-members', 'renewals', 'statuses-report'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -389,6 +389,43 @@ class ApplicationController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'is_renewal' => 'yes'
+        ]);
+    }
+    
+    public function actionStatusesReport()
+    {        
+        $records = \Yii::$app->db->createCommand("
+            SELECT COUNT(id) id,
+            CONCAT_WS('', CASE
+                WHEN IFNULL(`status`, '') = '' THEN  'New'
+                WHEN `status` = 1 THEN  'Pending Payment'
+                WHEN `status` = 2 THEN  'Rejected at Secretariat'
+                WHEN `status` = 3 THEN  'Pending Payment Confirmation'
+                WHEN `status` = 4 THEN  'Complete'
+                WHEN `status` = 5 THEN  'Payment Rejected'
+                WHEN `status` = 6 THEN  'Pending Renewal'
+                WHEN `status` = 7 THEN  'Rejected at Committee'
+                WHEN `status` = 8 THEN  'Pending Secretariat Approval'
+                WHEN `status` = 9 THEN  'Pending Committee Approval'
+                WHEN `status` = 10 THEN  'Pending Assignment of Committee Members'    
+                ELSE `status` 
+             END, ' (', COUNT(id), ')' )AS `status`
+            FROM `accreditprof`.application WHERE parent_id IS NULL GROUP BY `status`")
+            ->queryAll();
+        $data = array_column($records, 'id');
+        $values = $data;
+        $total_applications = array_sum($data);
+        //echo$total_applications; exit;
+        array_walk($data, \app\models\Utility::class . '::get_percentages_from_array', $total_applications);
+        
+        //();
+        //echo $total_applications; exit;
+        //$percentages = 
+        $statuses = array_column($records, 'status');
+        return $this->render('statuses_report', [
+            'data_percentage' => $data,
+            'labels' => $statuses,
+            'data_values' => $values,
         ]);
     }
 }

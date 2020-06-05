@@ -53,7 +53,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'committee-members', 'get-data', 'renewals'],
+                        'actions' => ['index', 'approve-payment', 'committee-members', 'get-data', 'renewals', 'statuses-report'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -431,6 +431,10 @@ class ApplicationController extends Controller
         ]);
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function actionRenewals()
     {
         $searchModel = new ApplicationSearch();
@@ -440,6 +444,33 @@ class ApplicationController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'is_renewal' => 'yes'
+        ]);
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function actionStatusesReport()
+    {        
+        $records = \Yii::$app->db->createCommand("
+            SELECT COUNT(id) id, CONCAT_WS(' ', `status`, '(', COUNT(id), ')') `status`
+            FROM `accreditcomp`.application WHERE parent_id IS NULL GROUP BY `status`")
+            ->queryAll();
+        $data = array_column($records, 'id');
+        $values = $data;
+        $total_applications = array_sum($data);
+        //echo  $total_applications; exit;
+        array_walk($data, \app\models\Utility::class . '::get_percentages_from_array', $total_applications);
+        
+        //();
+        //echo $total_applications; exit;
+        //$percentages = 
+        $statuses = array_column($records, 'status');
+        return $this->render('statuses_report', [
+            'data_percentage' => $data,
+            'labels' => $statuses,
+            'data_values' => $values,
         ]);
     }
 }

@@ -52,4 +52,10 @@ class Utility {
     public static function generateRandomString($length = 100) {
         return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@!', ceil($length/strlen($x)) )),1,$length);
     }
+    
+    public static function get_percentages_from_array(&$data_item, $key, $total_item_count)
+    {
+        $data_item = $data_item/$total_item_count * 100;
+    }
+
 }
