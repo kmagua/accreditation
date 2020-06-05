@@ -133,4 +133,23 @@ class Payment extends \yii\db\ActiveRecord
             return '';
         }
     }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function savePaymentConfirmationDetails()
+    {
+        $this->application->initial_approval_date = date('Y-m-d');
+        $this->application->status =( $this->status == 'confirmed' )?4:5;
+        if( $this->application->cert_serial == '' ){
+            $this->application->cert_serial = strtoupper(dechex($this->application->id * 100000081));
+        }
+        if($this->status == 'confirmed' && $this->application->parent_id != ''){
+            Yii::$app->db2->createCommand()->update('accreditprof.application',
+                ['status' => 4], ['id' =>$this->application->parent_id])->execute();
+        }
+        $this->application->save(false);
+        return "Payment status updated successfully.";
+    }
 }

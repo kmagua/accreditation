@@ -343,16 +343,8 @@ MSG;
             $application->setAttributes(['parent_id' => $parent_id, 'user_id' => $piid,
                 'category_id' => $parent->category_id, 'declaration' => 1, 'status' => 12
             ]);
-            $transaction = \Yii::$app->db->beginTransaction();
-            try{
-                $parent->status = 4;
-                if($application->save(false) && $parent->save(false)){
-                    $transaction->commit();
-                }else{
-                    throw new \Exception('Could not Create your Renewal.');
-                }       
-            }catch(\Exception $e){
-                $transaction->rollBack();
+            if(!$application->save(false) /*&& $parent->save(false)*/){                
+                throw new \Exception('Could not Create your Renewal.');
             }
         }
         return $application;

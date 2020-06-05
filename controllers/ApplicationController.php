@@ -381,9 +381,6 @@ class ApplicationController extends Controller
         $model->initRenewal($id, $cid, $t);
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->db->createCommand()->update('accreditcomp.application',
-                ['status' => 'ApplicationWorkflow/completed'], ['id' =>$model->parent_id])->execute();
-            
             \Yii::$app->session->setFlash('application_submitted','Application Renewal Submitted Successfully!');
             $this->redirect(['company-profile/view','id'=>$cid,'#'=>'application_data_tab']);
         }

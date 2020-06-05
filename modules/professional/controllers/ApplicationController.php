@@ -324,13 +324,7 @@ class ApplicationController extends Controller
         $model->confirmed_by = Yii::$app->user->identity->user_id;
         
         if ( $model->load(Yii::$app->request->post()) && $model->save() ) {
-            $model->application->initial_approval_date = date('Y-m-d');
-            $model->application->status =( $model->status == 'confirmed' )?4:5;
-            if($model->application->cert_serial == ''){
-                $model->application->cert_serial = strtoupper(dechex($model->application->id * 100000081));
-            }
-            $model->application->save(false);
-            return "Payment status updated successfully.";
+            return $model->savePaymentConfirmationDetails();
         }
         
         return $this->renderAjax('../payment/approve_payment_receipt', [
