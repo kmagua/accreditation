@@ -851,4 +851,17 @@ MSG;
         $data = \Yii::$app->db->createCommand($sql)->queryScalar();
         return $data;
     }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getExpiryDate()
+    {
+        $app = Application::find()->where('parent_id = ' . $this->id)->orderBy('id DESC')->one();
+        if(!$app || $app->initial_approval_date == ''){
+            $app = $this;
+        }
+        return date('d-m-Y', strtotime($app->initial_approval_date . "+1 year"));
+    }
 }

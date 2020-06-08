@@ -11,7 +11,7 @@ $this->title = "Accreditation System Reports";
     <?= Html::a('1. Accredited Suppliers', ['/application/accredited-suppliers'], 
             ['class' => 'btn btn-primary', 'title' =>"Original Applications", 'style' => 'margin-bottom:5px']); ?>
     <br>
-    <?= Html::a('2. Accredited Individuals', ['/professional/application/accredited-suppliers'], 
+    <?= Html::a('2. Accredited Individuals', ['/professional/application/accredited-professionals'], 
             ['class' => 'btn btn-primary', 'title' =>"Original Applications", 'style' => 'margin-bottom:5px']); ?>
     <br>
     <?= Html::a('3. Supplier Application Statuses', ['/application/statuses-report'], 

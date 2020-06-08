@@ -53,7 +53,8 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'committee-members', 'get-data', 'renewals', 'statuses-report'],
+                        'actions' => ['index', 'approve-payment', 'committee-members', 'get-data', 
+                            'renewals', 'statuses-report', 'accredited-suppliers'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -463,14 +464,26 @@ class ApplicationController extends Controller
         //echo  $total_applications; exit;
         array_walk($data, \app\models\Utility::class . '::get_percentages_from_array', $total_applications);
         
-        //();
-        //echo $total_applications; exit;
-        //$percentages = 
         $statuses = array_column($records, 'status');
         return $this->render('statuses_report', [
             'data_percentage' => $data,
             'labels' => $statuses,
             'data_values' => $values,
+        ]);
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function actionAccreditedSuppliers()
+    {
+        $searchModel = new ApplicationSearch();
+        $dataProvider = $searchModel->getAccreditedList(Yii::$app->request->queryParams);
+
+        return $this->render('accredited_list', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 }

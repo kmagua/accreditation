@@ -132,4 +132,57 @@ class ApplicationSearch extends Application
 
         return $dataProvider;
     }
+    
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function getAccreditedList($params)
+    {
+        $query = Application::find();
+
+        // add conditions that should always apply here
+
+        $query->joinWith(['accreditationType', 'company']);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'company_id' => $this->company_id,
+            'accreditation_type_id' => $this->accreditation_type_id,
+            'cash_flow' => $this->cash_flow,
+            'turnover' => $this->turnover,
+            'user_id' => $this->user_id,
+            
+            //'last_updated' => $this->last_updated,
+        ]);
+        $query->andWhere(['is', 'parent_id', new \yii\db\Expression('NULL')]);
+        //$query->andFilterWhere(['like', 'financial_status_link', $this->financial_status_link])
+        if($this->status){
+            $query->andFilterWhere(['like', 'status', $this->status]);
+        }else{
+            $query->andFilterWhere(['in', 'status', ['ApplicationWorkflow/completed', 'ApplicationWorkflow/renewal']]);
+        }
+        $query->andFilterWhere(['like', 'company_profile.company_name', $this->company])
+            ->andFilterWhere(['like', 'accreditation_type.name', $this->accreditationType])
+            ->andFilterWhere(['like', 'declaration', $this->declaration]);
+        
+        $query->orderBy("id desc");
+
+        return $dataProvider;
+    }
 }

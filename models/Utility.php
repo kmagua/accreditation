@@ -55,7 +55,7 @@ class Utility {
     
     public static function get_percentages_from_array(&$data_item, $key, $total_item_count)
     {
-        $data_item = $data_item/$total_item_count * 100;
+        $data_item = round($data_item/$total_item_count * 100, 1);
     }
 
 }

@@ -68,7 +68,8 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'committee-members', 'renewals', 'statuses-report'],
+                        'actions' => ['index', 'approve-payment', 'committee-members', 'renewals', 
+                            'statuses-report', 'accredited-professionals'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -392,6 +393,10 @@ class ApplicationController extends Controller
         ]);
     }
     
+    /**
+     * Statuses report for original submissions
+     * @return type
+     */
     public function actionStatusesReport()
     {        
         $records = \Yii::$app->db->createCommand("
@@ -426,6 +431,21 @@ class ApplicationController extends Controller
             'data_percentage' => $data,
             'labels' => $statuses,
             'data_values' => $values,
+        ]);
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function actionAccreditedProfessionals()
+    {
+        $searchModel = new ApplicationSearch();
+        $dataProvider = $searchModel->getAccreditedIndividuals(Yii::$app->request->queryParams);
+
+        return $this->render('accredited_list', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 }

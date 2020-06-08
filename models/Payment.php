@@ -128,7 +128,7 @@ class Payment extends \yii\db\ActiveRecord
         }*/
         $status = $this->status == 'confirmed'?'completed':'approval-payment-rejected';
         $this->application->getInitApprovalDate();
-        //update status of the parent to completed
+        //update status of the parent to completed if renewal and payment is confirmed
         if($this->status == 'confirmed' && $this->application->parent_id != ''){
             Yii::$app->db->createCommand()->update('accreditcomp.application',
                 ['status' => 'ApplicationWorkflow/completed'], ['id' =>$this->application->parent_id])->execute();
