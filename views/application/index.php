@@ -79,7 +79,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'certificate-paid' => 'Pending Payment Confirmation',
                     'approval-payment-rejected' => 'Payment Rejected',
                     'completed' => 'Completed',
-                    'renewal' => 'Pending Renewal'
+                    'renewal' => 'Pending Renewal',
+                    'renewed' => 'Pending Renewal Approval'
                 ]
             ],
             

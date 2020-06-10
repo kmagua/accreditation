@@ -44,7 +44,7 @@
         <table>
             <tr>
             <!--<div class="col-md-4" style="float:left;padding-left:49px;"> -->
-            <td style="width: 120mm; padding-left: 50px">
+            <td style="width: 120mm; padding-left: 50px;">
                 <p style="font-family:Arial;color:gray;font-weight:100;font-size:1.5em; ">
                     <img src="<?= Yii::getAlias('@web'. '/images/francis.jpg'); ?>" style="height:100px" />
                     <!-- <img src="@Server.MapPath("~/Views/Profile/sergon.jpg")" style="width:4em;height:2em" />-->
@@ -53,7 +53,10 @@
                     Chairman, Accreditation Committee
                 </p>
             </td>
-            <td  style="width: 120mm; padding-left:27mm">
+            <td  style="width: 130mm; float:right !important;">
+                <p>&nbsp;</p>
+            </td>
+            <td  style="width: 120mm; float:right !important;">
                 <p style="font-family:Arial;font-weight:100;color:gray;font-size:1.5em; text-align: left">
                  <img src="<?= Yii::getAlias('@web'. '/images/rono1.jpg'); ?>" style="height:100px" />
                     <br />

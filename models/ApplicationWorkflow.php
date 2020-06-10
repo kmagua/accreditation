@@ -59,8 +59,11 @@ class ApplicationWorkflow implements \raoul2000\workflow\source\file\IWorkflowDe
                     'transition' => ['renewal']
                 ],
                 'renewal' => [
-                    'transition' => ['completed']
+                    'transition' => ['renewed']
                 ],
+                'renewed' => [
+                    'transition' => ['completed']
+                ]
             ]
         ];
     }

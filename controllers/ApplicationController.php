@@ -207,7 +207,7 @@ class ApplicationController extends Controller
     {
         $model = new Application();
         $model->company_id = $cid;
-        $model->setScenario('create');
+        $model->setScenario('create_update');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->session->setFlash('application_submitted','Application Submitted Successfully!');
@@ -240,8 +240,10 @@ class ApplicationController extends Controller
             $rejection_comment = Yii::$app->request->post()['ApplicationScore']['rejection_comment'];
             \app\models\ApplicationClassification::saveClassification($id, $committee_score, $committee_category, $level, $approval_status, $rejection_comment);
             
-            Application::progressOnCommitteeApproval($id, $approval_status, $level);
-            
+            $parent_id = Application::progressOnCommitteeApproval($id, $approval_status, $level);
+            if($parent_id){
+                return $this->redirect('renewals');
+            }
             return $this->redirect('index');
         }
 
@@ -376,12 +378,20 @@ class ApplicationController extends Controller
         return $pdf->render(); 
     }
     
+    /**
+     * 
+     * @param type $id
+     * @param type $cid
+     * @param type $t
+     * @return type
+     */
     public function actionRenewCert($id, $cid, $t)
     {
         $model = new Application();
         $model->initRenewal($id, $cid, $t);
+        $model->setScenario('create_update');
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->saveRenewal()) {
             \Yii::$app->session->setFlash('application_submitted','Application Renewal Submitted Successfully!');
             $this->redirect(['company-profile/view','id'=>$cid,'#'=>'application_data_tab']);
         }
@@ -391,6 +401,12 @@ class ApplicationController extends Controller
         ]);
     }
     
+    /**
+     * 
+     * @param type $id
+     * @param type $sec
+     * @return type
+     */
     public function actionGetData($id, $sec)
     {
         $application = $this->findModel($id);

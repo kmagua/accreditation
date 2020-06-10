@@ -403,6 +403,8 @@ class Application extends \yii\db\ActiveRecord
                 return $this->processCompleted();
             case 'ApplicationWorkflow/renewal':
                 return $this->processRenewal();
+            case 'ApplicationWorkflow/renewed':
+                return 'Pending Renewal Approval';
         }
     }
     
@@ -497,10 +499,12 @@ class Application extends \yii\db\ActiveRecord
      */
     public function processCompleted()
     {        
-        /*$latest = Application::find()->where(['parent_id' => $this->id])->orderBy('id desc')->one();
+        $latest = Application::find()->where(['parent_id' => $this->id])->orderBy('id desc')->one();
         if($latest){
-            return $latest->getApplicationProgress();
-        }*/
+            return Html::a('Download Certificate',[
+                'application/download-cert', 'id' => $latest->id], 
+                    ['data-pjax'=>'0', 'title' =>'Certificate Download']);
+        }
         return Html::a('Download Certificate',[
             'application/download-cert', 'id' => $this->id], 
                 ['data-pjax'=>'0', 'title' =>'Certificate Download']);
@@ -667,6 +671,7 @@ MSG;
             $new_status = ($level == 1)? 'sec-rejected' : 'com-rejected';
             $app->progressWorkFlowStatus($new_status);
         }
+        return $app->parent_id;
     }
     
     /**
@@ -789,9 +794,9 @@ MSG;
     
     /**
      * 
-     * @param type $parent_id
-     * @param type $cid
-     * @param type $t
+     * @param type $parent_id Application ID
+     * @param type $cid CompanyProfile ID
+     * @param type $t AccreditationType ID
      */
     public function initRenewal($parent_id,$cid, $t)
     {
@@ -863,5 +868,20 @@ MSG;
             $app = $this;
         }
         return date('d-m-Y', strtotime($app->initial_approval_date . "+1 year"));
+    }
+    
+    /**
+     * Save renewal and update parent status
+     * @return boolean
+     */
+    public function saveRenewal()
+    {
+        if($this->save()){
+            $sql = "UPDATE `accreditcomp`.`application` set
+                status = 'ApplicationWorkflow/renewed' where id = {$this->parent_id}";
+            $app = \Yii::$app->db->createCommand($sql)->execute();
+            return true;
+        }
+        return false;
     }
 }
