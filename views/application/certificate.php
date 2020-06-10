@@ -20,22 +20,20 @@
         <!--<p><img src="~/favicon.ico" style="margin-top:30%;width:9em;height:4em;" /></p> -->
         
         <p style="text-align:center;font-family:Arial;color:gray;font-weight:100;text-transform:uppercase;text-decoration:underline;font-size:1.8em;"><b>
-                <?= $application->company->company_name ?> &nbsp; (<?= $application->company->business_reg_no ?>)</b>
-            </p>
-        
-            
-                <p style="text-align:center;font-family:Arial;color:gray;font-weight:100;line-height:1.5;font-size:1.7em;">
-                    Has demonstrated compliance with the Government IT Governance <br />
-                    Standard, Criteria for accreditation of Government ICT <br />
-                    Suppliers/Contractors and has been accredited under 
-                    Category<br/> <b><span style="text-decoration:underline; text-decoration-style:dashed;"><?= $app_class->classification . ": " . strtoupper($application->accreditationType->name) ?></span></b> 
-                    for the provision of ICT services in the<br/> scope of accreditation commencing
-                
-                from <b><span style="text-decoration:underline; text-decoration-style:dashed;">&nbsp;&nbsp;&nbsp;&nbsp;
-                    <?= date('d-m-Y', strtotime($application->initial_approval_date)) ?>&nbsp;&nbsp;&nbsp;&nbsp;</span></b> to <b>
-                    <span style="text-decoration:underline; text-decoration-style:dashed;">&nbsp;&nbsp;&nbsp;&nbsp;
-                    <?= date('d-m-Y', strtotime($application->initial_approval_date . "+ 1 year")) ?>&nbsp;&nbsp;&nbsp;&nbsp;</span></b>
-            </p>
+            <?= $application->company->company_name ?> &nbsp; (<?= $application->company->business_reg_no ?>)</b>
+        </p>
+        <p style="text-align:center;font-family:Arial;color:gray;font-weight:100;line-height:1.5;font-size:1.7em;">
+                Has demonstrated compliance with the Government IT Governance <br />
+                Standard, Criteria for accreditation of Government ICT <br />
+                Suppliers/Contractors and has been accredited under 
+                Category<br/> <b><span style="text-decoration:underline; text-decoration-style:dashed;"><?= $app_class->classification . ": " . strtoupper($application->accreditationType->name) ?></span></b> 
+                for the provision of ICT services in the<br/> scope of accreditation commencing
+
+            from <b><span style="text-decoration:underline; text-decoration-style:dashed;">&nbsp;&nbsp;&nbsp;&nbsp;
+                <?= date('d-m-Y', strtotime($application->initial_approval_date)) ?>&nbsp;&nbsp;&nbsp;&nbsp;</span></b> to <b>
+                <span style="text-decoration:underline; text-decoration-style:dashed;">&nbsp;&nbsp;&nbsp;&nbsp;
+                <?= date('d-m-Y', strtotime($application->initial_approval_date . "+ 1 year")) ?>&nbsp;&nbsp;&nbsp;&nbsp;</span></b>
+        </p>
         
         <br/>
         <br/>
@@ -53,14 +51,14 @@
                     Chairman, Accreditation Committee
                 </p>
             </td>
-            <td  style="width: 130mm; float:right !important;">
+            <td style="width: 130mm; float:right !important;">
                 <p>&nbsp;</p>
             </td>
             <td  style="width: 120mm; float:right !important;">
                 <p style="font-family:Arial;font-weight:100;color:gray;font-size:1.5em; text-align: left">
                  <img src="<?= Yii::getAlias('@web'. '/images/rono1.jpg'); ?>" style="height:100px" />
-                    <br />
-                    Kipronoh Ronoh P.<br />
+                    <br/>
+                    Kipronoh Ronoh P.<br/>
                     Director, Programmes and Standards
                 </p>
             </td>
