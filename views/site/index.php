@@ -28,18 +28,18 @@ $this->title = 'ICT Authority Accreditation System';
         <div class="row" style="border-bottom: 1px solid red">            
             <div class="col-lg-5 col-md-6" style="border-top:1px solid red;">
                 <h2 style="color: #c11d35">1. Supplier/Company Accreditation Requirements</h2>
-                <h5 style="font-style: italic"><b>The following documents are required during Accreditation</b></h5>
+                <h5 style="font-style: italic"><b>The following documents are required for application.</b></h5>
 
                 <ol>
                    <li>  Company profile</li>
                    <li>  Certificate of incorporation</li>
-                   <li>  Companies act/ permit</li>
+                   <li>  Business permit</li>
                    <li>  KRA compliance certificate</li>
                    <li>  CVs , IT related university certificate, project management certificate national id copies and KRA pin for all of all directors</li>
                    <li>  CVs, IT related degree, professional certifications, certification in project management for all technical staff</li>
-                   <li>  Past LPOs and Recommendation Letters</li>
-                   <li>  Recent bank statement from the last financial year together with the audited accounts of the same</li>
-                   <li>  Partnership certificates if any</li>                   
+                   <li>  LPOs, LSOs, and Recommendation Letters</li>
+                   <li>  Bank statements and audited accounts for the past three (3) years;</li>                   
+                   <li>  Certificate of partnership, where applicable</li>                   
                 </ol>
                 <p style='color:red'>There are 8 categories for Supplier/Company Accreditation. <?= Html::a('Click Here', ['site/company-accreditation-prerequisites']) ?> to see the prerequisites for each.</p>
             </div>

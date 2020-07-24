@@ -11,7 +11,7 @@ $this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
-
+    <h1>Registered Users</h1>
     <p>
         <?= Html::a('New User', ['new'], ['class' => 'btn btn-success']) ?>
     </p>

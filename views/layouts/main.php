@@ -54,9 +54,11 @@ AppAsset::register($this);
                     ['label' => 'Company Accreditation', 'url' => ['/application/index'],
                         //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
-                    ['label' => 'Professional Certificate', 'url' => ['/professional/application/index'],
+                    ['label' => 'Professional Certification', 'url' => ['/professional/application/index'],
                         //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],                    
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'FAQs', 'url' => ['/site/faqs'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],
@@ -67,8 +69,8 @@ AppAsset::register($this);
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
                     ['label' => 'Professional', 'url' => ['/professional/personal-information/my-profile'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                    
-                    
+                    ['label' => 'FAQs', 'url' => ['/site/faqs'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))
             ],
@@ -77,13 +79,13 @@ AppAsset::register($this);
                 'items' => [
                     ['label' => 'Users', 'url' => ['/user/index'],                        
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
-                    ['label' => 'Company Document Types', 'url' => ['/document-type/index'],
+                    ['label' => 'List of Application documents', 'url' => ['/document-type/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                     ['label' => 'Professional Accreditation Categories', 'url' => ['/professional/category/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                     ['label' => 'Accreditation Type', 'url' => ['/accreditation-type/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                    ['label' => 'Approval Levels', 'url' => ['/icta-committee/index'],
+                    ['label' => 'Approval Stages', 'url' => ['/icta-committee/index'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                     ['label' => 'Reports', 'url' => ['/site/reports'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],

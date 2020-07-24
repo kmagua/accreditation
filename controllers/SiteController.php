@@ -150,6 +150,10 @@ class SiteController extends Controller
         return $this->render('search');
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function actionCodeOfConduct()
     {
         return $this->render('code_of_conduct');
@@ -158,5 +162,10 @@ class SiteController extends Controller
     public function actionReports()
     {
         return $this->render('reports');
+    }
+    
+    public function actionFaqs()
+    {
+        return $this->render('faqs');
     }
 }

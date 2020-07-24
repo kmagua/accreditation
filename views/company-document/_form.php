@@ -32,6 +32,7 @@ use yii\helpers\ArrayHelper;
          
         <div class="col-md-8">    
             <?= $form->field($model, 'uploadFile')->fileInput() ?>
+            <i style="color:red">pdf allowed,  <=2MB</i>
         </div>
     </div>
  

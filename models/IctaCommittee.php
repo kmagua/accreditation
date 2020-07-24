@@ -33,7 +33,7 @@ class IctaCommittee extends \yii\db\ActiveRecord
     {
         return [
             [['date_created', 'last_updated'], 'safe'],
-            [['name'], 'string', 'max' => 20],
+            [['name'], 'string', 'max' => 40],
             [['purpose'], 'string', 'max' => 100],
         ];
     }

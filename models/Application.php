@@ -130,8 +130,8 @@ class Application extends \yii\db\ActiveRecord
             'revert_rejection' => 'I confirm that issues raised in the rejection comment have been addressed.',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
-            'app_company_experience' => 'Select company work experience to include in this application',
-            'app_staff' => 'Select Staff Members to inlucde in this application',
+            'app_company_experience' => 'Select relevant work experience for this application',
+            'app_staff' => 'Select staff for this application',
             'previous_category' => 'Previously Assigned Category',
             'application_type' => 'New or Annual Renewal'
         ];

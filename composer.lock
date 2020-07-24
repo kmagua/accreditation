@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26d01a429a6097ca3d46ef6a9adb96c4",
+    "content-hash": "3cedc35cc9f702a27a077f3ffebcefd9",
     "packages": [
         {
             "name": "2amigos/yii2-chartjs-widget",
@@ -69,7 +69,7 @@
             "version": "v3.4.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:twbs/bootstrap.git",
+                "url": "https://github.com/twbs/bootstrap.git",
                 "reference": "68b0d231a13201eb14acd3dc84e51543d16e5f7e"
             },
             "dist": {
@@ -129,7 +129,7 @@
             "version": "3.4.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
+                "url": "git@github.com:jquery/jquery-dist.git",
                 "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d"
             },
             "dist": {
@@ -147,7 +147,7 @@
             "version": "1.12.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:components/jqueryui.git",
+                "url": "https://github.com/components/jqueryui.git",
                 "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
             },
             "dist": {
@@ -2025,6 +2025,51 @@
                 "pdf"
             ],
             "time": "2020-02-19T11:30:55+00:00"
+        },
+        {
+            "name": "sjaakp/yii2-collapse",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sjaakp/yii2-collapse.git",
+                "reference": "17499af97de08f1109afda9e721327183ef9cf9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sjaakp/yii2-collapse/zipball/17499af97de08f1109afda9e721327183ef9cf9f",
+                "reference": "17499af97de08f1109afda9e721327183ef9cf9f",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "sjaakp\\collapse\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sjaak Priester",
+                    "email": "sjaak@sjaakpriester.nl",
+                    "homepage": "http://sjaakpriester.nl"
+                }
+            ],
+            "description": "Collapse and Accordion widgets for the Yii 2.0 framework",
+            "keywords": [
+                "accordion",
+                "collapse",
+                "extension",
+                "widget",
+                "yii",
+                "yii2"
+            ],
+            "time": "2019-04-25T12:33:55+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5901,5 +5946,6 @@
     "platform": {
         "php": ">=7.2.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
