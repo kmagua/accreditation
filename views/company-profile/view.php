@@ -49,7 +49,7 @@ $cpDataProvider = $searchCP->search([]);
             
         ],
        [
-            'label' => 'Company Projects/Experience',
+            'label' => 'Company Experience',
             'content' => $this->render('../company-experience/index', [
                 'searchModel' => $searchCP,
                 'dataProvider' => $cpDataProvider,

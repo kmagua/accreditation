@@ -56,7 +56,7 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
             <?= $form->field($model, 'app_company_experience')->widget(Select2::classname(), [
                     'data' => $comp_exp_data,
                     'language' => 'en',
-                    'options' => ['placeholder' => 'Select Projects to include on application','multiple'=>true,],
+                    'options' => ['placeholder' => '', 'multiple'=>true],
                     'pluginOptions' => [
                         'allowClear' => true, 
                         //'dropdownParent' => "#accreditation-modal", 
@@ -70,7 +70,7 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
             <?= $form->field($model, 'app_staff')->widget(Select2::classname(), [
                     'data' => $staff_data,
                     'language' => 'en',
-                    'options' => ['placeholder' => 'Select Staff to include on application','multiple'=>true,],
+                    'options' => ['placeholder' => '', 'multiple'=>true],
                     'pluginOptions' => [
                         'allowClear' => true, 'multiple'=>true,
                         //'dropdownParent' => "#accreditation-modal", 

@@ -95,6 +95,10 @@ class CompanyProfileController extends Controller
      */
     public function actionCreate()
     {
+        $company_profile = CompanyProfile::findOne(['user_id' => \Yii::$app->user->identity->user_id]);
+        if($company_profile){
+            return $this->redirect(['company-profile/view', 'id' => $company_profile->id]);
+        }
         $model = new CompanyProfile();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

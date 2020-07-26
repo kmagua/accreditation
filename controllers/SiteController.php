@@ -74,7 +74,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirectToProfile();
         }
 
         $model->password = '';
@@ -167,5 +167,15 @@ class SiteController extends Controller
     public function actionFaqs()
     {
         return $this->render('faqs');
+    }
+    
+    public function redirectToProfile()
+    {
+        $company_profile = \app\models\CompanyProfile::findOne(['user_id' => \Yii::$app->user->identity->user_id]);
+        if($company_profile){
+            return $this->redirect(['company-profile/view', 'id' => $company_profile->id]);
+        }else{
+            return $this->redirect(['company-profile/create']);
+        }
     }
 }

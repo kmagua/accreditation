@@ -73,7 +73,7 @@ class CompanyStaff extends \yii\db\ActiveRecord
             'dob' => 'Date of Birth',
             'disability_status' => 'Disabled?',
             'title' => 'Job Title',
-            'staff_type' => 'Staff Type',
+            'staff_type' => 'Staff Category',
             'status' => 'Status',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',

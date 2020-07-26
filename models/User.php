@@ -46,7 +46,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'kra_pin_number', 'first_name', 'last_name'], 'required'],
+            [['email', 'first_name'], 'required'],
             [['role'], 'string'],
             [['status'], 'number'],
             [['captcha', 'password'], 'required', 'on'=>'register'],
@@ -56,8 +56,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email'], 'string', 'max' => 60],
             ['email', 'email'],
             [['kra_pin_number'], 'string', 'max' => 11, 'min'=>11],
-            [['first_name', 'last_name'], 'string', 'max' => 20],
-            [['password', 'password_repeat'], 'string', 'max' => 100],
+            [['last_name'], 'string', 'max' => 20],
+            [['password', 'password_repeat', 'first_name'], 'string', 'max' => 100],
             [['password_repeat'], 'validatePasswordRepeat', 'on'=>['register', 'password_update', 'register_internal']],
         ];
     }
@@ -69,8 +69,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             'id' => 'ID',
-            'kra_pin_number' => 'Company/Personal KRA PIN Number',
-            'email' => 'Email',
+            'kra_pin_number' => 'Company KRA PIN Number',
+            'email' => 'Company Email',
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
             'password' => 'Password',            
@@ -237,7 +237,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $this->username = $this->email;
         $this->setUserId();
         $this->setGroup();
-        $this->full_name = $this->first_name . ' ' . $this->last_name;
+        $this->full_name = trim($this->first_name . ' ' . $this->last_name);
         return true;
     }
 

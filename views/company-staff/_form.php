@@ -34,15 +34,12 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'national_id')->textInput() ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'kra_pin')->textInput(['maxlength' => true]) ?>
+            <?= ''//$form->field($model, 'kra_pin')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'gender')->dropDownList([ 'Male' => 'Male', 'Female' => 'Female', ], ['prompt' => '']) ?>
         </div>
     </div>
 
     <div class="row"> 
-        <div class="col-md-6">
-            <?= $form->field($model, 'gender')->dropDownList([ 'Male' => 'Male', 'Female' => 'Female', ], ['prompt' => '']) ?>
-        </div>
-
         <div class="col-md-6">
             <?= $form->field($model, 'dob')->widget(\yii\jui\DatePicker::classname(), [
                 //'language' => 'ru',
@@ -59,6 +56,10 @@ use yii\widgets\ActiveForm;
                     'readonly' => 'readonly'
                 ]
             ]) ?>
+        </div>
+
+        <div class="col-md-6">
+            <?= $form->field($model, 'disability_status')->dropDownList([ 'No' => 'No', 'Yes' => 'Yes', ], ['prompt' => '']) ?>
             
             <?= '' //$form->field($model, 'dob')->textInput() ?>
         </div>
@@ -66,23 +67,23 @@ use yii\widgets\ActiveForm;
     
     <div class="row"> 
         <div class="col-md-6">
-            <?= $form->field($model, 'disability_status')->dropDownList([ 'No' => 'No', 'Yes' => 'Yes', ], ['prompt' => '']) ?>
+            <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
         </div> 
         <div class="col-md-6">
-            <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'staff_type')->dropDownList([ 'Director' => 'Director', 
+                'Technical Director' => 'Technical Director', 'Technical Staff' => 'Technical Staff', ], ['prompt' => '']) ?>
         </div>
     </div>
     
-    <div class="row"> 
+    <!--<div class="row"> 
         <div class="col-md-6">
-            <?= $form->field($model, 'staff_type')->dropDownList([ 'Staff' => 'Staff', 
-                'Technical Director' => 'Technical Director', 'Director' => 'Director', ], ['prompt' => '']) ?>
+            <?= ''//$form->field($model, 'status')->dropDownList([ 1 => 'Active', 0 => 'Inactive', ], ['prompt' => '']) ?>
         </div>
     
         <div class="col-md-6">
-            <?= $form->field($model, 'status')->dropDownList([ 1 => 'Active', 0 => 'Inactive', ], ['prompt' => '']) ?>
+            
         </div>
-    </div>
+    </div> -->
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'onclick'=>'saveDataForm(this); return false;']) ?>

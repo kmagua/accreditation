@@ -13,13 +13,14 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
     
-    <div class="row"> 
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'company_name')->textInput(['maxlength' => true, 
+                'value' => Yii::$app->user->identity->full_name, 'readonly' => true]) ?>
+        </div> 
         <div class="col-md-6">
             <?= $form->field($model, 'business_reg_no')->textInput(['maxlength' => true]) ?>
         </div>
-           <div class="col-md-6">
-               <?= $form->field($model, 'company_name')->textInput(['maxlength' => true]) ?>
-        </div>        
     </div>
     
  
@@ -64,17 +65,18 @@ use yii\helpers\ArrayHelper;
         </div>
         
         <div class="col-md-6">
-               <?= $form->field($model, 'telephone_number')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'telephone_number')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
     
         <div class="row">
         <div class="col-md-6">
-              <?= $form->field($model, 'company_email')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'company_email')->textInput(['maxlength' => true, 
+                'value' => Yii::$app->user->identity->username, 'readonly' => true]) ?>
         </div>
         
         <div class="col-md-6">
-              <?= $form->field($model, 'company_type_id')->dropDownList(ArrayHelper::map(
+            <?= $form->field($model, 'company_type_id')->dropDownList(ArrayHelper::map(
                 \app\models\CompanyType::find()->where("id > 0")->all(), 'id', 'name'), ['prompt' => '']) ?>
         </div>
     </div>

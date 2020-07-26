@@ -32,9 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             //'id',
             'email:email',
-            'first_name',
-            'last_name',
-            'kra_pin_number',
+            [
+                'attribute' => 'first_name',
+                'label' => 'Company Name',
+            ],
+            //'last_name',
+            //'kra_pin_number',
             //'role',
             'date_created',
             'last_updated',

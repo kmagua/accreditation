@@ -63,14 +63,16 @@ AppAsset::register($this);
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],
             [
-                'label' => 'Accreditations', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
+                'label' => 'Quick Links', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
                 'items' => [
-                    ['label' => 'Company/Supplier', 'url' => ['/company-profile/my-companies'],                        
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
-                    ['label' => 'Professional', 'url' => ['/professional/personal-information/my-profile'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'Company Profile', 'url' => ['/company-profile/create'],                        
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
+                    //['label' => 'Professional', 'url' => ['/professional/personal-information/my-profile'],
+                    //    'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'My Account', 'url' => ['/user/my-profile'],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'FAQs', 'url' => ['/site/faqs'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],                    
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))
             ],
@@ -78,33 +80,31 @@ AppAsset::register($this);
                 'label' => 'Administration', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
                 'items' => [
                     ['label' => 'Users', 'url' => ['/user/index'],                        
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'List of Application documents', 'url' => ['/document-type/index'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'Professional Accreditation Categories', 'url' => ['/professional/category/index'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'Accreditation Type', 'url' => ['/accreditation-type/index'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'Approval Stages', 'url' => ['/icta-committee/index'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'Reports', 'url' => ['/site/reports'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],
             ['label' => 'Register', 'url' => ['/user/register'],
                 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],'visible'=>Yii::$app->user->isGuest],
-            ['label' => 'My Profile', 'url' => ['/user/my-profile'],
-                'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
-                'visible'=>(!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))],
+            
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->full_name . ')',
-                    ['class' => 'btn btn-link logout', 'style' => 'color: white;font-weight: 450;margin-top: 20px;']
+                    'Logout',
+                    ['class' => 'btn btn-link logout glyphicon glyphicon-log-out', 'style' => 'color: white;font-weight: 450;margin-top: 20px;']
                 )
                 . Html::endForm()
                 . '</li>'

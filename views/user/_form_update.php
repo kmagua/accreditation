@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="container" style="margin-top:2%;background-color:white;margin-left:-5%" id="Log">
-    <div class="col-md-5 col-md-offset-3 alert alert-info" style="background-color:white;border:solid 1px  #009933;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;">
+    <div class="col-md-6 col-md-offset-3 alert alert-info" style="background-color:white;border:solid 1px  #009933;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;">
         <div style="text-align:center;"><img src="<?= Yii::getAlias("@web") ?>/images/icta.png" height="60"; width="100" /></div>
         <br />
     
@@ -30,14 +30,10 @@ use yii\widgets\ActiveForm;
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    
-    <?= $form->field($model, 'kra_pin_number')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'first_name')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'last_name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'first_name')->textInput(['maxlength' => true])->label('Company Name') ?>
 
     <div class="form-group">
         <div class="col-md-6">
