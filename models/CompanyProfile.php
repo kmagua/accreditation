@@ -20,6 +20,8 @@ use Yii;
  * @property string|null $company_type_id
  * @property string|null $postal_address
  * @property string|null $company_categorization
+ * @property float|null $turnover
+ * @property float|null $cashflow
  * @property int|null $user_id
  * @property string $date_created
  * @property string|null $last_updated
@@ -50,6 +52,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
             [['registration_date', 'date_created', 'last_updated'], 'safe'],
             [['company_type_id', 'company_categorization'], 'string'],
             [['user_id'], 'integer'],
+            [['turnover', 'cashflow'], 'number'],
             [['business_reg_no', 'county', 'floor'], 'string', 'max' => 20],
             [['company_name', 'telephone_number', 'company_email'], 'string', 'max' => 100],
             [['company_email'], 'email'],
@@ -78,6 +81,8 @@ class CompanyProfile extends \yii\db\ActiveRecord
             'company_type_id' => 'Type Of Business',
             'postal_address' => 'Postal Address',
             'company_categorization' => 'Company Categorization',
+            'turnover' => 'Turnover',
+            'cashflow' => 'Cash Flow',
             'user_id' => 'User ID',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',

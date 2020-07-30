@@ -57,7 +57,7 @@ $cpDataProvider = $searchCP->search([]);
             
         ],
         [
-            'label' => 'Staff Details',
+            'label' => 'Staff Profiles',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['company-staff/staff-data', 'cid'=>$model->id])],
             //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'company_data_tab'],

@@ -171,6 +171,9 @@ class SiteController extends Controller
     
     public function redirectToProfile()
     {
+        if(Yii::$app->user->identity->isInternal()){
+            return $this->redirect(['site/index']);
+        }
         $company_profile = \app\models\CompanyProfile::findOne(['user_id' => \Yii::$app->user->identity->user_id]);
         if($company_profile){
             return $this->redirect(['company-profile/view', 'id' => $company_profile->id]);

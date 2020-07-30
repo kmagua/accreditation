@@ -31,25 +31,24 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
         </div>
         
         <div class="col-md-6">
-            <?= $form->field($model, 'cash_flow')->textInput() ?>
+            <?= $form->field($model, 'financial_status_link')->textInput(['maxlength' => true,
+                'placeholder' => 'Upload the file somewhere like on your website/google drive and then provide the link to it',])
+                ->label(null, ['data-toggle' => 'tooltip','data-placement' =>'right',
+                    'title' => 'Upload the file somewhere like on your website/google drive and then provide the link to it.']) ?>
+            
         </div>
         
     </div>
 
-    <div class="row"> 
+    <!--<div class="row"> 
         
          <div class="col-md-6">
             <?= $form->field($model, 'turnover')->textInput() ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'financial_status_link')->textInput(['maxlength' => true,
-                'placeholder' => 'Upload the file somewhere like on your website/google drive and then provide the link to it',])
-                ->label(null, ['data-toggle' => 'tooltip','data-placement' =>'right',
-                    'title' => 'Upload the file somewhere like on your website/google drive and then provide the link to it.']) ?>
+            <?= $form->field($model, 'cash_flow')->textInput() ?>
         </div>
-        
-     
-    </div>
+    </div>-->
     
     <div class="row">
           <div class="col-md-6">

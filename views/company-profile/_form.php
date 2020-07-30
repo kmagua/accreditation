@@ -69,7 +69,7 @@ use yii\helpers\ArrayHelper;
         </div>
     </div>
     
-        <div class="row">
+    <div class="row">
         <div class="col-md-6">
             <?= $form->field($model, 'company_email')->textInput(['maxlength' => true, 
                 'value' => Yii::$app->user->identity->username, 'readonly' => true]) ?>
@@ -80,8 +80,18 @@ use yii\helpers\ArrayHelper;
                 \app\models\CompanyType::find()->where("id > 0")->all(), 'id', 'name'), ['prompt' => '']) ?>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'turnover')->textInput() ?>
+        </div>
+        
+        <div class="col-md-6">
+            <?= $form->field($model, 'cashflow')->textInput() ?>
+        </div>
+    </div>
 
-        <div class="row">
+    <div class="row">
         <div class="col-md-6">
              <?= $form->field($model, 'postal_address')->textInput(['maxlength' => true]) ?>
         </div>

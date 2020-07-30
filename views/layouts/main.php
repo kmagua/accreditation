@@ -54,11 +54,10 @@ AppAsset::register($this);
                     ['label' => 'Company Accreditation', 'url' => ['/application/index'],
                         //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
-                    ['label' => 'Professional Certification', 'url' => ['/professional/application/index'],
+                    //['label' => 'Professional Certification', 'url' => ['/professional/application/index'],
                         //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                    ['label' => 'FAQs', 'url' => ['/site/faqs'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                        //'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],
@@ -83,14 +82,16 @@ AppAsset::register($this);
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'List of Application documents', 'url' => ['/document-type/index'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'Professional Accreditation Categories', 'url' => ['/professional/category/index'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
+                    /*['label' => 'Professional Accreditation Categories', 'url' => ['/professional/category/index'],
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],*/
                     ['label' => 'Accreditation Type', 'url' => ['/accreditation-type/index'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'Approval Stages', 'url' => ['/icta-committee/index'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'Reports', 'url' => ['/site/reports'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
+                    ['label' => 'FAQs', 'url' => ['/site/faqs'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],

@@ -92,7 +92,7 @@ class Application extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'accreditation_type_id', 'cash_flow', 'financial_status_link', 'turnover', 'application_type'], 'required'],
+            [['company_id', 'accreditation_type_id', 'financial_status_link', 'application_type'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id', 'application_type', 'parent_id'], 'integer'],
             [['app_company_experience','app_staff', 'cash_flow', 'financial_status_link', 'turnover'], 'required','on'=>'create_update'],
             [['cash_flow', 'turnover'], 'number'],
@@ -255,6 +255,8 @@ class Application extends \yii\db\ActiveRecord
         parent::beforeSave($insert);
         if($insert){
             $this->user_id = Yii::$app->user->identity->user_id;
+            $this->turnover = $this->company->turnover;
+            $this->cash_flow = $this->company->cashflow;
         }        
         return true;
     }
