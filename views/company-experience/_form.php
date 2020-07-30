@@ -86,3 +86,30 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+
+$js = <<<JS
+    $('#companyexperience-end_date').change(function(){
+        if(this.value != ''){
+            var date_array = this.value.split("-");        
+            var selected_date = new Date(date_array[2], date_array[1] -1, date_array[0]);
+            var today = new Date();
+            if(today >= selected_date){                
+                $("#companyexperience-status option[value='Completed']").removeAttr('disabled')
+                $("#companyexperience-status option[value='Suspended']").removeAttr('disabled')
+                $("#companyexperience-status option[value='Terminated']").removeAttr('disabled')
+                $('#companyexperience-status').val('Completed');
+                $("#companyexperience-status option[value='Ongoing']").attr('disabled', 'disabled');
+            }else{
+                $("#companyexperience-status option[value='Ongoing']").removeAttr('disabled')
+                $('#companyexperience-status').val('Ongoing');
+                $("#companyexperience-status option[value='Completed']").attr('disabled', 'disabled');
+                $("#companyexperience-status option[value='Suspended']").attr('disabled', 'disabled');
+                $("#companyexperience-status option[value='Terminated']").attr('disabled', 'disabled');
+            }
+            
+        }
+    });
+JS;        
+$this->registerJs($js, yii\web\View::POS_END, 'test_js');
+?>
