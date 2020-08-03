@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\IctaCommittee */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Icta Committees', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Approval Levels', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>

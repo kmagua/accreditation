@@ -45,12 +45,12 @@ $this->title = 'ICT Authority Supplier Accreditation System';
         </div>
         
         <div class="row">
-            <div class="col-lg-4 col-md-4">                
+            <div class="col-lg-4 col-md-4">            
                 <?php if(Yii::$app->user->isGuest): ?>
                 <h2>Where to start</h2>
                 <?= Html::a('Login',['/site/login']) ?> or <?= Html::a('Register',['/user/register']) ?> an account to apply for <span style="color:red"><i>
-                        Supplier/Company Certificate</i></span> or <span style='color:red'><i>
-                                ICT Professional Certification!</i></span><br>
+                        Supplier/Company Certificate</i></span> <!--or <span style='color:red'><i>
+                                ICT Professional Certification!</i></span>--><br>
                 <?php elseif(!Yii::$app->user->identity->isInternal()): ?>
                 <!--<h2>Choose application Type</h2>-->
                 <?php
@@ -79,6 +79,8 @@ $this->title = 'ICT Authority Supplier Accreditation System';
                 Account Number: <strong>0300085016</strong><br/>
                 Branch: <strong>Upper Hill (code: 16000)</strong><br/>
                 SWIFT Code: <strong>CITIKENA</strong><br>&nbsp;-->
+                <h2>User Guide</h2>
+                <p><?= Html::a('Click here to open user guide', ['/files/supaccreditationuserguide.pdf']) ?></p>
             </div>
             
             <div class="col-lg-4 col-md-4" style="border-left: 1px solid red;">

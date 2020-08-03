@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\IctaCommitteeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Icta Committees';
+$this->title = 'Approval Levels';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="icta-committee-index">

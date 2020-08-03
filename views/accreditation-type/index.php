@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\AccreditationTypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Accreditation Types';
+$this->title = 'Accreditation Categories';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="accreditation-type-index">
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Accreditation Type', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add a new Category', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

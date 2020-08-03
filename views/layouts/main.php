@@ -84,7 +84,7 @@ AppAsset::register($this);
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     /*['label' => 'Professional Accreditation Categories', 'url' => ['/professional/category/index'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],*/
-                    ['label' => 'Accreditation Type', 'url' => ['/accreditation-type/index'],
+                    ['label' => 'Accreditation Categories', 'url' => ['/accreditation-type/index'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'Approval Stages', 'url' => ['/icta-committee/index'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
