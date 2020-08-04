@@ -11,8 +11,8 @@ Icon::map($this, Icon::FAS); // Maps the Elusive icon font framework
 /* @var $model app\models\CompanyProfile */
 
 $this->title = $model->company_name;
-$this->params['breadcrumbs'][] = ['label' => 'Company Profiles',
-    'url' => \Yii::$app->user->identity->isInternal()?['index']:['my-companies']];
+/*$this->params['breadcrumbs'][] = ['label' => 'Company Profiles',
+    'url' => \Yii::$app->user->identity->isInternal()?['index']:['my-companies']];*/
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 $searchCD = new app\models\CompanyDocumentSearch();

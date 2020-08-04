@@ -3,7 +3,7 @@ use yii\grid\GridView;
 use yii\helpers\Html;
 /* @var $this yii\web\View */
 
-$this->title = 'ICT Authority Supplier Accreditation System';
+$this->title = 'Supplier Accreditation';
 ?>
 
 <div class="row">

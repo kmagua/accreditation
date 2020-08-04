@@ -68,7 +68,7 @@ class CompanyExperience extends \yii\db\ActiveRecord
             'attachment' => 'Attachment',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
-            'upload_file' => 'Attach documentary evidence for this project as one file [LPO, LSO OR CONTRACT] (Combine in one file)',
+            'upload_file' => 'Attach documentary evidence for this project. Either [LPO, LSO OR Signed Contract]',
         ];
     }
 

@@ -65,7 +65,7 @@ use yii\widgets\ActiveForm;
     
     <div class="row"> 
         <div class="col-md-6">
-        <?= $form->field($model, 'status')->dropDownList([ 'Ongoing' => 'Ongoing', 'Completed' => 'Completed', 'Suspended' => 'Suspended', 'Terminated' => 'Terminated', ], ['prompt' => '']) ?>
+        <?= $form->field($model, 'status')->dropDownList([ 'Ongoing' => 'Ongoing', 'Completed' => 'Completed', 'Delayed' => 'Delayed'], ['prompt' => '']) ?>
         </div>
     
         <div class="col-md-6">
@@ -96,16 +96,12 @@ $js = <<<JS
             var today = new Date();
             if(today >= selected_date){
                 $("#companyexperience-status option[value='Completed']").removeAttr('disabled')
-                $("#companyexperience-status option[value='Suspended']").removeAttr('disabled')
-                $("#companyexperience-status option[value='Terminated']").removeAttr('disabled')
                 $('#companyexperience-status').val('Completed');
                 $("#companyexperience-status option[value='Ongoing']").attr('disabled', 'disabled');
             }else{
                 $("#companyexperience-status option[value='Ongoing']").removeAttr('disabled')
                 $('#companyexperience-status').val('Ongoing');
-                $("#companyexperience-status option[value='Completed']").attr('disabled', 'disabled');
-                $("#companyexperience-status option[value='Suspended']").attr('disabled', 'disabled');
-                $("#companyexperience-status option[value='Terminated']").attr('disabled', 'disabled');
+                $("#companyexperience-status option[value='Completed']").attr('disabled', 'disabled');                
             }
             
         }

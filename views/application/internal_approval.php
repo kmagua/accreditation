@@ -29,7 +29,7 @@ if($cur_application->application_type == 2){
         echo '<h3 style="color:red">THIS IS A RENEWAL. Previous Category was ' . $category . '</h3>';
     }else{
         $renewal_levl = '<span style="color:red"> Previous was ' . $cur_application->previous_category .'(<i>by applicant</i>)</span>';
-        echo '<h3 style="color:red">THIS IS A RENEWAL. Previos Category (<i>From Applicant</i>) was ' . $cur_application->previous_category . '</h3>';
+        echo '<h3 style="color:red">THIS IS A RENEWAL. Previous Category (<i>From Applicant</i>) was ' . $cur_application->previous_category . '</h3>';
     }
 }
 ?>

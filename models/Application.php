@@ -94,7 +94,7 @@ class Application extends \yii\db\ActiveRecord
         return [
             [['company_id', 'accreditation_type_id', 'financial_status_link', 'application_type'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id', 'application_type', 'parent_id'], 'integer'],
-            [['app_company_experience','app_staff', 'cash_flow', 'financial_status_link', 'turnover'], 'required','on'=>'create_update'],
+            [['app_company_experience','app_staff', 'financial_status_link'], 'required','on'=>'create_update'],
             [['cash_flow', 'turnover'], 'number'],
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['revert_rejection', 'required', 'on' => ['revert_rejection'], 'requiredValue' => 1, 
@@ -123,7 +123,7 @@ class Application extends \yii\db\ActiveRecord
             'accreditation_type_id' => 'Accreditation Category',
             'cash_flow' => 'Cash Flow (KES)',
             'turnover' => 'Turnover (KES)',
-            'financial_status_link' => 'Audited Accounts Document Link',
+            'financial_status_link' => 'Bank statements and audited accounts for the past three (3) years',
             'user_id' => 'User ID',
             'status' => 'Status',
             'declaration' => 'I declare that the information given here is correct to the best of my knowledge.',
