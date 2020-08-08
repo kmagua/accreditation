@@ -93,7 +93,7 @@ class CompanyDocumentController extends Controller
         $model->company_id = $cid;
 
         if ($model->load(Yii::$app->request->post()) && $model->saveCompanyDocument()){
-            \Yii::$app->session->setFlash('cd_added','Document added successfully!');
+            \Yii::$app->session->setFlash('cd_added','Successfully uploaded, add another document or close the dialog!');
             $model = null;
         }        
         $searchModel = new CompanyDocumentSearch();

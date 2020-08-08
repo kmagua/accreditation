@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="company-experience-form">
     <?php if(Yii::$app->session->hasFlash('ce_added')): ?>
-    <div class="alert alert-success alert-dismissable">
+    <div class="alert alert-danger alert-dismissable">
         <h4><?php echo Yii::$app->session->getFlash('ce_added'); ?></h4>
     </div>
     <?php endif; ?> 
@@ -20,10 +20,17 @@ use yii\widgets\ActiveForm;
             'options' => ['enctype' => 'multipart/form-data']]); ?>
     <div class="row"> 
         <div class="col-md-6">
-            <?= $form->field($model, 'organization_type')->dropDownList([ 'Public' => 'Public', 'Private' => 'Private', ], ['prompt' => '']) ?>
+            <?= $form->field($model, 'organization_type')->dropDownList([ 'Government of Kenya' => 'Government of Kenya', 
+                'Any other Government' => 'Any other Government', 'Private sector' => 'Private sector'], ['prompt' => '']) ?>
         </div>
         
         <div class="col-md-6">
+            <?= $form->field($model, 'organization_name')->textInput(['maxlength' => true]) ?>
+        </div>
+    </div>
+    
+    <div class="row"> 
+        <div class="col-md-12">
             <?= $form->field($model, 'project_name')->textInput(['maxlength' => true]) ?>
         </div>
     </div>

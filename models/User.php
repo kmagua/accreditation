@@ -55,7 +55,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['date_created', 'last_updated'], 'safe'],
             [['email'], 'string', 'max' => 60],
             ['email', 'email'],
-            [['kra_pin_number'], 'string', 'max' => 11, 'min'=>11],
+            //[['kra_pin_number'], 'string', 'max' => 11, 'min'=>11],
             [['last_name'], 'string', 'max' => 20],
             [['password', 'password_repeat', 'first_name'], 'string', 'max' => 100],
             [['password_repeat'], 'validatePasswordRepeat', 'on'=>['register', 'password_update', 'register_internal']],
@@ -158,10 +158,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        $rec = static::findOne(['kra_pin_number' => $username, 'status'=>1]);
-        if(!$rec){
-            $rec = static::findOne(['email' => $username, 'status'=>1]);
-        }
+        $rec = static::findOne(['email' => $username, 'status'=>1]);        
         return $rec;
     }
 
@@ -189,14 +186,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * 
      */
-    public function beforeValidate() 
+    /*public function beforeValidate() 
     {
         parent::beforeValidate();
         if($this->scenario == 'register_internal'){
             $this->generateKRAPIN();
         }
         return true;
-    }
+    }*/
     /**
      * 
      * @param type $insert

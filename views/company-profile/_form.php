@@ -19,14 +19,19 @@ use yii\helpers\ArrayHelper;
                 'value' => Yii::$app->user->identity->full_name, 'readonly' => true]) ?>
         </div> 
         <div class="col-md-6">
-            <?= $form->field($model, 'business_reg_no')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'company_email')->textInput(['maxlength' => true, 
+                'value' => Yii::$app->user->identity->username, 'readonly' => true]) ?>
+            
         </div>
     </div>
     
  
     
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <?= $form->field($model, 'business_reg_no')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-4">
             <?= $form->field($model, 'registration_date')->widget(\yii\jui\DatePicker::classname(), [
                 //'language' => 'ru',
                 'dateFormat' => 'dd-MM-yyyy',
@@ -41,77 +46,74 @@ use yii\helpers\ArrayHelper;
                 ]
             ]) ?>
         </div>
-        
-        <div class="col-md-6">
-            <?= $form->field($model, 'county')->dropDownList([
-                'Mombasa' => 'Mombasa', 'Kwale' => 'Kwale', 'Kilifi' => 'Kilifi',
-'Tana' => 'Tana', 'Lamu' => 'Lamu', 'Taita-Taveta' => 'Taita-Taveta', 'Garissa' => 'Garissa',
-'Wajir' => 'Wajir', 'Mandera' => 'Mandera', 'Marsabit' => 'Marsabit', 'Isiolo' => 'Isiolo',
-'Meru' => 'Meru', 'Tharaka-Nithi' => 'Tharaka-Nithi', 'Embu' => 'Embu', 'Kitui' => 'Kitui',
-'Machakos' => 'Machakos', 'Makueni' => 'Makueni', 'Nyandarua' => 'Nyandarua', 'Nyeri' => 'Nyeri',
-'Kirinyaga'=> 'Kirinyaga', "Murang'a" => "Murang'a", 'Kiambu' => 'Kiambu', 'Turkana' => 'Turkana',
-'West Pokot' => 'West Pokot', 'Samburu' => 'Samburu', 'Trans Nzoia' => 'Trans Nzoia',
-'Uasin Gishu' => 'Uasin Gishu', 'Elgeyo-Marakwet' => 'Elgeyo-Marakwet', 'Nandi' => 'Nandi',
-'Baringo' => 'Baringo', 'Laikipia' => 'Laikipia', 'Nakuru' => 'Nakuru', 'Narok' => 'Narok',
-'Kajiado' => 'Kajiado', 'Kericho'=> 'Kericho', 'Bomet' => 'Bomet','Kakamega' => 'Kakamega',
-'Vihiga' => 'Vihiga', 'Bungoma' => 'Bungoma', 'Busia' => 'Busia','Siaya' => 'Siaya',
-'Kisumu' => 'Kisumu', 'Homa Bay' => 'Homa Bay','Migori' => 'Migori', 'Kisii' => 'Kisii',
-'Nyamira' => 'Nyamira',
-'Nairobi' => 'Nairobi'
-], ['prompt' =>'']) ?>
-        </div>
     </div>
   
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <?= $form->field($model, 'county')->dropDownList([
+                'Mombasa' => 'Mombasa', 'Kwale' => 'Kwale', 'Kilifi' => 'Kilifi',
+                'Tana' => 'Tana', 'Lamu' => 'Lamu', 'Taita-Taveta' => 'Taita-Taveta', 'Garissa' => 'Garissa',
+                'Wajir' => 'Wajir', 'Mandera' => 'Mandera', 'Marsabit' => 'Marsabit', 'Isiolo' => 'Isiolo',
+                'Meru' => 'Meru', 'Tharaka-Nithi' => 'Tharaka-Nithi', 'Embu' => 'Embu', 'Kitui' => 'Kitui',
+                'Machakos' => 'Machakos', 'Makueni' => 'Makueni', 'Nyandarua' => 'Nyandarua', 'Nyeri' => 'Nyeri',
+                'Kirinyaga'=> 'Kirinyaga', "Murang'a" => "Murang'a", 'Kiambu' => 'Kiambu', 'Turkana' => 'Turkana',
+                'West Pokot' => 'West Pokot', 'Samburu' => 'Samburu', 'Trans Nzoia' => 'Trans Nzoia',
+                'Uasin Gishu' => 'Uasin Gishu', 'Elgeyo-Marakwet' => 'Elgeyo-Marakwet', 'Nandi' => 'Nandi',
+                'Baringo' => 'Baringo', 'Laikipia' => 'Laikipia', 'Nakuru' => 'Nakuru', 'Narok' => 'Narok',
+                'Kajiado' => 'Kajiado', 'Kericho'=> 'Kericho', 'Bomet' => 'Bomet','Kakamega' => 'Kakamega',
+                'Vihiga' => 'Vihiga', 'Bungoma' => 'Bungoma', 'Busia' => 'Busia','Siaya' => 'Siaya',
+                'Kisumu' => 'Kisumu', 'Homa Bay' => 'Homa Bay','Migori' => 'Migori', 'Kisii' => 'Kisii',
+                'Nyamira' => 'Nyamira',
+                'Nairobi' => 'Nairobi'
+                ], ['prompt' =>'']) 
+            ?>
+        </div>
+        
+        <div class="col-md-4">
                 <?= $form->field($model, 'town')->textInput(['maxlength' => true]) ?>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-4">
              <?= $form->field($model, 'building')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
 
     
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <?= $form->field($model, 'floor')->textInput(['maxlength' => true]) ?>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-4">
             <?= $form->field($model, 'telephone_number')->textInput(['maxlength' => true]) ?>
+        </div>
+        
+        <div class="col-md-4">
+             <?= $form->field($model, 'postal_address')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
     
-    <div class="row">
-        <div class="col-md-6">
-            <?= $form->field($model, 'company_email')->textInput(['maxlength' => true, 
-                'value' => Yii::$app->user->identity->username, 'readonly' => true]) ?>
-        </div>
+    <!--<div class="row">
         
-        <div class="col-md-6">
+    </div>-->
+    
+    <div class="row">
+        <div class="col-md-4">
             <?= $form->field($model, 'company_type_id')->dropDownList(ArrayHelper::map(
                 \app\models\CompanyType::find()->where("id > 0")->all(), 'id', 'name'), ['prompt' => '']) ?>
         </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <?= $form->field($model, 'turnover')->textInput() ?>
+        <div class="col-md-4">
+            <?= $form->field($model, 'turnover')->dropDownList(['Over 50m' =>'Over 50m', '5-50m' => '5-50m', 'below 5m' => 'below 5m'], ['prompt' => '']) ?>
         </div>
         
-        <div class="col-md-6">
-            <?= $form->field($model, 'cashflow')->textInput() ?>
+        <div class="col-md-4">
+            <?= $form->field($model, 'cashflow')->dropDownList(['Over 50m' =>'Over 50m', '5-50m' => '5-50m', '1-5m' => '1-5m', 'below 1m' =>'below 1m'], ['prompt' => '']) ?>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-             <?= $form->field($model, 'postal_address')->textInput(['maxlength' => true]) ?>
-        </div>
-        
-        <div class="col-md-6">
+    <div class="row">        
+        <div class="col-md-4">
              <?= $form->field($model, 'company_categorization')->dropDownList([ 'Open' => 'Open', 'Youth' => 'Youth', 'Women' => 'Women', 'People With Disability' => 'People With Disability', ], ['prompt' => '']) ?>
         </div>
     </div>

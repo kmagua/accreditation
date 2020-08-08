@@ -41,7 +41,7 @@ $cpDataProvider = $searchCP->search([]);
             'active' => true
         ],
        [
-            'label' => 'Company Documents',
+            'label' => 'Company Registration and Compliance',
             'content' => $this->render('../company-document/index', [
                 'searchModel' => $searchCD,
                 'dataProvider' => $cdDataProvider,
@@ -57,7 +57,7 @@ $cpDataProvider = $searchCP->search([]);
             
         ],
         [
-            'label' => 'Staff Profiles',
+            'label' => 'Director/ Staff qualification and experience',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['company-staff/staff-data', 'cid'=>$model->id])],
             //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'company_data_tab'],

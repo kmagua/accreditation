@@ -14,6 +14,12 @@ $this->title = "Change Password";
     <h1><?= $this->title ?></h1>
     
     <?php $form = ActiveForm::begin(); ?>
+    <?php
+    foreach($model->errors as $error){
+        echo "<h5>Erros</h5>";
+        echo print_r($error, true) , "<br>";
+    }
+    ?>
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'value' => '']) ?>
     

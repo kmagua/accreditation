@@ -20,8 +20,8 @@ use Yii;
  * @property string|null $company_type_id
  * @property string|null $postal_address
  * @property string|null $company_categorization
- * @property float|null $turnover
- * @property float|null $cashflow
+ * @property string|null $turnover
+ * @property string|null $cashflow
  * @property int|null $user_id
  * @property string $date_created
  * @property string|null $last_updated
@@ -51,11 +51,11 @@ class CompanyProfile extends \yii\db\ActiveRecord
             [['business_reg_no', 'company_name', 'registration_date', 'county', 'company_email', 'telephone_number', 'company_categorization', 'company_type_id'], 'required'],
             [['registration_date', 'date_created', 'last_updated'], 'safe'],
             [['company_type_id', 'company_categorization'], 'string'],
-            [['user_id'], 'integer'],
-            [['turnover', 'cashflow'], 'number'],
-            [['business_reg_no', 'county', 'floor'], 'string', 'max' => 20],
+            [['user_id'], 'integer'],            
+            [['business_reg_no', 'county', 'floor', 'turnover', 'cashflow'], 'string', 'max' => 20],
             [['company_name', 'telephone_number', 'company_email'], 'string', 'max' => 100],
             [['company_email'], 'email'],
+            //['business_reg_no', 'match', 'pattern' => '/^[a-z0-9]\w*$/i'],
             [['town', 'building'], 'string', 'max' => 40],
             [['postal_address'], 'string', 'max' => 50],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -81,8 +81,8 @@ class CompanyProfile extends \yii\db\ActiveRecord
             'company_type_id' => 'Type Of Business',
             'postal_address' => 'Postal Address',
             'company_categorization' => 'Company Categorization',
-            'turnover' => 'Turnover',
-            'cashflow' => 'Cash Flow',
+            'turnover' => 'Turnover [KES]',
+            'cashflow' => 'Cash Flow [KES]',
             'user_id' => 'User ID',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',

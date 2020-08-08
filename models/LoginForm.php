@@ -89,7 +89,7 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => 'E-Mail / KRA PIN Number',
+            'username' => 'E-Mail',
         ];
     }
 }

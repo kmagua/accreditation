@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 <div class="company-document-form">    
     
     <?php if(Yii::$app->session->hasFlash('cd_added')): ?>
-    <div class="alert alert-success alert-dismissable">
+    <div class="alert alert-danger alert-dismissable">
         <h4><?= Yii::$app->session->getFlash('cd_added'); ?></h4>
     </div>
     <?php endif; ?>

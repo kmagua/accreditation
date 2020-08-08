@@ -15,7 +15,7 @@ $model->company_id = $searchModel->company_id;
         'model' => $model,
     ]);*/
     ?>
-     <?= Html::a("Add Documents", ['company-document/data', 'cid'=> $searchModel->company_id], [
+     <?= Html::a("Add Document", ['company-document/data', 'cid'=> $searchModel->company_id], [
         'class' => 'btn btn-success', 'onclick'=>'getDataForm(this.href, "<h3> Documents for ' . $searchModel->company->company_name. '</h3>"); return false;'
         ]); 
     ?>

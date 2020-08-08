@@ -13,8 +13,8 @@ use raoul2000\workflow\events\WorkflowEvent;
  * @property int $id
  * @property int $company_id
  * @property int|null $accreditation_type_id
- * @property float|null $cash_flow
- * @property float|null $turnover
+ * @property string|null $cash_flow
+ * @property string|null $turnover
  * @property string|null $financial_status_link
  * @property int|null $user_id
  * @property string|null $status
@@ -94,15 +94,14 @@ class Application extends \yii\db\ActiveRecord
         return [
             [['company_id', 'accreditation_type_id', 'financial_status_link', 'application_type'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id', 'application_type', 'parent_id'], 'integer'],
-            [['app_company_experience','app_staff', 'financial_status_link'], 'required','on'=>'create_update'],
-            [['cash_flow', 'turnover'], 'number'],
+            [['app_company_experience','app_staff', 'financial_status_link'], 'required','on'=>'create_update'],            
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['revert_rejection', 'required', 'on' => ['revert_rejection'], 'requiredValue' => 1, 
                 'message' => 'You must confirm to have addressed issues raised in the rejection comment.'],
             ['declaration', 'required', 'on' => ['create'], 'requiredValue' => 1, 
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             [['status', 'certificate_serial'], 'string', 'max' => 50],
-            [['previous_category'], 'string', 'max' => 20],
+            [['previous_category', 'cash_flow', 'turnover'], 'string', 'max' => 20],
             //[['company_id', 'accreditation_type_id'], 'unique', 'targetAttribute' => ['accreditation_type_id'], 'message' => 'You have already submitted an application for the selected Accreditation Category'],
             [['date_created', 'last_updated', 'app_company_experience', 'app_staff', 'initial_approval_date'], 'safe'],
             [['financial_status_link'], 'string', 'max' => 250],

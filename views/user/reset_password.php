@@ -14,7 +14,7 @@ $this->title = "Reset Password";
 
         <?php $form = ActiveForm::begin(); ?>
         
-        <?= Html::label('Enter your KRA PIN or E-Mail', 'kra_pin_number') ?>
+        <?= Html::label('Enter your E-Mail Address', 'kra_pin_number') ?>
 
         <?= Html::textInput('kra_pin_number', '', ['id' => 'kra_pin_number', 
             'class'=>'form-control', 'style' =>'margin-bottom:10px']) ?>

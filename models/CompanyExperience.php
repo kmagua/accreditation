@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int|null $company_id
  * @property string|null $organization_type
+ * @property string|null $organization_name
  * @property string|null $project_name
  * @property string|null $start_date
  * @property string|null $end_date
@@ -45,6 +46,7 @@ class CompanyExperience extends \yii\db\ActiveRecord
             [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'pdf', 'doc', 'jpg'], 'maxSize'=> 1024*1024*2],
             [['start_date', 'end_date', 'date_created', 'last_updated'], 'safe'],
             [['project_cost'], 'number'],
+            [['organization_name'], 'string', 'max' => 250],
             [['upload_file'],'required', 'on' => 'create'],
             [['project_name', 'attachment'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
@@ -59,7 +61,8 @@ class CompanyExperience extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'company_id' => 'Company ID',
-            'organization_type' => 'Organization Type',
+            'organization_type' => 'Type of Organization',
+            'organization_name' => 'Name of the organization',
             'project_name' => 'Project Name',
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
