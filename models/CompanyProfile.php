@@ -151,7 +151,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
         if($insert){
             $this->user_id = Yii::$app->user->identity->user_id;
         }
-        $this->registration_date = date('Y-m-d');
+        $this->registration_date = date('Y-m-d', strtotime($this->registration_date));
         return true;
     }
     

@@ -52,7 +52,7 @@ $model->company_id = $searchModel->company_id;
                 },
             ],
             //'declaration',
-            //'date_created',
+            'date_created',
             //'last_updated',
 
             ['class' => 'yii\grid\ActionColumn',

@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return "<a href='{$model->financial_status_link}'>open</a>";
                 },
             ],*/
-            //'user_id',
+            
             [
                 'attribute' => 'status',
                 'contentOptions' => ['style' => 'width: 12%'],

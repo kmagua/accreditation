@@ -125,7 +125,7 @@ class Application extends \yii\db\ActiveRecord
             'financial_status_link' => 'Bank statements and audited accounts for the past three (3) years',
             'user_id' => 'User ID',
             'status' => 'Status',
-            'declaration' => 'I declare that the information given here is correct to the best of my knowledge.',
+            'declaration' => 'I agree to abide by the Code of Conduct (see home page)',
             'revert_rejection' => 'I confirm that issues raised in the rejection comment have been addressed.',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',

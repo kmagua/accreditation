@@ -26,7 +26,7 @@ $this->title = 'Supplier Accreditation';
         </div>
         
         <div class="row" style="border-bottom: 1px solid red">            
-            <div class="col-lg-11 col-md-6" style="border-top:1px solid red;">
+            <div class="col-lg-7 col-md-6" style="border-top:1px solid red;">
                 <h2 style="color: #c11d35">Requirements</h2>
 
                 <ol>
@@ -41,6 +41,20 @@ $this->title = 'Supplier Accreditation';
                    <li>  Certificate of partnership, where applicable</li>                   
                 </ol>
                 <p style='color:red'>There are 8 categories for Supplier/Company Accreditation. <?= Html::a('Click Here', ['site/company-accreditation-prerequisites']) ?> to see the prerequisites for each.</p>
+            </div>
+            
+            <div class="col-lg-5 col-md-6" style="border-top:1px solid red;">
+                <h2 style="color: #c11d35">Code of Conduct</h2>
+
+                <ol>
+                    <li>Ensure government receives competent professional services</li>
+                    <li>Enhance the professional development of its staff</li>
+    <li>Respect the confidentiality of any information given by government institution</li>
+    <li>Enhance integrity in the delivery of products and services to government institutions</li>
+    <li>Comply with all government of Kenya laws and regulations</li>
+    <li>Protect and respect third-party intellectual property and utilize it only after having properly secured rights to its use.</li>                   
+                </ol>
+                
             </div>
         </div>
         
