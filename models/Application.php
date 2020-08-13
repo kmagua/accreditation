@@ -885,4 +885,18 @@ MSG;
         }
         return false;
     }
+    
+    /**
+     * 
+     */
+    public function getClassification()
+    {
+        $app_class = ApplicationClassification::find()
+            ->where("application_id = {$this->id} OR application_id = {$this->parent_id}")->orderBy('id DESC')->one();
+        if($app_class){
+            return $app_class->classification;
+        }
+        return '';
+    }
+    
 }

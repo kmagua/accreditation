@@ -1,5 +1,5 @@
 <div class="company-document-index">
-    <span style="font-size: 15pt; font-weight: bold">Company Documents</span>
+    <span style="font-size: 15pt; font-weight: bold">Payments</span>
 <?= \yii\grid\GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
@@ -8,16 +8,19 @@
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            //'company_id',
-            'companyTypeDoc.documentType.name',
+            'application_id',
+            'billable_amount',
+            //'mpesa_code',
+            //'receipt',
+            //'level',
+            'status',
             [
                 'attribute' => 'upload_file',
                 'content' => function($data){
-                    return $data->fileLink(true);
+                    return $data->getReceipt(false);
                 }
-            ],
-            //'date_created',
-            //'last_updated',
+            ],            
+            //'last_update',
         ],
     ]); ?>
 </div>

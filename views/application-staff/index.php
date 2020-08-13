@@ -18,14 +18,15 @@ use yii\grid\GridView;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'staff.kra_pin',
+            
             [
                 'label' => 'Name',
                 'content' => function($data){
                     return $data->staff->getNames();
                 }
             ],
-            
+            'staff.title',
+            'staff.gender',
             'role',
             //'date_created',
             //'last_updated',

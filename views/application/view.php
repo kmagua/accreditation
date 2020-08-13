@@ -85,6 +85,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $cdDataProvider,
     ]);
 ?>
+
+<?php
+    $paymentSearchModel = new \app\models\PaymentSearch();
+    $paymentSearchModel->application_id = $model->id;
+    $paymentDataProvider = $paymentSearchModel->search([]);
+    echo $this->render('payment_grid', [
+        'searchModel' => $paymentSearchModel,
+        'dataProvider' => $paymentDataProvider,
+    ]);
+?>
 <?php
 $this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);
 $this->registerJsFile('../js/company_staff.js', ['position'=>yii\web\View::POS_END]);

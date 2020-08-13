@@ -38,6 +38,13 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         ],
         [
+            'label' => 'Grade',
+            'content' => function($model){
+                return $model->getClassification();
+            }
+        ],
+        'certificate_serial',
+        [
             'attribute' => 'status',
             'contentOptions' => ['style' => 'width: 12%'],
             'content' => function($model){
