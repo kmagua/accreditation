@@ -103,7 +103,7 @@ class ApplicationClassification extends \yii\db\ActiveRecord
         $uid = \Yii::$app->user->identity->user_id;
         $insert_sql = "INSERT INTO application_classification (application_id, icta_committee_id, user_id, score, classification, status, rejection_comment)
             VALUES ($app_id, $icta_comm, $uid, $score, '$category', $status, :rejection_comment)
-            ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP, score = $score, classification = '$category'";
+            ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP, score = $score, classification = '$category', status = '$status'";
                 
         return \Yii::$app->db->createCommand($insert_sql, [':rejection_comment' => $rejection_comment])->execute();
     }

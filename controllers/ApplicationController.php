@@ -53,7 +53,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'committee-members', 'get-data', 
+                        'actions' => ['index', 'approve-payment', 'get-data', 
                             'renewals', 'statuses-report', 'accredited-suppliers'],
                         'allow' => true,
                         'roles' => ['@'],
@@ -61,6 +61,23 @@ class ApplicationController extends Controller
                             return Yii::$app->user->identity->isInternal();
                         }
                     ],
+                    [
+                        'actions' => ['committee-members'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(Yii::$app->request->get()['l'] == 1){
+                                $email = Yii::$app->user->identity->username;
+                                if(in_array($email, ['charles.waithiru@ict.go.ke', 'charles.waithiru@icta.go.ke']) 
+                                        || Yii::$app->user->identity->isAdmin()){
+                                    return true;
+                                }
+                            }else if(Yii::$app->request->get()['id'] == 2){
+                                return Yii::$app->user->identity->isInternal();
+                            }
+                        }
+                    ],        
+                            
                     [
                         'actions' => ['approval'],
                         'allow' => true,

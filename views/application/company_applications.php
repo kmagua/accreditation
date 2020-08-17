@@ -12,8 +12,16 @@ $model->company_id = $searchModel->company_id;
 ?>
 <div class="application-index">
     <p>
-        <?= '' /*Html::a('Submit Application', ['new','cid'=>$model->company_id], ['class' => 'btn btn-success',
-            'onclick'=>'getDataForm(this.href); return false;'])*/ ?>
+        <?php 
+        $missing = app\models\Application::checkCompletedSections($model->company_id);
+        if($missing){
+            echo "<h4 style='color:red'>The following sections are missing. Please complete before submiting an application.</h4><ul>";
+            foreach($missing as $miss){
+                echo '<li><span  style="color:red">' , $miss, '</span></li>';
+            }
+            echo "<br>";
+        }
+        ?>
         <?= Html::a('Submit a new Application', ['create','cid'=>$model->company_id], ['class' => 'btn btn-success']) ?>
     </p>
 

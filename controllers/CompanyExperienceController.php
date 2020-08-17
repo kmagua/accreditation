@@ -86,7 +86,7 @@ class CompanyExperienceController extends Controller
         $model->setScenario('create');
 
         if ($model->load(Yii::$app->request->post()) && $model->saveCompanyExperience()){            
-            \Yii::$app->session->setFlash('ce_added','5. Successfully saved, add another project or close the dialog.');
+            \Yii::$app->session->setFlash('ce_added','Successfully saved, add another project or close the dialog.');
             $model = null;         
         }
         

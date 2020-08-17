@@ -731,7 +731,7 @@ MSG;
                 <p>Kindly note that your Accreditation request for $type has been reviewed and approved by ICT Authority.
                     You are now required to make payment of KES: {$this->getPayableAtLevel()} to: <br>CITIBANK,<br>Name: ICT Authority,<br>Account No: 0300085016,<br>Branch: Upper Hill (code: 16000).
                         </p>
-                <p>After payment, login to the system using this link $link and upload your receipt. You will get a notification email to download your certificate once payment is confirmed.</p>
+                <p><strong>After payment, deliver the bank slip to ICTA - Telposta Towers 12th floor, Finance Department to be issued a receipt which you will then upload on the system using this link {$link}. You will get a notification email to download your certificate once your uploaded receipt is confirmed.</strong></p>
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;
@@ -891,12 +891,35 @@ MSG;
      */
     public function getClassification()
     {
+        $or = ($this->parent_id != '')?" OR application_id = {$this->parent_id}":"";
         $app_class = ApplicationClassification::find()
-            ->where("application_id = {$this->id} OR application_id = {$this->parent_id}")->orderBy('id DESC')->one();
+            ->where("application_id = {$this->id} $or")->orderBy('id DESC')->one();
         if($app_class){
             return $app_class->classification;
         }
         return '';
+    }
+    
+    /**
+     * 
+     * @param type $company_id
+     */
+    public static function checkCompletedSections($company_id)
+    {
+        $missing = [];
+        $company_docs = CompanyDocument::find()->where("company_id = $company_id")->one();
+        if(!$company_docs){
+            $missing[] = 'Company Registration and Compliance not uploaded.';
+        }
+        $company_exp = CompanyExperience::find()->where("company_id = $company_id")->one();
+        if(!$company_exp){
+            $missing[] = 'You have not added details of projects done by your company.';
+        }
+        $staff = CompanyStaff::find()->where("company_id = $company_id")->one();
+        if(!$staff){
+            $missing[] = 'You have not entered details about the company\'s staff.';
+        }
+        return $missing;
     }
     
 }

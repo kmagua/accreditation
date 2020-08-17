@@ -23,7 +23,7 @@ class CompanyDocument extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-     public $uploadFile;
+    public $uploadFile;
     public static function tableName()
     {
         return 'company_document';

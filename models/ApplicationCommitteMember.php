@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int $application_id
  * @property int $committee_member_id
+ * @property int $assigned_by
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -34,7 +35,7 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
     {
         return [
             [['application_id', 'committee_member_id'], 'required'],
-            [['application_id', 'committee_member_id'], 'integer'],
+            [['application_id', 'committee_member_id', 'assigned_by'], 'integer'],
             [['date_created', 'last_updated', 'committee_member_ids'], 'safe'],
             [['committee_member_id'], 'exist', 'skipOnError' => true, 'targetClass' => IctaCommitteeMember::className(), 'targetAttribute' => ['committee_member_id' => 'id']],
             [['application_id'], 'exist', 'skipOnError' => true, 'targetClass' => Application::className(), 'targetAttribute' => ['application_id' => 'id']],
@@ -82,7 +83,8 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
             $rec = ApplicationCommitteMember::find()->where(['committee_member_id'=>$member_id, 'application_id' => $this->application_id])->one();
             if(!$rec){                
                 \Yii::$app->db->createCommand()->insert('application_committe_member',[
-                    'committee_member_id'=> $member_id, 'application_id'=> $this->application_id
+                    'committee_member_id'=> $member_id, 'application_id'=> $this->application_id,
+                    'assigned_by' => Yii::$app->user->identity->id
                 ])->execute();
             }
         }

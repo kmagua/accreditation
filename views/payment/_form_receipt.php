@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
     <div class="row"> 
         <div class="col-md-8">
             <?= $form->field($model, 'upload_file')->fileInput()
-                ->label("Upload a receipt for payment of KES: " . $model->billable_amount) ?>
+                ->label("Upload a receipt [issued by Finance Department - ICTA] for payment of KES: " . $model->billable_amount) ?>
         </div>
     </div>
 
