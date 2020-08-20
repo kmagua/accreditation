@@ -72,7 +72,7 @@ class ApplicationController extends Controller
                                         || Yii::$app->user->identity->isAdmin()){
                                     return true;
                                 }
-                            }else if(Yii::$app->request->get()['id'] == 2){
+                            }else if(Yii::$app->request->get()['l'] == 2){
                                 return Yii::$app->user->identity->isInternal();
                             }
                         }

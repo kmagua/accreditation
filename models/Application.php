@@ -448,13 +448,14 @@ class Application extends \yii\db\ActiveRecord
     {
         if(\Yii::$app->user->identity->isInternal()){
             $grp = ($level==1)?"Secretariat":"Committee member";
-            if(\Yii::$app->user->identity->inGroup($grp)){
+            $param = ($level==1)?"secAssigner":"committeeAssigner";
+            if(in_array(Yii::$app->user->identity->username, \Yii::$app->params[$param]) ){
                 return Html::a("Assign Members ". Icon::show('users', ['class' => 'fa', 'framework' => Icon::FA]), [
                     'application/committee-members', 'id' => $this->id, 'l'=> $level], 
                         ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Application {$grp} Members</h3>'); return false;",
                             'title' => $message]);
             }
-            return "Pending assignment of " . (($level==1)?"secretariat members.":"committee members.");
+            return "Pending assignment at " . (($level==1)?"secretariat.":"committee.");
         }
         return "Pending";
     }
@@ -475,12 +476,15 @@ class Application extends \yii\db\ActiveRecord
     public function processInternalCommittee($level)
     {
         $group = ($level == 1)?'Secretariat':'Committee member';
-        if(\Yii::$app->user->identity->inGroup($group)){
+        if(Application::canApprove($level, $this->id)){
             $title = ($level == 1) ? 'Score by ICTA Acceditation Secretariat' : 'Score by ICTA Approving Committee';
             return Html::a("Score " .Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
                 'application/approval', 'id' => $this->id, 'level'=> $level], 
                     ['data-pjax'=>'0', 'title' => $title]);
         }else{
+            if(\Yii::$app->user->identity->isInternal()){
+                return "at $group";
+            }
             return "Pending";
         }
     }
@@ -762,9 +766,9 @@ MSG;
      */
     public static function canApprove($level, $id)
     {
-        if(\Yii::$app->user->identity->isAdmin()){
-            return true;
-        }
+        //if(\Yii::$app->user->identity->isAdmin()){
+           // return true;
+        //}
         $sql = "SELECT icm.user_id, app.status  FROM `icta_committee_member` icm 
             JOIN `application_committe_member` acm ON acm.`committee_member_id` = icm.`id`
             JOIN `application` app ON app.`id` = acm.`application_id`
