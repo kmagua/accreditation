@@ -92,7 +92,7 @@ class Application extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'accreditation_type_id', , 'application_type'], 'required'],
+            [['company_id', 'accreditation_type_id', 'application_type'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id', 'application_type', 'parent_id'], 'integer'],
             [['app_staff', 'financial_status_link'], 'required','on'=>'create_update'],            
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
