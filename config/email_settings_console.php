@@ -1,6 +1,6 @@
 <?php
 
-if(gethostname() == 'DESKTOP-18B10UM'){
+if(gethostname() == 'DESKTOP-5E94PGU'){
     return [
         'class' => 'yii\swiftmailer\Mailer',
         'useFileTransport' => true

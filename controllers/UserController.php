@@ -41,7 +41,7 @@ class UserController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['my-profile'],
+                        'actions' => ['my-profile', 'change-password'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -280,6 +280,21 @@ class UserController extends Controller
         }
 
         return $this->render('new_user_internal', [
+            'model' => $model,
+        ]);
+    }
+    
+    public function actionChangePassword()
+    {
+        $model = User::findOne(['email'=> Yii::$app->user->identity->username]);
+        $model->password = '';
+        $model->setScenario('password_update');
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('user_registration','Password updated successfully.');
+            return $this->redirect(['site/index']);
+        }
+
+        return $this->render('change_password', [
             'model' => $model,
         ]);
     }

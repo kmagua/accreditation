@@ -92,9 +92,9 @@ class Application extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'accreditation_type_id', 'financial_status_link', 'application_type'], 'required'],
+            [['company_id', 'accreditation_type_id', , 'application_type'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id', 'application_type', 'parent_id'], 'integer'],
-            [['app_company_experience','app_staff', 'financial_status_link'], 'required','on'=>'create_update'],            
+            [['app_staff', 'financial_status_link'], 'required','on'=>'create_update'],            
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['revert_rejection', 'required', 'on' => ['revert_rejection'], 'requiredValue' => 1, 
                 'message' => 'You must confirm to have addressed issues raised in the rejection comment.'],
@@ -475,7 +475,7 @@ class Application extends \yii\db\ActiveRecord
      */
     public function processInternalCommittee($level)
     {
-        $group = ($level == 1)?'Secretariat':'Committee member';
+        $group = ($level == 1)?'Secretariat':'Committee';
         if(Application::canApprove($level, $this->id)){
             $title = ($level == 1) ? 'Score by ICTA Acceditation Secretariat' : 'Score by ICTA Approving Committee';
             return Html::a("Score " .Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
@@ -729,10 +729,10 @@ MSG;
         $header = "ICT Authority - Payment Request for Company Accreditation";
         $type = $this->accreditationType->name;
         $link = \yii\helpers\Url::to(['/company-profile/view', 'id' => $this->company_id], true);
-        
+        $ac = ApplicationClassification::find()->where(['application_id'=>$this->id, 'icta_committee_id' => 2])->one();
         $message = <<<MSG
                 Dear {$this->user->full_name},
-                <p>Kindly note that your Accreditation request for $type has been reviewed and approved by ICT Authority.
+                <p>Kindly note that your Accreditation request for $type has been reviewed and graded [{$ac->classification}]  by ICT Authority.
                     You are now required to make payment of KES: {$this->getPayableAtLevel()} to: <br>CITIBANK,<br>Name: ICT Authority,<br>Account No: 0300085016,<br>Branch: Upper Hill (code: 16000).
                         </p>
                 <p><strong>After payment, deliver the bank slip to ICTA - Telposta Towers 12th floor, Finance Department to be issued a receipt which you will then upload on the system using this link {$link}. You will get a notification email to download your certificate once your uploaded receipt is confirmed.</strong></p>
@@ -766,9 +766,9 @@ MSG;
      */
     public static function canApprove($level, $id)
     {
-        //if(\Yii::$app->user->identity->isAdmin()){
-           // return true;
-        //}
+        if(\Yii::$app->user->identity->isAdmin()){
+            return true;
+        }
         $sql = "SELECT icm.user_id, app.status  FROM `icta_committee_member` icm 
             JOIN `application_committe_member` acm ON acm.`committee_member_id` = icm.`id`
             JOIN `application` app ON app.`id` = acm.`application_id`

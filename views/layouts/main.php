@@ -71,7 +71,9 @@ AppAsset::register($this);
                     ['label' => 'My Account', 'url' => ['/user/my-profile'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'FAQs', 'url' => ['/site/faqs'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],                    
+                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
+                    ['label' => 'Change My Password', 'url' => ['/user/change-password'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))
             ],
@@ -91,6 +93,8 @@ AppAsset::register($this);
                     ['label' => 'Reports', 'url' => ['/site/reports'],
                         'linkOptions' => ['style' => 'color:#fff; background-color:green']],
                     ['label' => 'FAQs', 'url' => ['/site/faqs'],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                    ['label' => 'Change My Password', 'url' => ['/user/change-password'],
                         'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
