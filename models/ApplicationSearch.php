@@ -212,4 +212,32 @@ class ApplicationSearch extends Application
         
         return $dataProvider;
     }
+    
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function getListOfAssignees($params)
+    {
+        $sql = "SELECT COUNT(usr.id) id, CONCAT_WS(' ', usr.first_name, usr.last_name) previous_category
+            FROM `accreditcomp`.`application` app 
+            JOIN `accreditcomp`.`application_committe_member`  acm ON app.id = acm.`application_id`
+            JOIN `icta_committee_member` icm ON icm.id = acm.`committee_member_id`
+            JOIN `accreditcomp`.`user` usr ON usr.id = icm.`user_id`
+            GROUP BY usr.id";
+        
+        $query = Application::findBySql($sql);
+
+        // add conditions that should always apply here
+
+        //$query->joinWith(['accreditationType', 'company']);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        
+        return $dataProvider;
+    }
 }

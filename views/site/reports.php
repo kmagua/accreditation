@@ -19,5 +19,8 @@ $this->title = "Accreditation System Reports";
     <br>
     <?= Html::a('4. Professional Application Statuses', ['/professional/application/statuses-report'], 
         ['class' => 'btn btn-primary', 'title' =>"Original Applications", 'style' => 'margin-bottom:5px']); ?>
+    <br>
+    <?= Html::a('5. Review by Internal Staff List', ['/application/review-report-by-staff'], 
+        ['class' => 'btn btn-primary', 'title' =>"Original Applications", 'style' => 'margin-bottom:5px']); ?>
 
 </div>

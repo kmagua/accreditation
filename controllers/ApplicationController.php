@@ -55,7 +55,7 @@ class ApplicationController extends Controller
                     ],
                     [
                         'actions' => ['index', 'approve-payment', 'get-data', 
-                            'renewals', 'statuses-report', 'accredited-suppliers', 'my-assigned'],
+                            'renewals', 'statuses-report', 'accredited-suppliers', 'my-assigned', 'review-report-by-staff'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -532,6 +532,17 @@ class ApplicationController extends Controller
         $dataProvider = $searchModel->getMyListList(Yii::$app->request->queryParams);
 
         return $this->render('my_list', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    public function actionReviewReportByStaff()
+    {
+        $searchModel = new ApplicationSearch();
+        $dataProvider = $searchModel->getListOfAssignees(Yii::$app->request->queryParams);
+
+        return $this->render('assignee_list', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
