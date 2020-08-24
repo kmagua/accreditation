@@ -54,9 +54,9 @@ AppAsset::register($this);
                     ['label' => 'Company Accreditation', 'url' => ['/application/index'],
                         //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
                         'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
-                    //['label' => 'Professional Certification', 'url' => ['/professional/application/index'],
+                    ['label' => 'My Pending Reviews', 'url' => ['/application/my-assigned'],
                         //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
-                        //'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
+                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
                     
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())

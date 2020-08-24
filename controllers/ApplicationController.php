@@ -12,6 +12,7 @@ use yii\filters\AccessControl;
 use yii\base\Model;
 use kartik\mpdf\Pdf;
 use app\models\CompanyProfile;
+use yii\web\ForbiddenHttpException;
 
 /**
  * ApplicationController implements the CRUD actions for Application model.
@@ -54,7 +55,7 @@ class ApplicationController extends Controller
                     ],
                     [
                         'actions' => ['index', 'approve-payment', 'get-data', 
-                            'renewals', 'statuses-report', 'accredited-suppliers'],
+                            'renewals', 'statuses-report', 'accredited-suppliers', 'my-assigned'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -83,7 +84,12 @@ class ApplicationController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            return Application::canApprove(Yii::$app->request->get()['level'], Yii::$app->request->get()['id']);
+                            $status = Application::canApprove(Yii::$app->request->get()['level'], Yii::$app->request->get()['id']);
+                            if($status){
+                                return true;
+                            }else{
+                                throw new ForbiddenHttpException("Either you've not been assigned to review at this stage or the Application has already been reviewed.");
+                            }
                         }
                     ],
                 ],
@@ -515,6 +521,17 @@ class ApplicationController extends Controller
         $dataProvider = $searchModel->getAccreditedList(Yii::$app->request->queryParams);
 
         return $this->render('accredited_list', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    public function actionMyAssigned()
+    {
+        $searchModel = new ApplicationSearch();
+        $dataProvider = $searchModel->getMyListList(Yii::$app->request->queryParams);
+
+        return $this->render('my_list', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

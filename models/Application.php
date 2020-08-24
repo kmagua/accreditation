@@ -769,13 +769,14 @@ MSG;
         if(\Yii::$app->user->identity->isAdmin()){
             return true;
         }
+        $lvl = ($level == 1)?'ApplicationWorkflow/at-secretariat':'ApplicationWorkflow/at-committee';
         $sql = "SELECT icm.user_id, app.status  FROM `icta_committee_member` icm 
             JOIN `application_committe_member` acm ON acm.`committee_member_id` = icm.`id`
             JOIN `application` app ON app.`id` = acm.`application_id`
             WHERE `committee_id` = $level AND icm.user_id = " . \Yii::$app->user->identity->id . "
-                AND acm.application_id = $id";
-        $recs = \Yii::$app->db->createCommand($sql)->queryOne();
-        if($recs && in_array($recs['status'], ['ApplicationWorkflow/at-committee', 'ApplicationWorkflow/at-secretariat'])){
+                AND acm.application_id = $id AND app.status = '$lvl'";
+        $rec = \Yii::$app->db->createCommand($sql)->queryOne();
+        if($rec){
             return true;
         }
         return false;

@@ -17,8 +17,12 @@ Icon::map($this, Icon::FAS);
 /* @var $model app\models\Application */
 
 $this->title =  "Application for " . $model->accreditationType->name . " Accreditation.";
-$this->params['breadcrumbs'][] = ['label' => 'My Applications', 'url' => [
+if(Yii::$app->user->identity->isInternal()){
+    $this->params['breadcrumbs'][] = ['label' => 'Applications', 'url' => ['application/index']];
+}else{
+    $this->params['breadcrumbs'][] = ['label' => 'My Applications', 'url' => [
     'company-profile/view','id'=>$model->company_id, '#'=>'application_data_tab']];
+}
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>

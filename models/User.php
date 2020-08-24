@@ -370,9 +370,13 @@ MSG;
      * 
      * @return type
      */
-    public function isInternal()
+    public function isInternal($reviewers = false)
     {
-        return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committee member', 'su']);        
+        if($reviewers){
+            return in_array(strtolower(Yii::$app->user->identity->group),['secretariat','committee member']);
+        } else {
+            return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committee member', 'su']);
+        }
     }
     
      /**
