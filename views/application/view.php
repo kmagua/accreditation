@@ -101,6 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
+if(Yii::$app->user->identity->isInternal()){
     $reviewerSearchModel = new \app\models\ApplicationCommitteMemberSearch();
     $reviewerSearchModel->application_id = $model->id;
     $reviewerDataProvider = $reviewerSearchModel->search([]);
@@ -108,6 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'searchModel' => $reviewerSearchModel,
         'dataProvider' => $reviewerDataProvider,
     ]);
+}
 ?>
 <?php
 $this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);

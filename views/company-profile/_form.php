@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
     <div class="row">
         <div class="col-md-6">
             <?= $form->field($model, 'company_name')->textInput(['maxlength' => true, 
-                'value' => Yii::$app->user->identity->full_name, 'readonly' => true]) ?>
+                'value' => ($model->company_name =='')?Yii::$app->user->identity->full_name: $model->company_name]) ?>
         </div> 
         <div class="col-md-6">
             <?= $form->field($model, 'company_email')->textInput(['maxlength' => true, 
