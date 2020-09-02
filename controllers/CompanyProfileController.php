@@ -36,7 +36,7 @@ class CompanyProfileController extends Controller
                         'roles' => ['@'],
                         'matchCallback' => function () {
                             if(isset(Yii::$app->request->get()['id'])){
-                                return CompanyProfile::canAccess(Yii::$app->request->get()['id']);
+                                return CompanyProfile::canAccess(Yii::$app->request->get()['id']) || Yii::$app->user->identity->isAdmin(false);
                             }                             
                             return false;
                         }

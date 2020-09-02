@@ -234,7 +234,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $this->username = $this->email;
         $this->setUserId();
         $this->setGroup();
-        $this->full_name = trim($this->first_name . ' ' . $this->last_name);
+        $this->full_name = trim($this->first_name);
         return true;
     }
 

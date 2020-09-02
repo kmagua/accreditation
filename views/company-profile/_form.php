@@ -20,7 +20,7 @@ use yii\helpers\ArrayHelper;
         </div> 
         <div class="col-md-6">
             <?= $form->field($model, 'company_email')->textInput(['maxlength' => true, 
-                'value' => Yii::$app->user->identity->username, 'readonly' => true]) ?>
+                'value' => ($model->company_email =='')?Yii::$app->user->identity->username: $model->company_email, 'readonly' => true]) ?>
             
         </div>
     </div>
