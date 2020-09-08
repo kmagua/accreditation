@@ -367,11 +367,11 @@ class ApplicationController extends Controller
         }
         $app_classification = \app\models\ApplicationClassification::find()->where(['application_id'=>$id])->orderBy("id desc")->one();
         //$sn = bin2hex($id * 53);
-        $content = $this->renderPartial('certificate', ['application' => $application, 'app_class' => $app_classification]);
+        $content = $this->renderPartial('certificate_html', ['application' => $application, 'app_class' => $app_classification]);
         $filename = "cert- " .$application->id . ".pdf";
 
         // setup kartik\mpdf\Pdf component
-        $pdf = new Pdf([
+        /*$pdf = new Pdf([
             // set to use core fonts only
             'mode' => Pdf::MODE_CORE, 
             // A4 paper format
@@ -395,10 +395,11 @@ class ApplicationController extends Controller
                 'SetHeader'=>['SN: '. $application->certificate_serial], 
                 'SetFooter'=>['{PAGENO}'],
             ]
-        ]);
+        ]);*/
 
         // return the pdf output as per the destination setting
-        return $pdf->render(); 
+        //return $pdf->render();
+        return $content;
     }
     
     /**
