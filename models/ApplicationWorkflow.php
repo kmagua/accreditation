@@ -53,7 +53,7 @@ class ApplicationWorkflow implements \raoul2000\workflow\source\file\IWorkflowDe
                     'transition' => ['completed', 'approval-payment-rejected']
                 ],
                  'approval-payment-rejected' => [
-                    'transition' => ['approved']
+                    'transition' => ['certificate-paid']
                 ],
                 'completed' => [
                     'transition' => ['renewal']

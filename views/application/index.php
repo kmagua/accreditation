@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'renewed' => 'Pending Renewal Approval'
                 ]
             ],
-            
+            'date_created',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 4%'],

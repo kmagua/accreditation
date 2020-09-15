@@ -12,7 +12,7 @@ Icon::map($this, Icon::FAS);
 /* @var $searchModel app\models\ApplicationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'My Pending Applications';
+$this->title = 'Application Review by Staff';
 $this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['site/reports']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -25,7 +25,8 @@ $columns = [
     [
         'attribute' => 'id',
         'label' => '# of applications',
-    ],      
+    ],
+    'status_search'
 ];
 ?>
 <div class="application-index">

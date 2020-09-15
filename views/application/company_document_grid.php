@@ -1,5 +1,6 @@
 <div class="company-document-index">
     <span style="font-size: 15pt; font-weight: bold">Company Documents</span>
+    
 <?= \yii\grid\GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,

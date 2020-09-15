@@ -41,6 +41,7 @@ class Application extends \yii\db\ActiveRecord
     public $app_company_experience; // to capture selected company experience for this application
     public $app_staff; // to capture selected company staff for this application
     public $revert_rejection; //used to capture rejection reversion declaration
+    public $status_search;
     /**
      * {@inheritdoc}
      */
@@ -132,7 +133,8 @@ class Application extends \yii\db\ActiveRecord
             'app_company_experience' => 'Select relevant work experience for this application',
             'app_staff' => 'Select staff for this application',
             'previous_category' => 'Previously Assigned Category',
-            'application_type' => 'New or Annual Renewal'
+            'application_type' => 'New or Annual Renewal',
+            'status_search' => 'Status'
         ];
     }
 
@@ -463,9 +465,9 @@ class Application extends \yii\db\ActiveRecord
     /**
      * 
      */
-    public function processApplicationFeeRejected()
+    public function processApplicationFeeRejected($level = 2)
     {
-        return "TBA";
+        return 'TBA';
     }
     
     /**
@@ -495,7 +497,13 @@ class Application extends \yii\db\ActiveRecord
      */
     public function processApprovalFeeRejected()
     {
-        return "TBA";
+        if($this->checkUserCanAccess()){            
+            //return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented"); return false;']) . ' &nbsp;&nbsp; '. 
+            return Html::a('Upload Payment Receipt ' . Icon::show('receipt', ['class' => 'fas',
+                'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> 2], 
+                    ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
+        }
+        return "Receipt invalidated";
     }
     
     /**

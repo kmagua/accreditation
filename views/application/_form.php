@@ -32,9 +32,10 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
         
         <div class="col-md-6">
             <?= $form->field($model, 'financial_status_link')->textInput(['maxlength' => true,
-                'placeholder' => 'Upload the file somewhere like on your website/google drive and then provide the link to it',])
+                'placeholder' => 'Upload the file somewhere like on your website/google drive and then provide the link here',])
                 ->label(null, ['data-toggle' => 'tooltip','data-placement' =>'right',
-                    'title' => 'Upload the file somewhere like on your website/google drive and then provide the link to it.']) ?>
+                    'title' => 'Upload the file somewhere like on your website/google drive and then provide the link here.']) ?>
+            <i style="color:red">Make sure to give direct access permissions to the document so that the reviewing team can access it.</i>
             
         </div>
         

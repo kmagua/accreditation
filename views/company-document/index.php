@@ -19,6 +19,7 @@ $model->company_id = $searchModel->company_id;
         'class' => 'btn btn-success', 'onclick'=>'getDataForm(this.href, "<h3> Documents for ' . $searchModel->company->company_name. '</h3>"); return false;'
         ]); 
     ?>
+    <i style="color:red">Business permit, Certificate of Incorporation, KRA tax compliance are MANDATORY.</i>
     
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
