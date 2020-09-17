@@ -15,14 +15,16 @@ $model->company_id = $searchModel->company_id;
         <?php 
         $missing = app\models\Application::checkCompletedSections($model->company_id);
         if($missing){
-            echo "<h4 style='color:red'>The following sections are missing. Please complete before submiting an application.</h4><ul>";
+            echo "<h4 style='color:red'>The following sections are missing. Please complete before submiting an application as this will affect your score.</h4><ul>";
             foreach($missing as $miss){
                 echo '<li><span  style="color:red">' , $miss, '</span></li>';
             }
             echo "<br>";
-        }
+            echo Html::a('Submit a new Application with incomplete details', ['create','cid'=>$model->company_id], ['class' => 'btn btn-danger']);
+        }else{
         ?>
         <?= Html::a('Submit a new Application', ['create','cid'=>$model->company_id], ['class' => 'btn btn-success']) ?>
+        <?php } ?>
     </p>
 
     <div id="application_form_div" style="display: none">

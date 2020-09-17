@@ -28,10 +28,7 @@ class PreSystemAccreditedCompaniesController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function () {
-                            return Yii::$app->user->identity->isInternal();
-                        }
+                        'roles' => ['?', '@'],
                     ],
                 ],
             ],

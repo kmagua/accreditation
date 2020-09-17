@@ -26,6 +26,7 @@ $model->company_id = $searchModel->company_id;
             //'id',
             //'company_id',
             'organization_type',
+            'organization_name',
             'project_name',
             [
                 'label' => 'Dates',

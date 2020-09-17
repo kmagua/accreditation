@@ -920,9 +920,13 @@ MSG;
     public static function checkCompletedSections($company_id)
     {
         $missing = [];
-        $company_docs = CompanyDocument::find()->where("company_id = $company_id")->one();
-        if(!$company_docs){
-            $missing[] = 'Company Registration and Compliance not uploaded.';
+        $sql = "SELECT count(dt.id) id FROM `company_document` cd 
+            JOIN `company_type_document` ctd ON ctd.id = cd.`company_type_doc_id` 
+            JOIN `document_type` dt ON dt.id = ctd.`document_type_id` 
+            WHERE dt.id IN(1,2,3) AND cd.`company_id` = $company_id";
+        $company_docs = CompanyDocument::findBySql($sql)->one();
+        if(!$company_docs || $company_docs->id != 3){
+            $missing[] = 'You are missing either All or one of the following documents (Business permit, Certificate of Incorporation, KRA tax compliance).';
         }
         $company_exp = CompanyExperience::find()->where("company_id = $company_id")->one();
         if(!$company_exp){

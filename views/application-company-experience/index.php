@@ -18,7 +18,8 @@ use yii\grid\GridView;
             ['class' => 'yii\grid\SerialColumn'],
 
             'experience.organization_type',
-            'experience.project_name',
+            'experience.organization_name',
+            'experience.project_name',            
             [
                 'label' => 'Dates',
                 'content' => function($data){
