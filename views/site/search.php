@@ -12,7 +12,7 @@ $this->title = "Validate certificate";
 
 
 <div class="site-login">
-    <div class="row">
+    <div class="row" style="margin-top: 20px">
     <p>Please fill in the certificate serial number to search:</p>
     </div>
     <?php $form = ActiveForm::begin([
@@ -38,3 +38,5 @@ $this->title = "Validate certificate";
         <?php endif; ?>
     </div>
 </div>
+
+<h4>You can also search from the list of Companies Accredited before system was rolled out <a href='pre-system-accredited-companies/index'>HERE</a></h4>

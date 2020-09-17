@@ -50,7 +50,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     return "<a href='{$model->financial_status_link}'>open</a>";
                 },
             ],*/
-            
+            [
+                'attribute' =>'date_created',
+                'label'=>'Application Date',
+                'filter' => false,
+                'content' => function($data){
+                    return date('d-m-Y', strtotime($data->date_created));
+                }     
+            ],
             [
                 'attribute' => 'status',
                 'contentOptions' => ['style' => 'width: 12%'],

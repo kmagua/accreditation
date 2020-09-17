@@ -29,7 +29,8 @@
         "kartik-v/yii2-password": "dev-master",
         "kartik-v/yii2-export": "dev-master",
         "2amigos/yii2-chartjs-widget": "~2.0",
-        "sjaakp/yii2-collapse": "^1.1"
+        "sjaakp/yii2-collapse": "^1.1",
+        "yiister/yii2-gentelella": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
