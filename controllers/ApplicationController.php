@@ -460,8 +460,8 @@ class ApplicationController extends Controller
         $model = $this->findModel($id);
         $model->setScenario('revert_rejection');
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $next_step = ($l == 1) ? 'at-secretariat': 'at-committee';
-            if($model->progressWorkFlowStatus($next_step)){
+            //$next_step = ($l == 1) ? 'at-secretariat': 'at-committee';
+            if($model->progressWorkFlowStatus('at-secretariat')){
                 //\Yii::$app->session->setFlash('rejection_reversed','Application status updated!');
                 return "Application status updated!";
             }            

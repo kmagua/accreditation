@@ -629,7 +629,7 @@ MSG;
             }
             $insert_sql = "INSERT INTO application_score (application_id, score_item_id, committee_id, user_id, score, comment)
                 VALUES ({$this->id}, {$score_item_data['id']}, {$level->data}, $uid, :score, :comment)
-                ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP";
+                ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP, score = :score";
                 
             \Yii::$app->db->createCommand($insert_sql, [':score' => $score, ':comment' => $comment])->execute();
         }

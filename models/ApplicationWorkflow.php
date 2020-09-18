@@ -44,7 +44,7 @@ class ApplicationWorkflow implements \raoul2000\workflow\source\file\IWorkflowDe
                     'transition' => ['at-secretariat']
                 ],
                 'com-rejected' => [
-                    'transition' => ['at-committee']
+                    'transition' => ['at-secretariat']
                 ],
                 'approved' => [
                     'transition' => ['certificate-paid']
