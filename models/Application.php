@@ -83,7 +83,7 @@ class Application extends \yii\db\ActiveRecord
             [$this, 'sendRejectedEmail'], 'rejected'
     	);
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/com-rejected'),
-            [$this, 'sendRejectedEmail'], 'rejected'
+            [$this, 'sendRejectedEmailCommittee'], 'rejected'
     	);
     }
 
@@ -708,7 +708,7 @@ MSG;
         Utility::sendMail($this->company->company_email, $header, $message, $this->user->email);
     }
     
-        /**
+    /**
      * Send email to applicant after application has been approved by ICTA
      * @param type $event
      */
@@ -732,10 +732,40 @@ MSG;
         
     }
     
+    /**
+     * Send email to applicant after application has been approved by ICTA
+     * @param type $event
+     */
+    public function sendRejectedEmailCommittee($event)
+    {
+        $header = "An application you approved has been reverted back to you at Committee level";
+        //$type = $this->accreditationType->name;
+        $link = \yii\helpers\Url::to(['/application/view', 'id' => $this->id], true);
+        $app_categorization = ApplicationClassification::find()->where(['application_id' => $this->id])->
+            orderBy('application_id desc')->one();
+        $sec_approver = $this->getApprovers(1);
+        if(!$sec_approver){
+            return;
+        }
+        $send_to = array_column($sec_approver, 'email');
+        $comment = ($app_categorization)?$app_categorization->rejection_comment:"";
+        $message = <<<MSG
+                Dear {$this->user->full_name},
+                <p>Kindly note that an application you had reviewed and forward to the committee for consideration has been reverted back to you with the coomment below.</p>
+                <p>$comment</p>
+                <p>You can review your score or reject the application (with comment) to be returned back to the applicant compnay for action.</p><br>$link
+                <p>Thank you,<br>ICT Authority Accreditation.</p>
+                
+MSG;
+        Utility::sendMail($send_to, $header, $message, $this->user->email);
+        
+    }    
+    
     public function sendPaymentRequestEmail($event)
     {
         $header = "ICT Authority - Payment Request for Company Accreditation";
         $type = $this->accreditationType->name;
+        
         $link = \yii\helpers\Url::to(['/company-profile/view', 'id' => $this->company_id], true);
         $ac = ApplicationClassification::find()->where(['application_id'=>$this->id, 'icta_committee_id' => 2])->one();
         $message = <<<MSG
@@ -939,4 +969,14 @@ MSG;
         return $missing;
     }
     
+    public function getApprovers($level)
+    {
+        $sql = "SELECT usr.email, usr.id FROM `icta_committee_member` icm 
+            JOIN `application_committe_member` acm ON acm.`committee_member_id` = icm.`id`
+            JOIN `application` app ON app.`id` = acm.`application_id`            
+            JOIN `user` usr ON usr.id = icm.user_id
+            WHERE icm.`committee_id` = {$level} AND acm.application_id = {$this->id}";
+            
+        return \Yii::$app->db->createCommand($sql)->queryAll();
+    }
 }

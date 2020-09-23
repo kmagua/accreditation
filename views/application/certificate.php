@@ -9,7 +9,7 @@
 <div>
     <div style="width:100%;height:100%;margin-top:-0px;margin-left:-10px;margin-bottom:0px;margin-right:-10px;margin:auto;border:solid 4px red;margin-top:49px;">
         <p class="text-center" style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;text-align:center; margin-top:-15px;">
-            <img src="<?= Yii::getAlias('@web'. '/images/ictalogocert.png'); ?>" style="height:100px" />
+            <img src="<?= Yii::getAlias('@webroot/images/ictalogocert.png'); ?>" style="height:100px" />
         </p>
         <p style="text-align:center;font-family:'Old English Text MT';color:gray;font-weight:bold;font-size:3em;margin-top:-80px;">
             Certificate of Accreditation
@@ -44,7 +44,8 @@
             <!--<div class="col-md-4" style="float:left;padding-left:49px;"> -->
             <td style="width: 120mm; padding-left: 50px;">
                 <p style="font-family:Arial;color:gray;font-weight:100;font-size:1.5em; ">
-                    <img src="<?= Yii::getAlias('@web'. '/images/francis.jpg'); ?>" style="height:100px" />
+                    
+                    <img src="<?= Yii::getAlias('@webroot/images/francis.jpg'); ?>" style="height:100px" />
                     <!-- <img src="@Server.MapPath("~/Views/Profile/sergon.jpg")" style="width:4em;height:2em" />-->
                     <br />
                     Francis Mwaura <br />
@@ -56,7 +57,7 @@
             </td>
             <td  style="width: 120mm; float:right !important;">
                 <p style="font-family:Arial;font-weight:100;color:gray;font-size:1.5em; text-align: left">
-                 <img src="<?= Yii::getAlias('@web'. '/images/rono1.jpg'); ?>" style="height:100px" />
+                 <img src="<?= Yii::getAlias('@webroot/images/rono1.jpg'); ?>" style="height:100px" />
                     <br/>
                     Kipronoh Ronoh P.<br/>
                     Director, Programmes and Standards

@@ -13,6 +13,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="pre-system-accredited-companies-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    
+    <p>
+        <?= Html::a('New', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 

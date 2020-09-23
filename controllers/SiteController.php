@@ -66,6 +66,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        //echo \Yii::getAlias('@webroot/images/francis.png'); exit;
         return $this->render('index');
     }
 
