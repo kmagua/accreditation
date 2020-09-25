@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\components\AlphaValidator;
 
 /**
  * This is the model class for table "company_profile".
@@ -53,9 +54,10 @@ class CompanyProfile extends \yii\db\ActiveRecord
             [['company_type_id', 'company_categorization'], 'string'],
             [['user_id'], 'integer'],            
             [['business_reg_no', 'county', 'floor', 'turnover', 'cashflow'], 'string', 'max' => 20],
-            [['company_name', 'telephone_number', 'company_email'], 'string', 'max' => 100],
+            //[['company_name', 'telephone_number'], 'string', 'max' => 100],
+            [['company_name', 'telephone_number'], \app\components\AlNumValidator::className()],
             [['company_email'], 'email'],
-            //['business_reg_no', 'match', 'pattern' => '/^[a-z0-9]\w*$/i'],
+            ['town', AlphaValidator::className()],
             [['town', 'building'], 'string', 'max' => 40],
             [['postal_address'], 'string', 'max' => 50],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],

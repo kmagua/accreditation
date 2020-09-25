@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use kartik\password\StrengthValidator;
 
 /**
  * This is the model class for table "user".
@@ -54,6 +55,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email', 'kra_pin_number'], 'unique'],
             [['date_created', 'last_updated'], 'safe'],
             [['email'], 'string', 'max' => 60],
+            [['password'], StrengthValidator::className(), 'min' => 8, 'upper' => 1, 'lower' => 1, 'digit' => 1,
+                'special' => 1, 'userAttribute'=>'email'],
             ['email', 'email'],
             //[['kra_pin_number'], 'string', 'max' => 11, 'min'=>11],
             [['last_name'], 'string', 'max' => 20],
