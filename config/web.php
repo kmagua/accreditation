@@ -55,6 +55,18 @@ $config = [
                 '<action>'=>'site/<action>',
             ],
         ],
+        'assetManager' => [
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'sourcePath' => null,
+                    'basePath' => '@webroot',
+                    'baseUrl' => '@web',
+                    'js' => [
+                        'js/jquery-3.5.1.min.js',
+                    ]
+                ],
+            ],
+        ],
     ],
     'modules' => [
         'gridview' =>  [
