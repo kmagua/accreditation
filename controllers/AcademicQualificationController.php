@@ -84,16 +84,18 @@ class AcademicQualificationController extends Controller
         $model = new AcademicQualification();
         $model->staff_id = $sid;
 
-        if ($model->load(Yii::$app->request->post())){
-            $model->saveQualification();
+        if ($model->load(Yii::$app->request->post()) && $model->saveQualification()){
+            \Yii::$app->session->setFlash('aq_added','Successfully saved, add another qualification or close the dialog.');
+            $model = null;
         }
         $searchModel = new AcademicQualificationSearch();
         $searchModel->staff_id = $sid;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
-        return $this->renderAjax('index', [
+        return $this->renderAjax('index_with_form', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model
         ]);
     }
 

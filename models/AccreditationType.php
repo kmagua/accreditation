@@ -31,6 +31,7 @@ class AccreditationType extends \yii\db\ActiveRecord
         return [
             [['date_created', 'last_updated'], 'safe'],
             [['name'], 'string', 'max' => 100],
+            [['name', 'description'], \app\components\AlNumValidator::className()],
             [['description'], 'string', 'max' => 250],
         ];
     }

@@ -43,6 +43,7 @@ class Payment extends \yii\db\ActiveRecord
             [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf', 'maxSize'=> 1024*1024*2],            
             [['receipt'], 'string', 'max' => 100],
             [['comment'], 'string', 'max' => 200],
+            [['mpesa_code', 'comment'], \app\components\AlNumValidator::className()],
             [['mpesa_code', 'status'], 'string', 'max' => 20],
             [['application_id'], 'exist', 'skipOnError' => true, 'targetClass' => Application::className(), 'targetAttribute' => ['application_id' => 'id']],
         ];

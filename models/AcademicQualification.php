@@ -11,7 +11,7 @@ use Yii;
  * @property int|null $staff_id
  * @property string $level
  * @property string $course_name
- * @property resource $certificate
+ * @property string $certificate
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -40,6 +40,7 @@ class AcademicQualification extends \yii\db\ActiveRecord
             [['level'], 'string'],
             [['date_created', 'last_updated'], 'safe'],
             [['course_name', 'certificate'], 'string', 'max' => 100],
+            ['course_name', \app\components\AlNumValidator::className()],
             [['staff_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyStaff::className(), 'targetAttribute' => ['staff_id' => 'id']],
         ];
     }

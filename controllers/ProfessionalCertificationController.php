@@ -84,16 +84,18 @@ class ProfessionalCertificationController extends Controller
         $model = new ProfessionalCertification();
         $model->staff_id = $sid;
 
-        if ($model->load(Yii::$app->request->post())){
-            $model->saveProfessionalCertification();
+        if ($model->load(Yii::$app->request->post()) && $model->saveProfessionalCertification()){
+            \Yii::$app->session->setFlash('pc_added','Successfully saved, add another certification or close the dialog.');
+            $model = null;
         }
         $searchModel = new ProfessionalCertificationSearch();
         $searchModel->staff_id = $sid;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
-        return $this->renderAjax('index', [
+        return $this->renderAjax('index_with_form', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model
         ]);
     }
 

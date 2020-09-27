@@ -48,6 +48,7 @@ class CompanyExperience extends \yii\db\ActiveRecord
             [['project_cost'], 'number'],
             [['organization_name'], 'string', 'max' => 250],
             [['upload_file'],'required', 'on' => 'create'],
+            [['project_name', 'organization_name', 'organization_type'], \app\components\AlNumValidator::className()],
             [['project_name', 'attachment'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
         ];

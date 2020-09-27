@@ -39,6 +39,7 @@ class ProfessionalCertification extends \yii\db\ActiveRecord
             [['date_created', 'last_updated'], 'safe'],
             [['qualification_type', 'other_description'], 'string', 'max' => 50],
             [['certificate'], 'string', 'max' => 250],
+            [['other_description', 'qualification_type'], \app\components\AlNumValidator::className()],
             [['certificate_upload'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'pdf'], 'maxSize'=> 1024*1024*2],
             [['staff_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyStaff::className(), 'targetAttribute' => ['staff_id' => 'id']],
         ];

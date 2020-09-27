@@ -51,6 +51,8 @@ class CompanyStaff extends \yii\db\ActiveRecord
             [['gender', 'disability_status', 'staff_type', 'status'], 'string'],
             [['dob', 'date_created', 'last_updated'], 'safe'],
             [['first_name', 'last_name'], 'string', 'max' => 30],
+            [['first_name', 'last_name'], \app\components\AlphaValidator::className()],
+            [['kra_pin', 'title'], \app\components\AlNumValidator::className()],
             [['kra_pin'], 'string', 'max' => 15],
             [['title'], 'string', 'max' => 100],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],

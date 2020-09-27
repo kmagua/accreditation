@@ -85,15 +85,17 @@ class StaffExperienceController extends Controller
         $model->staff_id = $sid;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()){
-            //$model->saveQualification();
+            \Yii::$app->session->setFlash('se_added','Successfully saved, add another work experience or close the dialog.');
+            $model = null;
         }
         $searchModel = new StaffExperienceSearch();
         $searchModel->staff_id = $sid;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
-        return $this->renderAjax('index', [
+        return $this->renderAjax('index_with_form', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 

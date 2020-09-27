@@ -87,7 +87,7 @@ class CompanyExperienceController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->saveCompanyExperience()){            
             \Yii::$app->session->setFlash('ce_added','Successfully saved, add another project or close the dialog.');
-            $model = null;         
+            $model = null;
         }
         
         $searchModel = new CompanyExperienceSearch();

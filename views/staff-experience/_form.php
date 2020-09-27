@@ -9,6 +9,12 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="staff-experience-form">
+    <?php if(Yii::$app->session->hasFlash('se_added')): ?>
+    <div class="alert alert-danger alert-dismissable">
+        <h4><?php echo Yii::$app->session->getFlash('se_added'); ?></h4>
+    </div>
+    <?php endif; ?>
+    
 
     <?php $form = ActiveForm::begin([
             'id' =>'staff-experience-form',

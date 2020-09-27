@@ -32,6 +32,7 @@ class AccreditationLevel extends \yii\db\ActiveRecord
         return [
             [['accreditation_fee', 'renewal_fee'], 'number'],
             [['date_created', 'last_updated'], 'safe'],
+            ['name', \app\components\AlNumValidator::className()],
             [['name'], 'string', 'max' => 50],
         ];
     }

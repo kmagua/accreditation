@@ -32,6 +32,7 @@ class CompanyType extends \yii\db\ActiveRecord
         return [
             [['date_created', 'last_updated'], 'safe'],
             [['name'], 'string', 'max' => 30],
+            ['name', \app\components\AlNumValidator::className()],
         ];
     }
 

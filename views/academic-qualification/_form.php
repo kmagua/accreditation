@@ -9,6 +9,11 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="academic-qualification-form">
+    <?php if(Yii::$app->session->hasFlash('aq_added')): ?>
+    <div class="alert alert-danger alert-dismissable">
+        <h4><?php echo Yii::$app->session->getFlash('aq_added'); ?></h4>
+    </div>
+    <?php endif; ?>
 
     <?php
         $form = ActiveForm::begin([

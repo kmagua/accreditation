@@ -40,6 +40,7 @@ class StaffExperience extends \yii\db\ActiveRecord
             [['start_date', 'end_date', 'date_created', 'last_updated'], 'safe'],
             [['role', 'organization'], 'string', 'max' => 100],
             [['assignment'], 'string', 'max' => 200],
+            [['assignment', 'organization', 'role'],'match', 'pattern' => '/^[0-9\sa-z-_]+$/i', 'message'=>'{attribute} can only have alphanumerics, underscore or a hyphen.'],
             [['staff_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyStaff::className(), 'targetAttribute' => ['staff_id' => 'id']],
         ];
     }

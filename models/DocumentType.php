@@ -33,6 +33,7 @@ class DocumentType extends \yii\db\ActiveRecord
         return [            
             [['date_created', 'last_updated', 'applicable_app_types'], 'safe'],
             [['name'], 'string', 'max' => 50],
+            ['name', \app\components\AlNumValidator::className()],
             [['status'], 'integer'],
             [['applicable_app_types'], 'required'],
             //[['documents_upload'], 'string', 'max' => 255],

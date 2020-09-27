@@ -34,6 +34,7 @@ class IctaCommittee extends \yii\db\ActiveRecord
         return [
             [['date_created', 'last_updated'], 'safe'],
             [['name'], 'string', 'max' => 40],
+            ['name', \app\components\AlNumValidator::className()],
             [['purpose'], 'string', 'max' => 100],
         ];
     }

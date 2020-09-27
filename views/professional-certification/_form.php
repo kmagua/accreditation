@@ -9,6 +9,11 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="professional-certification-form">
+    <?php if(Yii::$app->session->hasFlash('pc_added')): ?>
+    <div class="alert alert-danger alert-dismissable">
+        <h4><?php echo Yii::$app->session->getFlash('pc_added'); ?></h4>
+    </div>
+    <?php endif; ?>
 
     <?php $form = ActiveForm::begin([
             'id' =>'professional-certification-form',
