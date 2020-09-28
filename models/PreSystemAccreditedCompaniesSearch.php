@@ -18,7 +18,7 @@ class PreSystemAccreditedCompaniesSearch extends PreSystemAccreditedCompanies
     {
         return [
             [['id', 'cert_reference'], 'integer'],
-            [['company_name', 'date_of_accreditation', 'valid_till', 'service_category', 'to_go', 'icta_grade'], 'safe'],
+            [['company_name'], 'safe'],
         ];
     }
 

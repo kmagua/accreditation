@@ -82,8 +82,12 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirectToProfile();
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->login()){
+                return $this->redirectToProfile();
+            }else{
+                \app\models\LoginTrials::checkAccountOnUnsuccessfulLogin($model->username);
+            }
         }
 
         $model->password = '';

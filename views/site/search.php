@@ -16,12 +16,11 @@ $this->title = "Validate certificate";
     <p>Please fill in the certificate serial number to search:</p>
     </div>
     <?php $form = ActiveForm::begin([
-        'id' => 'validate-cert-form',
-        
+        'id' => 'validate-cert-form',        
     ]); ?>
     <div class="row">
         <?= Html::textInput('certificate_no', null, ['class' => 'form-control', 
-            'id'=>'certificate_no', 'placeholder' => 'Certificate serial number']) ?>
+            'id'=>'certificate_no', 'placeholder' => 'Certificate serial number', 'pattern' => "[a-zA-Z0-9]+", 'title' => "Certificate Serial Number should only contain alphanumerics"]) ?>
     </div>
        
     <div class="form-group row" style="margin-top: 5px">            

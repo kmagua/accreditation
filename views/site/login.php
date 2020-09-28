@@ -34,10 +34,15 @@ $this->title = "Login";
     <?php if(Yii::$app->session->hasFlash('user_confirmation')): ?>
     <div class="alert alert-success alert-dismissable">
         <h4><?php echo Yii::$app->session->getFlash('user_confirmation'); ?></h4>
-    </div>
-    <?php else: ?>    
-   
+    </div>      
     <?php endif; ?>
+    
+    <?php if(Yii::$app->session->hasFlash('logins_exceeded')): ?>
+    <div class="alert alert-danger alert-dismissable">
+        <h4><?php echo Yii::$app->session->getFlash('logins_exceeded'); ?></h4>
+    </div>
+    <?php endif; ?>
+    
     <p>Please fill out the following fields to login:</p>
 
     <?php $form = ActiveForm::begin([
