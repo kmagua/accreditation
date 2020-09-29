@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\ApplicationScore;
+use app\models\ApplicationClassification;
 
 /**
- * ApplicationScoreSearch represents the model behind the search form of `app\models\ApplicationScore`.
+ * ApplicationClassificationSearch represents the model behind the search form of `app\models\ApplicationClassification`.
  */
-class ApplicationScoreSearch extends ApplicationScore
+class ApplicationClassificationSearch extends ApplicationClassification
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,9 @@ class ApplicationScoreSearch extends ApplicationScore
     public function rules()
     {
         return [
-            [['id', 'application_id', 'score_item_id', 'score', 'user_id', 'committee_id'], 'integer'],
-            [['date_created', 'last_updated'], 'safe'],
+            [['id', 'application_id', 'icta_committee_id', 'status', 'user_id'], 'integer'],
+            [['score'], 'number'],
+            [['classification', 'rejection_comment', 'date_created', 'last_updated'], 'safe'],
         ];
     }
 
@@ -40,13 +41,12 @@ class ApplicationScoreSearch extends ApplicationScore
      */
     public function search($params)
     {
-        $query = ApplicationScore::find();
+        $query = ApplicationClassification::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 10],
         ]);
 
         $this->load($params);
@@ -61,13 +61,16 @@ class ApplicationScoreSearch extends ApplicationScore
         $query->andFilterWhere([
             'id' => $this->id,
             'application_id' => $this->application_id,
-            'score_item_id' => $this->score_item_id,
+            'icta_committee_id' => $this->icta_committee_id,
             'score' => $this->score,
+            'status' => $this->status,
             'user_id' => $this->user_id,
-            'committee_id' => $this->committee_id,
             'date_created' => $this->date_created,
             'last_updated' => $this->last_updated,
         ]);
+
+        $query->andFilterWhere(['like', 'classification', $this->classification])
+            ->andFilterWhere(['like', 'rejection_comment', $this->rejection_comment]);
 
         return $dataProvider;
     }

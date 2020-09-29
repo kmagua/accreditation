@@ -65,6 +65,7 @@ class ApplicationClassification extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
+            'rejection_comment' => 'Comment'
         ];
     }
 

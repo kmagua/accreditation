@@ -111,6 +111,18 @@ if(Yii::$app->user->identity->isInternal()){
     ]);
 }
 ?>
+
+<?php
+if(Yii::$app->user->identity->isInternal()){
+    $acSearchModel = new \app\models\ApplicationClassificationSearch();
+    $acSearchModel->application_id = $model->id;
+    $acDataProvider = $acSearchModel->search([]);
+    echo $this->render('app_classification_grid', [
+        'searchModel' => $acSearchModel,
+        'dataProvider' => $acDataProvider,
+    ]);
+}
+?>
 <?php
 $this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);
 $this->registerJsFile('../js/company_staff.js', ['position'=>yii\web\View::POS_END]);

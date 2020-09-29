@@ -56,7 +56,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
             [['business_reg_no', 'county', 'floor', 'turnover', 'cashflow'], 'string', 'max' => 20],
             [['company_name', 'telephone_number'], 'string', 'max' => 100],
             ['company_name', 'match', 'pattern' => '/^[0-9\sa-z-_]+$/i', 'message'=>'{attribute} can only have alphanumerics, underscore or a hyphen.'],
-            ['business_reg_no', 'match', 'pattern' => '/^[0-9\s,a-z-]+$/i', 'message'=>'Business Registration Number can only have Alphanumerics and a hyphen.'],
+            ['business_reg_no', 'match', 'pattern' => '/^[0-9\s,a-z-\/.]+$/i', 'message'=>'Business Registration Number can only have alphanumerics, hyphen, forward slash, comma.'],
             ['telephone_number', 'match', 'pattern' => '/^[0-9\s,]+$/', 'message'=>'Telephone can only have numbers and separated by a comma.'],
             [['company_email'], 'email'],
             ['town', AlphaValidator::className()],

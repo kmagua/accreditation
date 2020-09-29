@@ -44,7 +44,7 @@ $this->title = "Login";
     <?php endif; ?>
     
     <p>Please fill out the following fields to login:</p>
-
+    <i style="color:red">Password policy on this application has changed. You are required to reset your password and setup a new one if you created your account before 28th September.</i>
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
         

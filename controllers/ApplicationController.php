@@ -54,7 +54,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['index', 'approve-payment', 'get-data', 
+                        'actions' => ['index', 'approve-payment', 'get-data', 'get-scores',
                             'renewals', 'statuses-report', 'accredited-suppliers', 'my-assigned', 'review-report-by-staff'],
                         'allow' => true,
                         'roles' => ['@'],
@@ -247,7 +247,7 @@ class ApplicationController extends Controller
      * @param type $id Application ID
      * @param type $level 1= Secretariat, 2 = Committee
      */
-    public function actionApproval($id, $level)
+    public function actionApproval($id, $level, $rej=null)
     {
         $application_scores = \app\models\ApplicationScore::find()
             ->where(['application_id' => $id, 'committee_id' => $level])->indexBy('id')->orderBy('score_item_id')->all();
@@ -263,7 +263,7 @@ class ApplicationController extends Controller
             $rejection_comment = Yii::$app->request->post()['ApplicationScore']['rejection_comment'];
             \app\models\ApplicationClassification::saveClassification($id, $committee_score, $committee_category, $level, $approval_status, $rejection_comment);
             
-            $parent_id = Application::progressOnCommitteeApproval($id, $approval_status, $level);
+            $parent_id = Application::progressOnCommitteeApproval($id, $approval_status, $level, $rej);
             if($parent_id){
                 return $this->redirect('renewals');
             }
@@ -528,6 +528,10 @@ class ApplicationController extends Controller
         ]);
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function actionMyAssigned()
     {
         $searchModel = new ApplicationSearch();
@@ -539,12 +543,34 @@ class ApplicationController extends Controller
         ]);
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function actionReviewReportByStaff()
     {
         $searchModel = new ApplicationSearch();
         $dataProvider = $searchModel->getListOfAssignees(Yii::$app->request->queryParams);
 
         return $this->render('assignee_list', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    /**
+     * 
+     * @param type $id
+     * @param type $l
+     */
+    public function actionGetScores($id, $l)
+    {
+        $searchModel = new \app\models\ApplicationScoreSearch();
+        $searchModel->application_id = $id;
+        $searchModel->committee_id = $l;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->renderAjax('../application-score/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

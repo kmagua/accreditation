@@ -86,4 +86,14 @@ class LoginTrials extends \yii\db\ActiveRecord
             return;
         }        
     }
+    
+    /**
+     * 
+     * @param type $uid
+     */
+    public static function setStatusToZero($uid)
+    {
+        $sql = "INSERT INTO user_login_trial (user_id, number_of_trials) VALUES (:user_id, 0) ON DUPLICATE KEY UPDATE number_of_trials = 0";
+        Yii::$app->db->createCommand($sql, [':user_id' => $uid])->execute();
+    }
 }

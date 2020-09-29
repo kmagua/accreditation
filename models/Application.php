@@ -397,7 +397,7 @@ class Application extends \yii\db\ActiveRecord
             case 'ApplicationWorkflow/sec-rejected':
                 return $this->processRejected(1);
             case 'ApplicationWorkflow/com-rejected':
-                return $this->processRejected(2);
+                return $this->processCommRejected();
             case 'ApplicationWorkflow/certificate-paid':
                 return $this->processConfirmPayment(2);           
             case 'ApplicationWorkflow/approval-payment-rejected':
@@ -475,13 +475,14 @@ class Application extends \yii\db\ActiveRecord
      * @param type $level
      * @return string
      */
-    public function processInternalCommittee($level)
+    public function processInternalCommittee($level, $from_rejection = false)
     {
         $group = ($level == 1)?'Secretariat':'Committee';
         if(Application::canApprove($level, $this->id)){
+            //$other_params = ? ['level'=> $level, 'rej'=>1] : ['level'=> $level];
             $title = ($level == 1) ? 'Score by ICTA Acceditation Secretariat' : 'Score by ICTA Approving Committee';
             return Html::a("Score " .Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
-                'application/approval', 'id' => $this->id, 'level'=> $level], 
+                'application/approval', 'id' => $this->id, 'level'=> $level, 'rej'=> ($from_rejection)? 1:null], 
                     ['data-pjax'=>'0', 'title' => $title]);
         }else{
             if(\Yii::$app->user->identity->isInternal()){
@@ -574,13 +575,25 @@ class Application extends \yii\db\ActiveRecord
      */
     public function processRejected($level)
     {
-        return Html::a("Revert After Rejection", 
-            ['application/revert-rejection', 'id' => $this->id, 'l'=> $level], 
-            [
-                'data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Revert After Rejection</h3>'); return false;",
-                'title' => 'Confirm that all issues during Rejection of application are resolved.'
-            ]
-        );
+        if($this->checkUserCanAccess()){ 
+            return Html::a("Revert After Rejection", 
+                ['application/revert-rejection', 'id' => $this->id, 'l'=> $level], 
+                [
+                    'data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Revert After Rejection</h3>'); return false;",
+                    'title' => 'Confirm that all issues during Rejection of application are resolved.'
+                ]
+            );
+        }
+        return 'Pending applicant re-review';
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function processCommRejected()
+    {
+        return $this->processInternalCommittee(1, $from_rejection = true);
     }
     
     /**
@@ -652,11 +665,11 @@ MSG;
         }
         $emails = \yii\helpers\ArrayHelper::getColumn($assigned_members, 'email');
         $header = "Accreditation review/score invitation";
-        //$type = $this->accreditationType->name;
+        $mail_msg = ($prev_status == 'ApplicationWorkflow/com-rejected')?'reviewed by secretariat':'updated by the applicant';
         $link = \yii\helpers\Url::to(['/application/view', 'id' => $this->id], true);
         $score_link = \yii\helpers\Url::to(['/application/approval', 'id' => $this->id, 'level' => $level->data], true);
-        $main_paragraph = ($prev_status != 'ApplicationWorkflow/sec-rejected')?"Kindly note that you have been selected to review/score an application for accreditation.":
-            "Kindly note that an application that you(group) had rejected has been updated by the applicant. Kindly log on to the system to review again.";
+        $main_paragraph = (!in_array($prev_status, ['ApplicationWorkflow/sec-rejected', 'ApplicationWorkflow/com-rejected']))?"Kindly note that you have been selected to review/score an application for accreditation.":
+            "Kindly note that an application that you(group) had rejected has been {$mail_msg}. Kindly log on to the system to review again.";
         $message = <<<MSG
         Dear All,
         <p>$main_paragraph</p>
@@ -672,12 +685,17 @@ MSG;
      * @param type $id
      * @param type $status
      * @param type $level
+     * @param type $rej (should come set to 1 if this application had been rejected by committee [level 2])
      */
-    public static function progressOnCommitteeApproval($id, $status, $level)
+    public static function progressOnCommitteeApproval($id, $status, $level, $rej)
     {
         $app = Application::findOne($id);
         if($level == 1 && $status == 1){
-            $app->progressWorkFlowStatus('assign-approval-committee');
+            if($rej == 1){
+                $app->progressWorkFlowStatus('at-committee');
+            }else{
+                $app->progressWorkFlowStatus('assign-approval-committee');
+            }
         }else if($level == 2 && $status == 1){
             $app->progressWorkFlowStatus('approved');            
         }else{
@@ -751,9 +769,9 @@ MSG;
         $comment = ($app_categorization)?$app_categorization->rejection_comment:"";
         $message = <<<MSG
                 Dear {$this->user->full_name},
-                <p>Kindly note that an application you had reviewed and forward to the committee for consideration has been reverted back to you with the coomment below.</p>
+                <p>Kindly note that an application you had reviewed and forwarded to the committee for consideration has been reverted back to you with the coomment below.</p>
                 <p>$comment</p>
-                <p>You can review your score or reject the application (with comment) to be returned back to the applicant compnay for action.</p><br>$link
+                <p>You can review your score or reject the application (with comment) to be returned back to the applicant company for action.</p><br>$link
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;
@@ -969,6 +987,11 @@ MSG;
         return $missing;
     }
     
+    /**
+     * 
+     * @param type $level
+     * @return type
+     */
     public function getApprovers($level)
     {
         $sql = "SELECT usr.email, usr.id FROM `icta_committee_member` icm 

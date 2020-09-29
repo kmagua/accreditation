@@ -84,6 +84,7 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post())) {
             if($model->login()){
+                \app\models\LoginTrials::setStatusToZero($model->getUser()->getId());
                 return $this->redirectToProfile();
             }else{
                 \app\models\LoginTrials::checkAccountOnUnsuccessfulLogin($model->username);
