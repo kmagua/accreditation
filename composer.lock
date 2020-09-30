@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4997626fc027b09914cb86f3b4f86987",
+    "content-hash": "758d50ce87d6d4d58e8be534fe541587",
     "packages": [
         {
             "name": "2amigos/yii2-chartjs-widget",
@@ -175,6 +175,24 @@
             },
             "require": {
                 "bower-asset/jquery": ">=1.6"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/js-cookie",
+            "version": "v2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/js-cookie/js-cookie.git",
+                "reference": "54962f884e9ae33f93e13ac903ffaf1d5a523598"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/js-cookie/js-cookie/zipball/54962f884e9ae33f93e13ac903ffaf1d5a523598",
+                "reference": "54962f884e9ae33f93e13ac903ffaf1d5a523598"
             },
             "type": "bower-asset",
             "license": [
@@ -1491,6 +1509,194 @@
                 "vector"
             ],
             "time": "2019-10-06T11:29:25+00:00"
+        },
+        {
+            "name": "mg-code/yii2-assets",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mg-code/yii2-assets.git",
+                "reference": "5cc8695491b03943c1bd98293a6a21a9b937f9b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mg-code/yii2-assets/zipball/5cc8695491b03943c1bd98293a6a21a9b937f9b2",
+                "reference": "5cc8695491b03943c1bd98293a6a21a9b937f9b2",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "suggest": {
+                "bower-asset/awesome-grid": "Adds `awesome-grid` plugin support.",
+                "bower-asset/blueimp-file-upload": "Adds `jQuery File Upload` plugin support.",
+                "bower-asset/corejs-typeahead": "Adds `CoreJS TypeAhead` plugin support.",
+                "bower-asset/fancybox": "Adds `Fancybox` plugin support.",
+                "bower-asset/highcharts-release": "Adds `Highcharts` plugin support.",
+                "bower-asset/history.js": "Adds `history.js` plugin support.",
+                "bower-asset/intl": "Adds `Intl.js` plugin support.",
+                "bower-asset/jquery-easing-original": "Adds `jQuery Easing` plugin support.",
+                "bower-asset/jquery-serialize-object": "Adds `jquery-serialize-object` plugin support.",
+                "bower-asset/jquery.are-you-sure": "Adds `jquery.are-you-sure` plugin support.",
+                "bower-asset/jquery.browser": "Adds `jquery.browser` plugin support.",
+                "bower-asset/js-cookie": "Adds 'JavaScript Cookie' plugin support.",
+                "bower-asset/messageformat": "Adds `messageformat.js` plugin support.",
+                "bower-asset/owl.carousel": "Adds `owl.carousel` plugin support.",
+                "bower-asset/react": "Adds `ReactJs` plugin support.",
+                "bower-asset/seiyria-bootstrap-slider": "Adds `seiyria-bootstrap-slider` plugin support.",
+                "bower-asset/sly": "Adds `sly` plugin support.",
+                "bower-asset/sticky": "Adds `sticky` plugin support."
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "mgcode\\assets\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Maris Graudins",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Yii2 asset collection of useful JavaScript libraries",
+            "homepage": "https://github.com/mg-code/yii2-assets",
+            "keywords": [
+                "CoreJS TypeAhead",
+                "Single Page Nav",
+                "SinglePageNav",
+                "assets",
+                "autobahn js",
+                "awesome-grid",
+                "bootstrap slider",
+                "extension",
+                "fancybox",
+                "highcharts",
+                "history.js",
+                "intl.js",
+                "jQuery Easing",
+                "jquery file upload",
+                "jquery-serialize-object",
+                "jquery.are-you-sure",
+                "jquery.browser",
+                "js-cookie",
+                "messageformat.js",
+                "owl-carousel2",
+                "reactjs",
+                "seiyria bootstrap slider",
+                "sly",
+                "sticky",
+                "tabdrop",
+                "typeahead",
+                "yii2"
+            ],
+            "time": "2017-11-28T13:13:59+00:00"
+        },
+        {
+            "name": "mg-code/yii2-helpers",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mg-code/yii2-helpers.git",
+                "reference": "f7f71b4d40a3e061d334a7cdc1928c13c7b4218e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mg-code/yii2-helpers/zipball/f7f71b4d40a3e061d334a7cdc1928c13c7b4218e",
+                "reference": "f7f71b4d40a3e061d334a7cdc1928c13c7b4218e",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "mgcode\\helpers\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Maris Graudins",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A collection of useful helper classes for Yii framework 2.0",
+            "homepage": "https://github.com/mg-code/yii2-helpers",
+            "keywords": [
+                "array",
+                "database",
+                "db",
+                "extension",
+                "helper",
+                "math",
+                "request",
+                "string",
+                "time",
+                "url",
+                "yii",
+                "yii2"
+            ],
+            "time": "2017-08-03T10:12:50+00:00"
+        },
+        {
+            "name": "mg-code/yii2-session-timeout-warning",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mg-code/yii2-session-timeout-warning.git",
+                "reference": "58d5021cac9d1e554bed524609f8076981798505"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mg-code/yii2-session-timeout-warning/zipball/58d5021cac9d1e554bed524609f8076981798505",
+                "reference": "58d5021cac9d1e554bed524609f8076981798505",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/js-cookie": "~2",
+                "mg-code/yii2-assets": "*",
+                "mg-code/yii2-helpers": "*",
+                "yiisoft/yii2": "*",
+                "yiisoft/yii2-bootstrap": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "mgcode\\sessionWarning\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Maris Graudins",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Users are warned about expiring session.",
+            "homepage": "https://github.com/mg-code/yii2-session-timeout-warning",
+            "keywords": [
+                "expire",
+                "extension",
+                "notification",
+                "session",
+                "timeout",
+                "user",
+                "warning",
+                "yii2"
+            ],
+            "time": "2019-08-07T14:33:30+00:00"
         },
         {
             "name": "mpdf/mpdf",
@@ -6144,7 +6350,8 @@
         "kartik-v/yii2-grid": 20,
         "kartik-v/yii2-mpdf": 20,
         "kartik-v/yii2-password": 20,
-        "kartik-v/yii2-export": 20
+        "kartik-v/yii2-export": 20,
+        "mg-code/yii2-session-timeout-warning": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

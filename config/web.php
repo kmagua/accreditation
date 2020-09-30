@@ -8,7 +8,13 @@ $email_settings = require __DIR__ . '/email_settings.php';
 $config = [
     'id' => 'accreditation',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log',
+        [
+            'class' => \mgcode\sessionWarning\components\SessionWarningBootstrap::className(),
+            'initMessages' => true,
+        ]
+    ],
     'defaultRoute' => 'site/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -66,6 +72,11 @@ $config = [
                     ]
                 ],
             ],
+        ],
+    ],
+    'controllerMap' => [
+        'session-warning' => [
+            'class' => 'mgcode\sessionWarning\controllers\SessionWarningController',
         ],
     ],
     'modules' => [

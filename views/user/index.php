@@ -24,11 +24,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'email:email',
-            ['attribute' => 'first_name',
-                'label' => 'Name'],
-            //'last_name',
-            //'password',
+            //[
+                //'attribute' => 'first_name',
+                //'label' => 'Name'
+            //],
             'role',
+            'status',
+            'last_login_date',            
+            
             //'date_created',
             //'last_updated',
 

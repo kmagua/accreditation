@@ -48,9 +48,9 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             
-            /*if($user && $this->status < 1){
-                $this->addError('username', 'Account Not Activated!');
-            }*/
+            if($user && $user->status < 1){                
+                Yii::$app->session->setFlash('logins_exceeded','Account Not active. You MUST reset your password to login!');
+            }
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect email or password.');
             }

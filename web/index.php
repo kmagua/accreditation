@@ -1,6 +1,6 @@
 <?php
 ini_set('memory_limit', '512M');
-ini_set('max_execution_time', 400);
+ini_set('max_execution_time', 300);
 // comment out the following two lines when deployed to production
 if($_SERVER['SERVER_NAME'] == 'localhost'){
     defined('YII_DEBUG') or define('YII_DEBUG', true);

@@ -84,10 +84,15 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post())) {
             if($model->login()){
-                \app\models\LoginTrials::setStatusToZero($model->getUser()->getId());
+                $uid = $model->getUser()->getId();
+                \app\models\LoginTrials::setStatusToZero($uid);
+                \app\models\User::updateLastLoginTime($uid);
                 return $this->redirectToProfile();
             }else{
-                \app\models\LoginTrials::checkAccountOnUnsuccessfulLogin($model->username);
+                //if the account is still active
+                if($model->getUser() && $model->getUser()->status){
+                    \app\models\LoginTrials::checkAccountOnUnsuccessfulLogin($model->username);
+                }
             }
         }
 

@@ -16,6 +16,9 @@ use kartik\password\StrengthValidator;
  * @property string|null $password
  * @property string|null $role
  * @property int $status
+ * @property string $recent_passwords
+ * @property string $last_login_date
+ * @property string $last_password_change_date
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -53,7 +56,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['captcha', 'password'], 'required', 'on'=>'register'],
             [['password'], 'required', 'on'=>['register', 'password_update', 'register_internal']],
             [['email', 'kra_pin_number'], 'unique'],
-            [['date_created', 'last_updated'], 'safe'],
+            [['date_created', 'last_updated', 'last_login_date', 'last_password_change_date'], 'safe'],
             [['email'], 'string', 'max' => 60],
             [['password'], StrengthValidator::className(), 'min' => 8, 'upper' => 1, 'lower' => 1, 'digit' => 1,
                 'special' => 1, 'userAttribute'=>'email'],
@@ -62,6 +65,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['last_name'], 'string', 'max' => 20],
             [['password', 'password_repeat', 'first_name'], 'string', 'max' => 100],
             [['password_repeat'], 'validatePasswordRepeat', 'on'=>['register', 'password_update', 'register_internal']],
+            ['recent_passwords', 'string', 'max' => 500]
         ];
     }
 
@@ -161,7 +165,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        $rec = static::findOne(['email' => $username, 'status'=>1]);        
+        $rec = static::findOne(['email' => $username]);        
         return $rec;
     }
 
@@ -207,8 +211,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         parent::beforeSave($insert);
         //only on new record or password change
         if($insert || $this->scenario == 'password_update'){
-            $this->password = password_hash($this->password, PASSWORD_DEFAULT);        
-        }    
+            $password_before_hash = $this->password;
+            $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+            if(!$this->customPasswordChecks($insert, $password_before_hash)){
+                $this->addError('password', 'Password must not match any of the last 3 passwords you have used.');
+                return false;
+            }
+            $this->last_password_change_date = date('Y-m-d 00:00:00');
+        }
         return true;
     }
     
@@ -220,10 +230,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
+        
+        $this->addToInternalCommittee();
+        
         if($insert && $this->scenario == 'register'){
             $this->sendEmailConfirmationEmail();
         }
-        $this->addToInternalCommittee();
         return true;
     }
 
@@ -436,5 +448,52 @@ MSG;
         }
         //echo $this->id, ' - ', $level; exit;
         IctaCommitteeMember::updateAll(['status' => 0],"user_id  = {$this->id}");
+    }
+    
+    /**
+     * 
+     * @param type $uid
+     */
+    public static function updateLastLoginTime($uid)
+    {
+        $sql = "UPDATE user set last_login_date =:time_now WHERE id =:uid ";
+        Yii::$app->db->createCommand($sql, [':uid' => $uid, ':time_now' => date('Y-m-d H:i:s')])->execute();
+    }
+    
+    /**
+     * 
+     * @param type $insert
+     * @return boolean
+     */
+    public function customPasswordChecks($insert, $password_before_hash)
+    {
+        if($insert){
+            $this->recent_passwords = $this->password;           
+        }else{
+            return $this->passwordDoesNotMatchThreerecent($password_before_hash);
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @param type $password_before_hash
+     * @return boolean
+     */
+    public function passwordDoesNotMatchThreerecent($password_before_hash)
+    {
+        $passwords = explode(':::::', $this->recent_passwords);
+        
+        foreach($passwords as $old_password){
+            if(password_verify($password_before_hash, $old_password)){
+                return false;
+            }
+        }
+        if(count($passwords) == 3){
+            $this->recent_passwords = $passwords[1] . ':::::' . $passwords[2] . ':::::' . $this->password;
+        }else{
+            $this->recent_passwords = $this->recent_passwords . ':::::' . $this->password;
+        }
+        return true;
     }
 }

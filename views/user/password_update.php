@@ -15,9 +15,9 @@ $this->title = "Change Password";
     
     <?php $form = ActiveForm::begin(); ?>
     <?php
-    foreach($model->errors as $error){
-        echo "<h5>Erros</h5>";
-        echo print_r($error, true) , "<br>";
+    foreach($model->errors as $k=>$error){
+        echo "<h5>Errors</h5>";
+        echo $error[0] , "<br>";
     }
     ?>
 

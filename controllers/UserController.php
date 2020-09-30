@@ -284,14 +284,22 @@ class UserController extends Controller
         ]);
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function actionChangePassword()
     {
         $model = User::findOne(['email'=> Yii::$app->user->identity->username]);
         $model->password = '';
         $model->setScenario('password_update');
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('user_registration','Password updated successfully.');
-            return $this->redirect(['site/index']);
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->save()){
+                \Yii::$app->session->setFlash('user_registration','Password changed successfully.');
+                return $this->redirect(['site/index']);
+            }
+            $model->password = '';
+            $model->password_repeat = '';
         }
 
         return $this->render('change_password', [

@@ -53,4 +53,10 @@ WHERE app.status IN('ApplicationWorkflow/at-secretariat', 'ApplicationWorkflow/a
         }
         return ExitCode::OK;
     }
+    
+    public function actionDisableExpiredAccounts()
+    {
+        $sql = "UPDATE `user` SET `status` = '0' WHERE DATEDIFF(NOW(), last_password_change_date) = 60";
+        \Yii::$app->db->createCommand($sql)->execute();
+    }
 }
