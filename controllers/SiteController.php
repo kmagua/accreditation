@@ -147,6 +147,10 @@ class SiteController extends Controller
         return $this->render('company_cat_prereq');
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function actionValidate()
     {
         if (Yii::$app->request->post()) {

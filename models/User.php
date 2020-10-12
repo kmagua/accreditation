@@ -61,7 +61,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['password'], StrengthValidator::className(), 'min' => 8, 'upper' => 1, 'lower' => 1, 'digit' => 1,
                 'special' => 1, 'userAttribute'=>'email'],
             ['email', 'email'],
-            ['first_name', 'match', 'pattern' => '/^[0-9\sa-z-_]+$/i', 'message'=>'{attribute} can only have alphanumerics, underscore or a hyphen.'],
+            ['first_name', 'match', 'pattern' => '/^[0-9\sa-z-_()&]+$/i', 'message'=>'{attribute} can only have alphanumerics, underscore or a hyphen.'],
             [['last_name'], 'string', 'max' => 20],
             [['password', 'password_repeat', 'first_name'], 'string', 'max' => 100],
             [['password_repeat'], 'validatePasswordRepeat', 'on'=>['register', 'password_update', 'register_internal']],
