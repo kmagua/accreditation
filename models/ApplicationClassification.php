@@ -108,4 +108,12 @@ class ApplicationClassification extends \yii\db\ActiveRecord
                 
         return \Yii::$app->db->createCommand($insert_sql, [':rejection_comment' => $rejection_comment])->execute();
     }
+    
+    public static function deleteClassification($level, $app_id)
+    {
+        ApplicationClassification::deleteAll(['application_id'=>$app_id, 'icta_committee_id' => $level]);
+        if($level == 1){
+            ApplicationClassification::deleteAll(['application_id'=>$app_id, 'icta_committee_id' => 2]);
+        }
+    }
 }

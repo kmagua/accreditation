@@ -66,17 +66,17 @@ class PasswordReset extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
     
-    public static function passwordReset($kra_pin_number)
+    public static function passwordReset($email)
     {
-        $sql = "select * from user where kra_pin_number = :kra_pin_number or email=:kra_pin_number";
-        $user = User::findBySql($sql, [':kra_pin_number' => $kra_pin_number])->one();
+        $sql = "select * from user where email=:kra_pin_number";
+        $user = User::findBySql($sql, [':kra_pin_number' => $email])->one();
         if($user){
             $hash = Utility::generateRandomString();
             $insert_sql = "INSERT INTO password_reset (user_id, hash)
                 VALUES ({$user->id}, :hash) ON DUPLICATE KEY UPDATE hash = :hash, status = 0";
             $rst = \Yii::$app->db->createCommand($insert_sql, [':hash' => $hash])->execute();
             if($rst){
-                PasswordReset::sendEmail($user, $hash, $kra_pin_number);
+                PasswordReset::sendEmail($user, $hash, $email);
             }
         }
     }

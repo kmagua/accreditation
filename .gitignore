@@ -35,3 +35,4 @@ tests/_support/_generated
 # uploads folder
 /web/uploads
 /config/
+/runtime/

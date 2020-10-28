@@ -16,8 +16,11 @@ $this->title = "Reset Password";
         
         <?= Html::label('Enter your E-Mail Address', 'kra_pin_number') ?>
 
-        <?= Html::textInput('kra_pin_number', '', ['id' => 'kra_pin_number', 
-            'class'=>'form-control', 'style' =>'margin-bottom:10px']) ?>
+        <?= $form->field($model, 'email')->textInput()->label('') ?>
+        
+        <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), [
+            // configure additional widget properties here
+        ]) ?>
 
         <div class="form-group">
             <div class="col-md-6">

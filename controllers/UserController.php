@@ -192,13 +192,16 @@ class UserController extends Controller
      */
     public function actionResetPassword()
     {
-        if (Yii::$app->request->post()) {
-            \app\models\PasswordReset::passwordReset(Yii::$app->request->post()['kra_pin_number']);
+        $model = new User();
+        //$model->captcha = rand(11111,99999);
+        $model->setScenario('password_reset');
+        if ($model->load(Yii::$app->request->post())) {
+            \app\models\PasswordReset::passwordReset($model->email);
             \Yii::$app->session->setFlash('account_reset','Your account password reset link has been sent to your email.');
             return $this->redirect(['site/index']);
         }
 
-        return $this->render('reset_password');
+        return $this->render('reset_password', ['model' => $model]);
     }
     
     /**
