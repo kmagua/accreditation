@@ -55,7 +55,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['status'], 'number'],
             [['captcha', 'password'], 'required', 'on'=>'register'],
             [['captcha'], 'required', 'on'=>['password_reset']],  
-            ['captcha', 'captcha','captchaAction'=>'/site/captcha'], // add this code to your rules.
+            ['captcha', 'captcha','captchaAction'=>'/site/captcha', 'on'=>'captchaRequired'], // add this code to your rules.
             [['password'], 'required', 'on'=>['register', 'password_update', 'register_internal']],
             [['email', 'kra_pin_number'], 'unique'],
             [['date_created', 'last_updated', 'last_login_date', 'last_password_change_date'], 'safe'],
