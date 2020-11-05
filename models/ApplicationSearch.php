@@ -200,8 +200,12 @@ class ApplicationSearch extends Application
         JOIN `accreditcomp`.`application_committe_member`  acm ON app.id = acm.`application_id`
         JOIN `icta_committee_member` icm ON icm.id = acm.`committee_member_id`
         JOIN `accreditcomp`.`user` usr ON usr.id = icm.`user_id`
-        WHERE usr.id=:uid  AND app.status IN('ApplicationWorkflow/at-secretariat', 'ApplicationWorkflow/at-committee')";
-        
+        WHERE usr.id=:uid  AND app.status IN('ApplicationWorkflow/at-secretariat', 'ApplicationWorkflow/at-committee', 'ApplicationWorkflow/com-rejected')";
+        if(in_array(\Yii::$app->user->identity->group, ['Chair', 'Director'])){
+            $status = (\Yii::$app->user->identity->group == 'Chair')?'ApplicationWorkflow/chair-approval':'ApplicationWorkflow/director-approval';
+            $sql = "SELECT app.*
+                FROM `accreditcomp`.`application` app WHERE app.status= '$status'";
+        }
         $query = Application::findBySql($sql, [':uid' => \Yii::$app->user->identity->user_id]);
 
         // add conditions that should always apply here

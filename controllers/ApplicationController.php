@@ -55,7 +55,7 @@ class ApplicationController extends Controller
                     ],
                     [
                         'actions' => ['index', 'approve-payment', 'get-data', 'get-scores',
-                            'renewals', 'statuses-report', 'accredited-suppliers', 'my-assigned', 'review-report-by-staff'],
+                            'renewals', 'statuses-report', 'accredited-suppliers', 'my-assigned', 'review-report-by-staff', 'ceremonial-approval'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -573,6 +573,23 @@ class ApplicationController extends Controller
         return $this->renderAjax('../application-score/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    public function actionCeremonialApproval($id, $l)
+    {
+        $model = $this->findModel($id);
+        $model->setScenario('chair_approval');
+        if ($model->load(Yii::$app->request->post())) {
+            $next_step = ($l == 1) ? 'director-approval': 'completed';
+            if($model->progressWorkFlowStatus($next_step)){
+                //\Yii::$app->session->setFlash('rejection_reversed','Application status updated!');
+                return "Application updated successfully!";
+            }
+        }
+        
+        return $this->renderAjax('ceremonial_approval', [
+            'model' => $model
         ]);
     }
 }

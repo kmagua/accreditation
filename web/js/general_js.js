@@ -19,7 +19,7 @@ function getDataForm(url, header='<h3>Add Staff</h3>'){
     });
 }
 
-function saveDataForm(clickedButton, contentDivID=''){
+function saveDataForm(clickedButton, contentDivID='', tabToOpen=''){
     
     var url = $(clickedButton.form).attr('action');
     var data = new FormData(clickedButton.form);

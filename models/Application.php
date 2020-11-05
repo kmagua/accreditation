@@ -42,6 +42,7 @@ class Application extends \yii\db\ActiveRecord
     public $app_staff; // to capture selected company staff for this application
     public $revert_rejection; //used to capture rejection reversion declaration
     public $status_search;
+    public $ceremonial_approval;
     /**
      * {@inheritdoc}
      */
@@ -85,6 +86,12 @@ class Application extends \yii\db\ActiveRecord
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/com-rejected'),
             [$this, 'sendRejectedEmailCommittee'], 'rejected'
     	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/chair-approval'),
+            [$this, 'notifyCeremonialApprovers'], 1
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/director-approval'),
+            [$this, 'notifyCeremonialApprovers'], 2
+    	);
     }
 
     /**
@@ -95,7 +102,8 @@ class Application extends \yii\db\ActiveRecord
         return [
             [['company_id', 'accreditation_type_id', 'application_type'], 'required'],
             [['company_id', 'accreditation_type_id', 'user_id', 'application_type', 'parent_id'], 'integer'],
-            [['app_staff', 'financial_status_link'], 'required','on'=>'create_update'],            
+            [['app_staff', 'financial_status_link'], 'required','on'=>'create_update'],
+            ['ceremonial_approval', 'required', 'on'=>'chair_approval', 'requiredValue' => 1, 'message' => 'You must check that you agree with the scores'],
             ['declaration', 'integer', 'max' => 1, 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             ['revert_rejection', 'required', 'on' => ['revert_rejection'], 'requiredValue' => 1, 
                 'message' => 'You must confirm to have addressed issues raised in the rejection comment.'],
@@ -408,6 +416,10 @@ class Application extends \yii\db\ActiveRecord
                 return $this->processRenewal();
             case 'ApplicationWorkflow/renewed':
                 return 'Pending Renewal Approval';
+            case 'ApplicationWorkflow/chair-approval':
+                return $this->processCeremonialAPproval(1);
+            case 'ApplicationWorkflow/director-approval':
+                return $this->processCeremonialAPproval(2);
         }
     }
     
@@ -498,7 +510,7 @@ class Application extends \yii\db\ActiveRecord
      */
     public function processApprovalFeeRejected()
     {
-        if($this->checkUserCanAccess()){            
+        if($this->checkUserCanAccess()){
             //return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented"); return false;']) . ' &nbsp;&nbsp; '. 
             return Html::a('Upload Payment Receipt ' . Icon::show('receipt', ['class' => 'fas',
                 'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> 2], 
@@ -826,12 +838,16 @@ MSG;
         if(\Yii::$app->user->identity->isAdmin()){
             return true;
         }
-        $lvl = ($level == 1)?'ApplicationWorkflow/at-secretariat':'ApplicationWorkflow/at-committee';
+        //$lvl = ($level == 1)?"ApplicationWorkflow/at-secretariat', 'ApplicationWorkflow/com-rejected":'ApplicationWorkflow/at-committee';
+        $and = " AND app.status = 'ApplicationWorkflow/at-committee'";
+        if($level == 1){
+            $and = " AND (app.status = 'ApplicationWorkflow/at-secretariat' OR app.status = 'ApplicationWorkflow/com-rejected')";
+        }
         $sql = "SELECT icm.user_id, app.status  FROM `icta_committee_member` icm 
             JOIN `application_committe_member` acm ON acm.`committee_member_id` = icm.`id`
             JOIN `application` app ON app.`id` = acm.`application_id`
             WHERE `committee_id` = $level AND icm.user_id = " . \Yii::$app->user->identity->id . "
-                AND acm.application_id = $id AND app.status = '$lvl'";
+                AND acm.application_id = $id $and";
         $rec = \Yii::$app->db->createCommand($sql)->queryOne();
         if($rec){
             return true;
@@ -1002,5 +1018,44 @@ MSG;
             WHERE icm.`committee_id` = {$level} AND acm.application_id = {$this->id}";
             
         return \Yii::$app->db->createCommand($sql)->queryAll();
+    }
+    
+    public function processCeremonialAPproval($level)
+    {
+        $text = ($level == 1)?'Chair Review':'Director Review';
+        if(in_array(\Yii::$app->user->identity->group, ['Chair', 'Director', 'Admin'])){
+            $text = ($level == 1)?'Chair Review':'Director Review';
+            return Html::a($text, [
+                'application/ceremonial-approval', 'id' => $this->id, 'l'=> $level], 
+                    ['data-pjax'=>'0', 'title' => $text, 
+                        'onclick' => "getDataForm(this.href, '<h3>{$text}</h3>'); return false;"]);
+        }
+        if(\Yii::$app->user->identity->isInternal()){
+            return 'Pending ' . $text;
+        }
+        return 'Pending';
+    }
+    
+    public function notifyCeremonialApprovers($level)
+    {
+        $lvl = $level->data;
+        $header = ($lvl == 1)?'Chair Review invitation for an Accreditation Application':'Director Review invitation for an Accreditation Application';
+        $role = ($lvl == 1)?'Chair':'Director';
+        $type = $this->accreditationType->name;
+        $users = User::find()->where(['role' => $role])->all();
+        if($users){
+            $emails = array_column($users, 'email');
+            $link = \yii\helpers\Url::to(['/application/my-assigned'], true);
+            $ac = ApplicationClassification::find()->where(['application_id'=>$this->id, 'icta_committee_id' => 2])->one();
+            $message = <<<MSG
+                    Dear $role,
+                    <p>You are invited to review an accreditation application that has been approved by committee. You can access it on the link below.</p>
+                    <p>$link</p>
+                    <p>Thank you,<br>ICT Authority Accreditation.</p>
+
+MSG;
+        Utility::sendMail($emails, $header, $message);
+        }
+        
     }
 }

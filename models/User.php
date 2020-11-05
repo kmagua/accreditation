@@ -392,7 +392,7 @@ MSG;
         if($reviewers){
             return in_array(strtolower(Yii::$app->user->identity->group),['secretariat','committee member']);
         } else {
-            return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committee member', 'su']);
+            return in_array(strtolower(Yii::$app->user->identity->group),['admin','secretariat','committee member', 'su', 'chair', 'director']);
         }
     }
     
