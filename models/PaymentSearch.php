@@ -47,6 +47,9 @@ class PaymentSearch extends Payment
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 1000
+            ],
         ]);
 
         $this->load($params);
