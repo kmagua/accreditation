@@ -23,6 +23,7 @@ use Yii;
 class Payment extends \yii\db\ActiveRecord
 {
     public $upload_file;
+    public $date_range;
     /**
      * {@inheritdoc}
      */
@@ -39,7 +40,7 @@ class Payment extends \yii\db\ActiveRecord
         return [
             [['application_id', 'level'], 'integer'],
             [['billable_amount'], 'number'],
-            [['date_created', 'last_update'], 'safe'],
+            [['date_created', 'last_update', 'date_range'], 'safe'],
             [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf', 'maxSize'=> 1024*1024*2],            
             [['receipt'], 'string', 'max' => 100],
             [['comment'], 'string', 'max' => 200],
@@ -156,5 +157,35 @@ class Payment extends \yii\db\ActiveRecord
         }else{
             return '';
         }
+    }
+    
+    /**
+     * return the link to a protocol file
+     * @author kmagua
+     * @return string
+     */
+    public function fileLink($icon = false)
+    {
+        if($this->receipt != ''){
+            $text = ($icon== true)?"<span class='glyphicon glyphicon-download-alt' title='Download - {$this->receipt}'></span>" :
+                \yii\helpers\Html::encode($this->receipt);
+            $path = Yii::getAlias('@web') ."/";
+            return \yii\helpers\Html::a($text,$path . $this->receipt,['data-pjax'=>"0", 'target'=>'_blank']);
+        }else{
+            return '';
+        }
+    }
+    
+    public static function getTotal($provider, $fieldName)
+    {
+        $total = 0;
+        foreach ($provider as $item) {
+            $total += $item[$fieldName];
+        }
+
+        // add number_format() before return
+        $sum = number_format( $total, 2 );
+
+        return $sum;
     }
 }

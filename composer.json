@@ -31,7 +31,8 @@
         "2amigos/yii2-chartjs-widget": "~2.0",
         "sjaakp/yii2-collapse": "^1.1",
         "yiister/yii2-gentelella": "~1.0",
-        "mg-code/yii2-session-timeout-warning": "@dev"
+        "mg-code/yii2-session-timeout-warning": "@dev",
+        "kartik-v/yii2-date-range": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -1041,7 +1041,7 @@ MSG;
         $lvl = $level->data;
         $header = ($lvl == 1)?'Chair Review invitation for an Accreditation Application':'Director Review invitation for an Accreditation Application';
         $role = ($lvl == 1)?'Chair':'Director';
-        $type = $this->accreditationType->name;
+        $company_name = $this->company->company_name;
         $users = User::find()->where(['role' => $role])->all();
         if($users){
             $emails = array_column($users, 'email');
@@ -1049,7 +1049,7 @@ MSG;
             $ac = ApplicationClassification::find()->where(['application_id'=>$this->id, 'icta_committee_id' => 2])->one();
             $message = <<<MSG
                     Dear $role,
-                    <p>You are invited to review an accreditation application that has been approved by committee. You can access it on the link below.</p>
+                    <p>You are invited to review an accreditation application for <strong>$company_name</strong> that has been ranked <strong>{$ac->classification}</strong> by committee. You can access it on the link below.</p>
                     <p>$link</p>
                     <p>Thank you,<br>ICT Authority Accreditation.</p>
 

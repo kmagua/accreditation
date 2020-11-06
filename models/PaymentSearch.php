@@ -19,7 +19,7 @@ class PaymentSearch extends Payment
         return [
             [['id', 'application_id', 'level', 'confirmed_by'], 'integer'],
             [['billable_amount'], 'number'],
-            [['mpesa_code', 'receipt', 'status', 'comment', 'date_created', 'last_update'], 'safe'],
+            [['mpesa_code', 'receipt', 'status', 'comment', 'date_created', 'last_update', 'date_range'], 'safe'],
         ];
     }
 
@@ -50,13 +50,15 @@ class PaymentSearch extends Payment
         ]);
 
         $this->load($params);
-
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
-
+        if($this->date_range){
+            $dates = explode(' to ', $this->date_range);
+            $query->andFilterWhere(['between', 'date_created', $dates[0], $dates[1]]);
+        }
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,

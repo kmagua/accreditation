@@ -21,6 +21,9 @@ $this->title = "Accreditation System Reports";
         ['class' => 'btn btn-primary', 'title' =>"Original Applications", 'style' => 'margin-bottom:5px']); ?>
     <br>
     <?= Html::a('5. Review by Internal Staff List', ['/application/review-report-by-staff'], 
-        ['class' => 'btn btn-primary', 'title' =>"Original Applications", 'style' => 'margin-bottom:5px']); ?>
+        ['class' => 'btn btn-primary', 'title' =>"Review by Internal Staff List", 'style' => 'margin-bottom:5px']); ?>
+    <br>
+    <?= Html::a('6. Payments Report', ['/application/payment-report'], 
+        ['class' => 'btn btn-primary', 'title' =>"Payments Report", 'style' => 'margin-bottom:5px']); ?>
 
 </div>

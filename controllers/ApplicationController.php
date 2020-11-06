@@ -55,7 +55,9 @@ class ApplicationController extends Controller
                     ],
                     [
                         'actions' => ['index', 'approve-payment', 'get-data', 'get-scores',
-                            'renewals', 'statuses-report', 'accredited-suppliers', 'my-assigned', 'review-report-by-staff', 'ceremonial-approval'],
+                            'renewals', 'statuses-report', 'accredited-suppliers', 'my-assigned', 'review-report-by-staff', 'ceremonial-approval',
+                            'payment-report'
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -590,6 +592,17 @@ class ApplicationController extends Controller
         
         return $this->renderAjax('ceremonial_approval', [
             'model' => $model
+        ]);
+    }
+    
+    public function actionPaymentReport()
+    {
+        $searchModel = new \app\models\PaymentSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('../payment/index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 }
