@@ -1011,9 +1011,9 @@ MSG;
      */
     public function getApprovers($level)
     {
-        $sql = "SELECT usr.email, usr.id FROM `icta_committee_member` icm 
+        $sql = "SELECT usr.email, usr.id FROM `icta_committee_member` icm
             JOIN `application_committe_member` acm ON acm.`committee_member_id` = icm.`id`
-            JOIN `application` app ON app.`id` = acm.`application_id`            
+            JOIN `application` app ON app.`id` = acm.`application_id`
             JOIN `user` usr ON usr.id = icm.user_id
             WHERE icm.`committee_id` = {$level} AND acm.application_id = {$this->id}";
             
@@ -1023,7 +1023,8 @@ MSG;
     public function processCeremonialAPproval($level)
     {
         $text = ($level == 1)?'Chair Review':'Director Review';
-        if(in_array(\Yii::$app->user->identity->group, ['Chair', 'Director', 'Admin'])){
+        $email = Yii::$app->user->identity->username;
+        if(in_array(\Yii::$app->user->identity->group, ['Chair', 'Director', 'Admin']) || in_array($email, Yii::$app->params['assignedGrandApprover'])){
             $text = ($level == 1)?'Chair Review':'Director Review';
             return Html::a($text, [
                 'application/ceremonial-approval', 'id' => $this->id, 'l'=> $level], 
