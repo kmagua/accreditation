@@ -142,7 +142,8 @@ class Application extends \yii\db\ActiveRecord
             'app_staff' => 'Select staff for this application',
             'previous_category' => 'Previously Assigned Category',
             'application_type' => 'New or Annual Renewal',
-            'status_search' => 'Status'
+            'status_search' => 'Status',
+            'ceremonial_approval' => 'I agree with the ratings for this application.',
         ];
     }
 

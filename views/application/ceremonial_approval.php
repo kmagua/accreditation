@@ -20,8 +20,7 @@ use yii\widgets\ActiveForm;
 
         <div class="row" style="padding-left:20px;"> 
             <?= $form->field($model, 'ceremonial_approval', ['options' => 
-                ['tag' => 'span'],'template' => "{input}"])->checkbox(['checked' => false, 'required' => true])
-                    ->label("I agree with the ratings for this application.") ?>
+                ['tag' => 'span'],'template' => "{input}"])->checkbox(['checked' => false, 'required' => true]) ?>
 
         </div>
 

@@ -591,7 +591,7 @@ class ApplicationController extends Controller
         }
         
         return $this->renderAjax('ceremonial_approval', [
-            'model' => $model
+            'model' => $model, 'level' => $l
         ]);
     }
     
