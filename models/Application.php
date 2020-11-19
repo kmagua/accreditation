@@ -111,7 +111,7 @@ class Application extends \yii\db\ActiveRecord
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             [['status', 'certificate_serial'], 'string', 'max' => 50],
             [['previous_category', 'cash_flow', 'turnover'], 'string', 'max' => 20],
-            //[['company_id', 'accreditation_type_id'], 'unique', 'targetAttribute' => ['accreditation_type_id'], 'message' => 'You have already submitted an application for the selected Accreditation Category'],
+            [['accreditation_type_id'], 'unique', 'targetAttribute' => ['accreditation_type_id', 'company_id'], 'message' => 'You have already submitted an application for the selected Accreditation Category'],
             [['date_created', 'last_updated', 'app_company_experience', 'app_staff', 'initial_approval_date'], 'safe'],
             [['financial_status_link'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],

@@ -124,9 +124,9 @@ AppAsset::register($this);
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= Alert::widget() ?>
-        <?= \mgcode\sessionWarning\widgets\SessionWarningWidget::widget([
+        <?=''/* \mgcode\sessionWarning\widgets\SessionWarningWidget::widget([
             'warnBefore' => 240,            
-        ]); ?>
+        ]);*/ ?>
         <?= $content ?>
     </div>
 </div>
