@@ -1026,7 +1026,7 @@ MSG;
         $text = ($level == 1)?'Chair Review':'Director Review';
         $email = Yii::$app->user->identity->username;
         if(in_array(\Yii::$app->user->identity->group, ['Chair', 'Director', 'Admin']) || in_array($email, Yii::$app->params['assignedGrandApprover'])){
-            $text = ($level == 1)?'Chair Review':'Director Review';
+            $text = 'Chair/Director Review';
             return Html::a($text, [
                 'application/ceremonial-approval', 'id' => $this->id, 'l'=> $level], 
                     ['data-pjax'=>'0', 'title' => $text, 
@@ -1041,20 +1041,19 @@ MSG;
     public function notifyCeremonialApprovers($level)
     {
         $lvl = $level->data;
-        $header = ($lvl == 1)?'Chair Review invitation for an Accreditation Application':'Director Review invitation for an Accreditation Application';
-        $role = ($lvl == 1)?'Chair':'Director';
+        $header = 'Chair/Director Review invitation for an Accreditation Application';
+        //$role = ($lvl == 1)?'Chair':'Director';
         $company_name = $this->company->company_name;
-        $users = User::find()->where(['role' => $role])->all();
+        $users = User::find()->where("role IN('Chair', 'Director')")->all();
         if($users){
             $emails = array_column($users, 'email');
             $link = \yii\helpers\Url::to(['/application/my-assigned'], true);
             $ac = ApplicationClassification::find()->where(['application_id'=>$this->id, 'icta_committee_id' => 2])->one();
             $message = <<<MSG
-                    Dear $role,
+                    Dear Chair/Director,
                     <p>You are invited to review an accreditation application for <strong>$company_name</strong> that has been ranked <strong>{$ac->classification}</strong> by committee. You can access it on the link below.</p>
                     <p>$link</p>
                     <p>Thank you,<br>ICT Authority Accreditation.</p>
-
 MSG;
         Utility::sendMail($emails, $header, $message);
         }

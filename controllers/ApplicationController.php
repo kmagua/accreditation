@@ -583,7 +583,7 @@ class ApplicationController extends Controller
         $model = $this->findModel($id);
         $model->setScenario('chair_approval');
         if ($model->load(Yii::$app->request->post())) {
-            $next_step = ($l == 1) ? 'director-approval': 'completed';
+            $next_step = 'completed';
             if($model->progressWorkFlowStatus($next_step)){
                 //\Yii::$app->session->setFlash('rejection_reversed','Application status updated!');
                 return "Application updated successfully!";
