@@ -79,19 +79,27 @@ class ApplicationController extends Controller
                                 return Yii::$app->user->identity->isInternal();
                             }
                         }
-                    ],        
-                            
+                    ],
                     [
                         'actions' => ['approval'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            $status = Application::canApprove(Yii::$app->request->get()['level'], Yii::$app->request->get()['id']);
-                            if($status){
+                            $level = Yii::$app->request->get()['level'];
+                            $status = Application::canApprove($level, Yii::$app->request->get()['id']);
+                            if($status || ($level == 1 && \Yii::$app->user->identity->inGroup('pdtp'))){
                                 return true;
                             }else{
                                 throw new ForbiddenHttpException("Either you've not been assigned to review at this stage or the Application has already been reviewed.");
                             }
+                        }
+                    ],
+                    [
+                        'actions' => ['pdpt-applications'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return \Yii::$app->user->identity->inGroup('pdtp');
                         }
                     ],
                 ],
@@ -269,7 +277,8 @@ class ApplicationController extends Controller
             if($parent_id){
                 return $this->redirect('renewals');
             }
-            return $this->redirect('index');
+            $view = (\Yii::$app->user->identity->inGroup('pdtp'))?'pdpt-applications':'index';
+            return $this->redirect($view);
         }
 
         return $this->render('internal_approval', [
@@ -601,6 +610,18 @@ class ApplicationController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('../payment/index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    public function actionPdptApplications()
+    {
+        $searchModel = new ApplicationSearch();
+        $searchModel->status = 'ApplicationWorkflow/at-secretariat';
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

@@ -9,8 +9,8 @@ $this->title = 'Role Change';
 /* @var $form yii\widgets\ActiveForm */
 $usr_roles = (Yii::$app->user->identity->isAdmin(false))?['Admin' => 'Admin',
     'Secretariat' => 'Secretariat', 'Committee member' => 'Committee member',
-        'Applicant' => 'Applicant', 'SU' => 'SU', 'Director' => 'Director', 'Chair'=>'Chair Person'] : ['Secretariat' => 'Secretariat',
-            'Committee member' => 'Committee member', 'Applicant' => 'Applicant', 'SU' => 'SU'];
+        'Applicant' => 'Applicant', 'SU' => 'SU', 'Director' => 'Director', 'Chair'=>'Chair Person', 'PDTP' => 'PDTP'] : ['Secretariat' => 'Secretariat',
+            'Committee member' => 'Committee member', 'Applicant' => 'Applicant', 'SU' => 'SU', 'PDTP' => 'PDTP'];
 ?>
 
 <div class="user-form">

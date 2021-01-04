@@ -61,6 +61,8 @@ AppAsset::register($this);
                 ],
                 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
             ],
+            ['label' => 'PDTP Applications', 'url' => ['/application/pdpt-applications'], 
+                'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'], 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('pdtp', false))],
             [
                 'label' => 'Quick Links', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
                 'items' => [

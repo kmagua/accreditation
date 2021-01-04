@@ -421,6 +421,8 @@ class Application extends \yii\db\ActiveRecord
                 return $this->processCeremonialAPproval(1);
             case 'ApplicationWorkflow/director-approval':
                 return $this->processCeremonialAPproval(2);
+            case 'ApplicationWorkflow/pdtp-reviewed':
+                return $this->processInternalCommittee(1);
         }
     }
     
@@ -498,6 +500,11 @@ class Application extends \yii\db\ActiveRecord
                 'application/approval', 'id' => $this->id, 'level'=> $level, 'rej'=> ($from_rejection)? 1:null], 
                     ['data-pjax'=>'0', 'title' => $title]);
         }else{
+            if($level == 1 && $this->status == 'ApplicationWorkflow/at-secretariat' && Yii::$app->user->identity->inGroup('pdtp')){
+                return Html::a("PDTP Score " .Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
+                    'application/approval', 'id' => $this->id, 'level'=> $level, 'rej'=> ($from_rejection)? 1:null], 
+                        ['data-pjax'=>'0', 'title' => 'PDTP Scoring']);
+            }
             if(\Yii::$app->user->identity->isInternal()){
                 return "at $group";
             }
@@ -708,7 +715,11 @@ MSG;
             if($rej == 1){
                 $app->progressWorkFlowStatus('at-committee');
             }else{
-                $app->progressWorkFlowStatus('assign-approval-committee');
+                if(Yii::$app->user->identity->inGroup('pdtp')){
+                    $app->progressWorkFlowStatus('pdtp-reviewed');
+                }else{
+                    $app->progressWorkFlowStatus('assign-approval-committee');
+                }
             }
         }else if($level == 2 && $status == 1){
             $app->progressWorkFlowStatus('approved');            
