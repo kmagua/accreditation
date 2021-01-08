@@ -496,7 +496,8 @@ class Application extends \yii\db\ActiveRecord
         if(Application::canApprove($level, $this->id)){
             //$other_params = ? ['level'=> $level, 'rej'=>1] : ['level'=> $level];
             $title = ($level == 1) ? 'Score by ICTA Acceditation Secretariat' : 'Score by ICTA Approving Committee';
-            return Html::a("Score " .Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
+            $pdtp_scored = ($this->status == 'ApplicationWorkflow/pdtp-reviewed')?'<span style="color:red">(PDTP reviewed) </span>':'';
+            return Html::a("Score $pdtp_scored" .Icon::show('comments', ['class' => 'fas', 'framework' => Icon::FAS]), [
                 'application/approval', 'id' => $this->id, 'level'=> $level, 'rej'=> ($from_rejection)? 1:null], 
                     ['data-pjax'=>'0', 'title' => $title]);
         }else{
@@ -853,7 +854,7 @@ MSG;
         //$lvl = ($level == 1)?"ApplicationWorkflow/at-secretariat', 'ApplicationWorkflow/com-rejected":'ApplicationWorkflow/at-committee';
         $and = " AND app.status = 'ApplicationWorkflow/at-committee'";
         if($level == 1){
-            $and = " AND (app.status = 'ApplicationWorkflow/at-secretariat' OR app.status = 'ApplicationWorkflow/com-rejected')";
+            $and = " AND (app.status = 'ApplicationWorkflow/at-secretariat' OR app.status = 'ApplicationWorkflow/pdtp-reviewed' OR app.status = 'ApplicationWorkflow/com-rejected')";
         }
         $sql = "SELECT icm.user_id, app.status  FROM `icta_committee_member` icm 
             JOIN `application_committe_member` acm ON acm.`committee_member_id` = icm.`id`

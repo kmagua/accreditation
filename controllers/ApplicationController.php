@@ -47,7 +47,8 @@ class ApplicationController extends Controller
                             if(isset(Yii::$app->request->get()['id'])){                                
                                 $application = Application::findOne(Yii::$app->request->get()['id']);
                                 if($application){
-                                    return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess($application->company_id);
+                                    return Yii::$app->user->identity->isInternal() || CompanyProfile::canAccess($application->company_id)
+                                        || ($application->status == 'ApplicationWorkflow/at-secretariat' && \Yii::$app->user->identity->inGroup('pdtp'));
                                 }
                             }                             
                             return false;
@@ -61,7 +62,7 @@ class ApplicationController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            return Yii::$app->user->identity->isInternal();
+                            return Yii::$app->user->identity->isInternal() || \Yii::$app->user->identity->inGroup('pdtp');
                         }
                     ],
                     [
