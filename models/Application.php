@@ -650,7 +650,7 @@ MSG;
         $score_items_sql ="SELECT id FROM `score_item`";
         $uid = \Yii::$app->user->identity->user_id;
         $score_items_data = \Yii::$app->db->createCommand($score_items_sql)->queryAll();
-        ApplicationClassification::deleteClassification($level->data, $this->id);
+        ApplicationClassification::setClassificationItemsToNull($level->data, $this->id);
         foreach($score_items_data as $score_item_data){
             $score = $comment = null;
             if($level->data == 2){
@@ -801,8 +801,7 @@ MSG;
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;
-        Utility::sendMail($send_to, $header, $message, $this->user->email);
-        
+        Utility::sendMail($send_to, $header, $message, $this->user->email);        
     }    
     
     public function sendPaymentRequestEmail($event)
@@ -1050,6 +1049,10 @@ MSG;
         return 'Pending';
     }
     
+    /**
+     * 
+     * @param type $level
+     */
     public function notifyCeremonialApprovers($level)
     {
         $lvl = $level->data;
@@ -1068,7 +1071,6 @@ MSG;
                     <p>Thank you,<br>ICT Authority Accreditation.</p>
 MSG;
         Utility::sendMail($emails, $header, $message);
-        }
-        
+        }        
     }
 }

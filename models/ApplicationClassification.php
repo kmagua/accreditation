@@ -116,4 +116,14 @@ class ApplicationClassification extends \yii\db\ActiveRecord
             ApplicationClassification::deleteAll(['application_id'=>$app_id, 'icta_committee_id' => 2]);
         }
     }
+    
+    public static function setClassificationItemsToNull($level, $app_id)
+    {
+        ApplicationClassification::updateAll(['score' => null, 'classification' => null, 'status' => null, 'user_id' => null], 
+            ['application_id'=>$app_id, 'icta_committee_id' => $level]);
+        if($level == 1){
+            ApplicationClassification::updateAll(['score' => null, 'classification' => null, 'status' => null, 'user_id' => null], 
+            ['application_id'=>$app_id, 'icta_committee_id' => 2]);
+        }
+    }
 }

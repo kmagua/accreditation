@@ -48,7 +48,7 @@
                     <img src="<?= Yii::getAlias('@webroot/images/francis.jpg'); ?>" style="height:100px" />
                     <!-- <img src="@Server.MapPath("~/Views/Profile/sergon.jpg")" style="width:4em;height:2em" />-->
                     <br />
-                    Francis Mwaura <br />
+                    <br />
                     Chairman, Accreditation Committee
                 </p>
             </td>
@@ -59,7 +59,7 @@
                 <p style="font-family:Arial;font-weight:100;color:gray;font-size:1.5em; text-align: left">
                  <img src="<?= Yii::getAlias('@webroot/images/rono1.jpg'); ?>" style="height:100px" />
                     <br/>
-                    Kipronoh Ronoh P.<br/>
+                    <br/>
                     Director, Programmes and Standards
                 </p>
             </td>

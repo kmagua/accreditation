@@ -176,6 +176,12 @@ class Payment extends \yii\db\ActiveRecord
         }
     }
     
+    /**
+     * 
+     * @param type $provider
+     * @param type $fieldName
+     * @return type
+     */
     public static function getTotal($provider, $fieldName)
     {
         $total = 0;

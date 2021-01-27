@@ -10,11 +10,11 @@ use yii\widgets\ActiveForm;
 $form = ActiveForm::begin();
 
 $current_category = $current_specific_item =  $ac_classification = $app_status = $ac_comment = "";
-$ac_score =0;
+$ac_score = 0;
 $level_val = ($level == 2)?1:$level;
 $app_classification = app\models\ApplicationClassification::find()->where(['application_id'=>$app_id, 'icta_committee_id'=>$level_val])->one();
 if($app_classification){
-    $ac_score = $app_classification->score;
+    $ac_score = ($app_classification->score =='')?0:$app_classification->score;
     $ac_classification = $app_classification->classification;
     $app_status = $app_classification->status;
     $ac_comment = $app_classification->rejection_comment;

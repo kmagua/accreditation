@@ -101,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
-if(Yii::$app->user->identity->isInternal()){
+if(Yii::$app->user->identity->isInternal() || Yii::$app->user->identity->inGroup('PDTP')){
     $reviewerSearchModel = new \app\models\ApplicationCommitteMemberSearch();
     $reviewerSearchModel->application_id = $model->id;
     $reviewerDataProvider = $reviewerSearchModel->search([]);

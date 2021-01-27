@@ -125,6 +125,9 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if(\Yii::$app->user->identity->inGroup('Applicant')){
+                return $this->redirect(['user/view', 'id' => $model->id]);
+            }
             return $this->redirect(['user/index']);
         }
 
