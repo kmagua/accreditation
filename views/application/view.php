@@ -124,5 +124,14 @@ if(Yii::$app->user->identity->isInternal()){
 }
 ?>
 <?php
+$email = Yii::$app->user->identity->username;
+if(in_array($model->status, ['ApplicationWorkflow/approved', 'ApplicationWorkflow/completed']) 
+    && in_array($email, ['charles.waithiru@ict.go.ke', 'charles.waithiru@icta.go.ke', 'james.wafula@ict.go.ke',
+        'james.wafula@icta.go.ke', 'kenmagua@gmail.com'])){
+        echo Html::a("Revert to Committee for Review", ['application/review-after-petition', 'id' => $model->id], ['class' =>'btn btn-danger']);
+    }
+?>
+
+<?php
 $this->registerJsFile('../js/general_js.js', ['position'=>yii\web\View::POS_END]);
 $this->registerJsFile('../js/company_staff.js', ['position'=>yii\web\View::POS_END]);

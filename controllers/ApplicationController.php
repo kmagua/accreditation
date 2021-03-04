@@ -103,6 +103,17 @@ class ApplicationController extends Controller
                             return \Yii::$app->user->identity->inGroup('pdtp');
                         }
                     ],
+                    [
+                        'actions' => ['review-after-petition'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            $email = Yii::$app->user->identity->username;
+                            if(in_array($email, ['charles.waithiru@ict.go.ke', 'charles.waithiru@icta.go.ke', 'james.wafula@ict.go.ke', 'james.wafula@icta.go.ke', 'kenmagua@gmail.com'])){
+                                return true;
+                            }
+                        }
+                    ],
                 ],
             ],
             'verbs' => [
@@ -626,5 +637,21 @@ class ApplicationController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    /**
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function actionReviewAfterPetition($id)
+    {
+        $application = Application::findOne($id);
+        if (isset(Yii::$app->request->post()['confirm'])) {
+            Yii::$app->db->createCommand("UPDATE application SET status='ApplicationWorkflow/at-committee' WHERE id={$id}")->execute();
+            $this->redirect(['application/index']);
+        }
+        
+        return $this->render('revert_for_review', ['id' => $id, 'model' => $application]);
     }
 }
