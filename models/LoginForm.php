@@ -51,7 +51,7 @@ class LoginForm extends Model
             if($user && $user->status < 1){                
                 Yii::$app->session->setFlash('logins_exceeded','Account Not active. You MUST reset your password to login!');
             }
-            if (!$user || !$user->validatePassword($this->password)) {
+            if (!$user || !$user->validatePassword($this->password)) {                
                 $this->addError($attribute, 'Incorrect email or password.');
             }
         }
@@ -65,7 +65,7 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*1 : 0);
-        }
+        }        
         return false;
     }
 
@@ -76,7 +76,7 @@ class LoginForm extends Model
      */
     public function getUser()
     {
-        if ($this->_user === false) {
+        if ($this->_user === false) {            
             $this->_user = User::findByUsername($this->username);
         }
 

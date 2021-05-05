@@ -205,4 +205,35 @@ class SiteController extends Controller
             return $this->redirect(['company-profile/create']);
         }
     }
+    
+    public function actionTestPut()
+    {
+        $curl = curl_init();
+        $id = 10;
+        $status = 'Confirmed';
+        $token = md5(date('Y-d-m')) . strtoupper(dechex($id));
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "http://localhost/accreditation/web/application-service/update-payment-status",
+          CURLOPT_RETURNTRANSFER => true,          
+          CURLOPT_CUSTOMREQUEST => "PUT",
+          CURLOPT_POSTFIELDS => json_encode( array( 'applic_Id'=> $id, "status" => $status, "token"=> $token) ), // Data sent in json format.
+          CURLOPT_HTTPHEADER => array(
+            "cache-control: no-cache",
+            "content-type: application/json",
+            "x-api-key: 4a5fcaa28975b99da6b8221f8fdf7b72A"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          echo $response;
+        }
+    }
 }

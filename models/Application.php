@@ -144,6 +144,7 @@ class Application extends \yii\db\ActiveRecord
             'application_type' => 'New or Annual Renewal',
             'status_search' => 'Status',
             'ceremonial_approval' => 'I agree with the ratings for this application.',
+            'initial_approval_date' => 'Approval/Renewal Date'
         ];
     }
 
@@ -801,8 +802,8 @@ MSG;
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;
-        Utility::sendMail($send_to, $header, $message, $this->user->email);        
-    }    
+        Utility::sendMail($send_to, $header, $message, $this->user->email);
+    }
     
     public function sendPaymentRequestEmail($event)
     {
@@ -815,8 +816,12 @@ MSG;
                 Dear {$this->user->full_name},
                 <p>Kindly note that your Accreditation request for $type has been reviewed and graded [{$ac->classification}]  by ICT Authority.
                     You are now required to make payment of KES: {$this->getPayableAtLevel()} to: <br>CITIBANK,<br>Name: ICT Authority,<br>Account No: 0300085016,<br>Branch: Upper Hill (code: 16000).
+                    <br>
+                    Or MPESA: <br>
+                    Paybill No: <strong>7864821</strong><br/>
+                    Account Name: <strong>ICTA</strong>
                         </p>
-                <p><strong>After payment, deliver the bank slip to ICTA - Telposta Towers 12th floor, Finance Department to be issued a receipt which you will then upload on the system using this link {$link}. You will get a notification email to download your certificate once your uploaded receipt is confirmed.</strong></p>
+                <p><strong>After payment, deliver the bank slip/MPesa Code to ICTA - Telposta Towers 12th floor, Finance Department to be issued a receipt which you will then upload on the system using this link {$link}. You will get a notification email to download your certificate once your uploaded receipt is confirmed.</strong></p>
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
                 
 MSG;
@@ -903,6 +908,7 @@ MSG;
             'status' => 'ApplicationWorkflow/draft',
             'application_type' => 2,
             'previous_category'=> $classification,
+            ''
         ]);
     }
     
@@ -1072,5 +1078,30 @@ MSG;
 MSG;
         Utility::sendMail($emails, $header, $message);
         }        
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function validatePayment()
+    {
+        if(in_array($this->status, ['ApplicationWorkflow/approved', 'ApplicationWorkflow/certificate-paid'])){            
+            return true;
+        }
+        return false;
+    }
+    
+    public function getLevelReviewer($level)
+    {
+        $sql = "SELECT GROUP_CONCAT(u. `first_name`, ' ', `last_name`) first_name FROM `application_committe_member` acm JOIN `icta_committee_member` icm ON acm.`committee_member_id`= icm.id
+            JOIN `user` u ON u.id = icm.`user_id`
+            WHERE `application_id` = {$this->id} AND icm.`committee_id` = {$level} 
+            GROUP BY application_id";
+        $reviewers = User::findBySql($sql)->one();
+        if($reviewers){
+            return $reviewers->first_name;
+        }
+        return "";
     }
 }

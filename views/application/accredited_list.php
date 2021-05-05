@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\export\ExportMenu;
+use kartik\daterange\DateRangePicker;
 
 \kartik\select2\Select2Asset::register($this);
 
@@ -32,6 +33,17 @@ $this->params['breadcrumbs'][] = $this->title;
             'value' => 'accreditationType.name',
         ],
         [
+            'attribute' => 'initial_approval_date',
+            'filter' => DateRangePicker::widget([
+                'name'=>'ApplicationSearch[initial_approval_date]',
+                'convertFormat'=>true,
+                'readonly' => true,            
+                'pluginOptions'=>[
+                    'locale'=>['format'=>'Y-m-d', 'changeYear' => true,]
+                ]
+            ]),
+        ],
+        [
             'label' => 'Expires On',
             'content' => function($model){
                 return $model->getExpiryDate();
@@ -41,6 +53,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'Grade',
             'content' => function($model){
                 return $model->getClassification();
+            }
+        ],
+        [
+            'label' => 'Secretariat Reviewer',
+            'content' => function($model){
+                return $model->getLevelReviewer(1);
+            }
+        ],
+        [
+            'label' => 'Committee Reviewer',
+            'content' => function($model){
+                return $model->getLevelReviewer(2);
             }
         ],
         'certificate_serial',

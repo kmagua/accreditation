@@ -21,7 +21,7 @@ class ApplicationSearch extends Application
         return [
             [['id', 'company_id', 'accreditation_type_id', 'user_id', 'parent_id'], 'integer'],
             [['cash_flow', 'turnover'], 'number'],
-            [['financial_status_link', 'status', 'declaration', 'date_created', 'last_updated', 'company', 'accreditationType', 'status_search'], 'safe'],
+            [['financial_status_link', 'status', 'declaration', 'date_created', 'last_updated', 'company', 'accreditationType', 'status_search', 'initial_approval_date'], 'safe'],
         ];
     }
 
@@ -76,7 +76,7 @@ class ApplicationSearch extends Application
             ->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'company_profile.company_name', $this->company])
             ->andFilterWhere(['like', 'accreditation_type.name', $this->accreditationType])
-            //->andFilterWhere(['>', 'application.id', 86])
+            ->andFilterWhere(['like', 'initial_approval_date', $this->initial_approval_date])
             ->andFilterWhere(['like', 'declaration', $this->declaration]);
         
         $query->orderBy("id desc");
@@ -178,8 +178,15 @@ class ApplicationSearch extends Application
         }else{
             $query->andFilterWhere(['in', 'status', ['ApplicationWorkflow/completed', 'ApplicationWorkflow/renewal']]);
         }
+        
+        if($this->initial_approval_date){
+            $dates = explode(' - ', $this->initial_approval_date);
+            $query->andFilterWhere(['>=', 'initial_approval_date', $dates[0]])
+                ->andFilterWhere(['<=', 'initial_approval_date', $dates[1]]);
+        }
         $query->andFilterWhere(['like', 'company_profile.company_name', $this->company])
             ->andFilterWhere(['like', 'accreditation_type.name', $this->accreditationType])
+            
             ->andFilterWhere(['like', 'declaration', $this->declaration]);
         
         $query->orderBy("id desc");
