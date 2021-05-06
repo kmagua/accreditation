@@ -355,20 +355,22 @@ class ApplicationController extends Controller
      * 
      * @param type $id
      * @param type $l
+     * @param type $cn => used for changing reviewers
      * @return string
      * @throws \Exception
      */
-    public function actionCommitteeMembers($id, $l)
+    public function actionCommitteeMembers($id, $l, $cn='')
     {
         $model = new \app\models\ApplicationCommitteMember();
         $model->application_id = $id;
         $model->loadApplicationCommitteeMembers($l);
         
         if ($model->load(Yii::$app->request->post()) && $model->saveApplicationCommitteeMembers($l)) {
-            $next_step = ($l == 1) ? 'at-secretariat': 'at-committee';
-            if($model->application->progressWorkFlowStatus($next_step)){
-                \Yii::$app->session->setFlash('members_added','Members assigned successfully!');
+            if($cn != 'yes'){
+                $next_step = ($l == 1) ? 'at-secretariat': 'at-committee';
+                $model->application->progressWorkFlowStatus($next_step);
             }
+            \Yii::$app->session->setFlash('members_added','Members assigned successfully!');
             //$this->redirect(['index']);
         }
         
@@ -648,6 +650,17 @@ class ApplicationController extends Controller
     {
         $application = Application::findOne($id);
         if (isset(Yii::$app->request->post()['confirm'])) {
+            Yii::$app->db->createCommand("UPDATE application SET status='ApplicationWorkflow/at-committee' WHERE id={$id}")->execute();
+            $this->redirect(['application/index']);
+        }
+        
+        return $this->render('revert_for_review', ['id' => $id, 'model' => $application]);
+    }
+    
+    public function assignDiffrentReviewer($id, $l)
+    {
+        $application = Application::findOne($id);
+        if ($model->load(Yii::$app->request->post())) {
             Yii::$app->db->createCommand("UPDATE application SET status='ApplicationWorkflow/at-committee' WHERE id={$id}")->execute();
             $this->redirect(['application/index']);
         }

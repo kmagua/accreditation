@@ -56,7 +56,10 @@ class Application extends \yii\db\ActiveRecord
      */
     public function init()
     {
-    	$this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-confirmed'),
+    	$this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/draft'),
+            [$this, 'checkCompanyExists'],'draft'
+    	);
+        $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-confirmed'),
             [$this, 'sendPaymentApprovalEmail'],'application-payment-confirmed'
     	);
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/application-payment-rejected'),
@@ -78,7 +81,7 @@ class Application extends \yii\db\ActiveRecord
             [$this, 'sendApprovalEmail'], 'completed'
     	);
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/approved'),
-            [$this, 'sendPaymentRequestEmail'], 'approved'
+            [$this, 'processAfterCommitteeApproval'], 'approved'
     	);
         $this->on(WorkflowEvent::afterEnterStatus('ApplicationWorkflow/sec-rejected'),
             [$this, 'sendRejectedEmail'], 'rejected'
@@ -805,6 +808,20 @@ MSG;
         Utility::sendMail($send_to, $header, $message, $this->user->email);
     }
     
+    /**
+     * 
+     * @param type $event
+     */
+    public function processAfterCommitteeApproval($event)
+    {
+        $this->updateApplicationPaymentOnERP();
+        $this->sendPaymentRequestEmail($event);
+    }
+    
+    /**
+     * 
+     * @param type $event
+     */
     public function sendPaymentRequestEmail($event)
     {
         $header = "ICT Authority - Payment Request for Company Accreditation";
@@ -1103,5 +1120,120 @@ MSG;
             return $reviewers->first_name;
         }
         return "";
+    }
+    
+    public function checkCompanyExists()
+    {
+        $biz_reg = $this->company->business_reg_no;
+        
+        $cURLConnection = curl_init();
+        $query = http_build_query(array('business_reg_no' => $biz_reg));
+        $url = "https://ess.icta.go.ke/acredapitest/api/file/verify-customer?$query";
+//echo print_r($query); exit;
+        // construct curl resource
+        //$curl = curl_init("https://api.copernica.com/v1/$resource?$query");
+        curl_setopt_array($cURLConnection, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+          //CURLOPT_CUSTOMREQUEST => "PUT",
+          //CURLOPT_POSTFIELDS => json_encode( array( 'business_reg_no'=> $biz_reg) ), // Data sent in json format.
+          CURLOPT_HTTPHEADER => array(
+            "cache-control: no-cache",
+            "content-type: application/json",
+            "x-api-key: 4a5fcaa28975b99da6b8221f8fdf7b72A"
+          ),
+        ));        
+
+        $response = curl_exec($cURLConnection); 
+        $err = curl_error($cURLConnection);
+        curl_close($cURLConnection);
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        }
+        echo $url . " ------- " .$response; exit;
+        $obj = json_decode($response);
+        if($obj->Title == 'error'){
+            $this->registerBizRegNumberInERP($biz_reg);
+        }else{
+            echo "Hapa; exists";
+        }
+    }
+    
+    public function registerBizRegNumberInERP($reg_no)
+    {
+        $curl = curl_init();        
+        $company = $this->company;
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://ess.icta.go.ke/acredapitest/api/file/register-customer",
+            CURLOPT_RETURNTRANSFER => true,          
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_POSTFIELDS => json_encode(array( 'business_reg_no'=> $reg_no, "company_name" => $company->company_name,
+              "registration_date"=> $company->registration_date, "county"=> $company->county, "town"=> $company->town,
+                "street"=> $company->street,  "building"=> $company->building, "telephone_number"=> $company->telephone_number,
+                "company_email"=> $company->company_email, "company_type_id"=> $company->company_type_id, "postal_address"=> $company->postal_address,
+                "company_categorization"=> $company->company_categorization, "turnover"=> $company->turnover, "cashflow"=> $company->cashflow,
+                "user_id"=> $company->user_id, "floor"=> $company->floor
+            ) ), // Data sent in json format.
+          CURLOPT_HTTPHEADER => array(
+            "cache-control: no-cache",
+            "content-type: application/json",
+            "x-api-key: 4a5fcaa28975b99da6b8221f8fdf7b72A",
+            "Authorization: Bearer vTMKamOLPcWKiC2p9cc4DnUIB3OQ"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          echo $response .' Hapa';
+        }
+        exit;
+    }
+    
+    public function updateApplicationPaymentOnERP()
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://ess.icta.go.ke/acredapitest/api/file/create-customer-invoice",
+            CURLOPT_RETURNTRANSFER => true,          
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_POSTFIELDS => json_encode(
+                array(
+                    "business_reg_no" => $this->company->business_reg_no,
+                    "application_id" => $this->id,
+                    "amount_payable" => $this->getPayableAtLevel(),
+                    "type_of_application" => $this->application_type
+                ) 
+            ), // Data sent in json format.
+            CURLOPT_HTTPHEADER => array(
+                "cache-control: no-cache",
+                "content-type: application/json",
+                "x-api-key: 4a5fcaa28975b99da6b8221f8fdf7b72A",
+                "Authorization: Bearer vTMKamOLPcWKiC2p9cc4DnUIB3OQ"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        
+        curl_close($curl);
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          echo $response;
+        }
+        exit;
     }
 }

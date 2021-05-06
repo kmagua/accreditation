@@ -230,10 +230,17 @@ class SiteController extends Controller
 
         curl_close($curl);
 
-        if ($err) {
+        /*if ($err) {
           echo "cURL Error #:" . $err;
         } else {
           echo $response;
-        }
+        }*/
+    }
+    
+    public function actionTestDraft($id)
+    {
+        $model = \app\models\Application::findOne($id);
+        $model->checkCompanyExists(); 
+        //$model->updateApplicationPaymentOnERP();
     }
 }
