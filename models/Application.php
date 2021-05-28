@@ -1098,7 +1098,7 @@ MSG;
     }
     
     /**
-     * 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
+     * 
      * @return boolean
      */
     public function validatePayment()
