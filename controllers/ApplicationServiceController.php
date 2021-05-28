@@ -20,17 +20,20 @@ class ApplicationServiceController extends ActiveController
     public function actionUpdatePaymentStatus()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $this->view->title = 'Updating Payment Status';
         
         $request = \Yii::$app->request->headers->get('host');
         if(isset(\Yii::$app->request->post()['token'])){
-            $post = \Yii::$app->request->post();            
-            if(/*in_array($request, \Yii::$app->params['allowed_hosts']) && */ $this->validateToken($post)){
+            $post = \Yii::$app->request->post(); 
+            \Yii::$app->db->createCommand('INSERT INTO service_log (status, str_log) VALUES (0, :str_log)', [':str_log' => serialize($post)])
+             ->execute();                       
+            //if(/*in_array($request, \Yii::$app->params['allowed_hosts']) && */ $this->validateToken($post)){
                 $application  = Application::findOne($post['applic_Id']);
                 if($application && $application->validatePayment($application->status)){
                     $application->progressWorkFlowStatus("chair-approval");
                     return true;
                 }                
-            }
+            //}
         }        
         return false;
     }

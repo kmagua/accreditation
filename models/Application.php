@@ -720,7 +720,7 @@ MSG;
             if($rej == 1){
                 $app->progressWorkFlowStatus('at-committee');
             }else{
-                if(Yii::$app->user->identity->inGroup('pdtp')){
+                if(Yii::$app->user->identity->inGroup('pdtp', false)){
                     $app->progressWorkFlowStatus('pdtp-reviewed');
                 }else{
                     $app->progressWorkFlowStatus('assign-approval-committee');
@@ -1098,7 +1098,7 @@ MSG;
     }
     
     /**
-     * 
+     * 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
      * @return boolean
      */
     public function validatePayment()
@@ -1150,15 +1150,20 @@ MSG;
         $err = curl_error($cURLConnection);
         curl_close($cURLConnection);
         if ($err) {
-          echo "cURL Error #:" . $err;
+          //$msg = "cURL Error #:" . $err; exit;
         }
-        echo $url . " ------- " .$response; exit;
+       // echo $url . " ------- " .$response; exit;
         $obj = json_decode($response);
+        //print_r($obj); exit;
         if($obj->Title == 'error'){
             $this->registerBizRegNumberInERP($biz_reg);
         }else{
-            echo "Hapa; exists";
+            $msg = "Hapa; exists";
         }
+        /*$myfile = fopen("testfile_check.txt", "a");
+        
+        fwrite($myfile, $msg);
+        fclose($myfile);*/
     }
     
     public function registerBizRegNumberInERP($reg_no)
@@ -1192,12 +1197,14 @@ MSG;
 
         curl_close($curl);
 
+        /*$myfile = fopen("testfile_reg_biz.txt", "a");
         if ($err) {
-          echo "cURL Error #:" . $err;
+          $msg = "cURL Error #:" . $err;
         } else {
-          echo $response .' Hapa';
+          $msg = "OK #:" . $response;
         }
-        exit;
+        fwrite($myfile, $msg);
+        fclose($myfile);*/
     }
     
     public function updateApplicationPaymentOnERP()
@@ -1229,11 +1236,14 @@ MSG;
         $err = curl_error($curl);
         
         curl_close($curl);
+        /*$myfile = fopen("testfile.txt", "a");
         if ($err) {
-          echo "cURL Error #:" . $err;
+          $msg = "cURL Error #:" . $err;
         } else {
-          echo $response;
+          $msg = "OK #:" . $response;
         }
-        exit;
+        fwrite($myfile, $msg);
+        fclose($myfile);*/
+        //exit;
     }
 }

@@ -30,7 +30,7 @@ $this->title = "Login";
         <br />
 
 
-<div class="site-login">
+<div class="site-login" style="color:black !important">
     <?php if(Yii::$app->session->hasFlash('user_confirmation')): ?>
     <div class="alert alert-success alert-dismissable">
         <h4><?php echo Yii::$app->session->getFlash('user_confirmation'); ?></h4>

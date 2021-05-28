@@ -13,6 +13,12 @@ $current_category = $current_specific_item =  $ac_classification = $app_status =
 $ac_score = 0;
 $level_val = ($level == 2)?1:$level;
 $app_classification = app\models\ApplicationClassification::find()->where(['application_id'=>$app_id, 'icta_committee_id'=>$level_val])->one();
+if($level == 2){
+    $ac = app\models\ApplicationClassification::find()->where(['application_id'=>$app_id, 'icta_committee_id'=>2])->one();
+    if($ac->score > 0){
+        $app_classification = $ac;
+    }
+}
 if($app_classification){
     $ac_score = ($app_classification->score =='')?0:$app_classification->score;
     $ac_classification = $app_classification->classification;

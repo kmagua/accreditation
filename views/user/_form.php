@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
             </h4>
         </div>
         <!--<br /> -->
-<div class="user-form">
+<div class="user-form" style="color: black !important">
 
     <?php $form = ActiveForm::begin(); ?>
     

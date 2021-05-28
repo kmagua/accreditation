@@ -289,7 +289,7 @@ class ApplicationController extends Controller
             if($parent_id){
                 return $this->redirect('renewals');
             }
-            $view = (\Yii::$app->user->identity->inGroup('pdtp'))?'pdpt-applications':'index';
+            $view = (\Yii::$app->user->identity->inGroup('pdtp', false))?'pdpt-applications':'index';
             return $this->redirect($view);
         }
 

@@ -50,7 +50,7 @@ class ApplicationWorkflow implements \raoul2000\workflow\source\file\IWorkflowDe
                     'transition' => ['sec-rejected', 'at-committee']
                 ],
                 'approved' => [
-                    'transition' => ['certificate-paid']
+                    'transition' => ['certificate-paid', 'chair-approval']
                 ],
                 'certificate-paid' => [
                     'transition' => ['chair-approval', 'approval-payment-rejected']
