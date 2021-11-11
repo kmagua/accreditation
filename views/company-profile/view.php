@@ -68,6 +68,12 @@ $cpDataProvider = $searchCP->search([]);
             //'headerOptions' => ['style'=>'font-weight:bold'],
             'options' => ['id' => 'application_data_tab'],
         ],
+        [
+            'label' => 'Renewals',
+            'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['application/my-renewals', 'cid'=>$model->id])],
+            //'headerOptions' => ['style'=>'font-weight:bold'],
+            'options' => ['id' => 'application_data_tab'],
+        ],
         /*[
             'label' => 'Dropdown',
             'items' => [

@@ -156,9 +156,11 @@ class SiteController extends Controller
     {
         if (Yii::$app->request->post()) {
             $cert_no = Yii::$app->request->post()['certificate_no'];
-            $company = \app\models\Application::find()->where(['certificate_serial' =>$cert_no])->one();
+            $company = \app\models\Application::find()->where(['certificate_serial' =>$cert_no])->orderBy('id desc')->one();
             if($company){
-                $details = $company->company->company_name . ' - Registration No: ' . $company->company->business_reg_no;
+                $app_classification = \app\models\ApplicationClassification::find()->where(['application_id'=>$company->id])->orderBy("id desc")->one();
+                $details = $company->company->company_name . ' - Registration No: ' . $company->company->business_reg_no . ' is accredited under <strong>' . 
+                    $company->accreditationType->name . ' (' . $app_classification->classification .')</strong> category, Valid Till: '. date('jS M Y', strtotime($company->initial_approval_date . "+ 1 year"));
                 Yii::$app->session->setFlash('cert_search', $details);
             }else{
                 $staff = \app\modules\professional\models\Application::find()->where(['cert_serial' =>$cert_no])->one();

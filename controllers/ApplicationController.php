@@ -29,7 +29,7 @@ class ApplicationController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['new','applications','create'],
+                        'actions' => ['new','applications','create', 'my-renewals'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -238,6 +238,23 @@ class ApplicationController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
         $html = $this->renderPartial('company_applications', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider
+        ]);
+        return \yii\helpers\Json::encode($html);
+    }
+    
+    /**
+     * 
+     * @param type $cid Company ID
+     */
+    public function actionMyRenewals($cid)
+    {
+        $searchModel = new ApplicationSearch();
+        $searchModel->company_id = $cid;
+        $dataProvider = $searchModel->searchRenewals(Yii::$app->request->queryParams);
+        
+        $html = $this->renderPartial('company_renewals', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider
         ]);

@@ -114,7 +114,7 @@ class Application extends \yii\db\ActiveRecord
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             [['status', 'certificate_serial'], 'string', 'max' => 50],
             [['previous_category', 'cash_flow', 'turnover'], 'string', 'max' => 20],
-            [['accreditation_type_id'], 'unique', 'targetAttribute' => ['accreditation_type_id', 'company_id'], 'message' => 'You have already submitted an application for the selected Accreditation Category'],
+            //[['accreditation_type_id'], 'unique', 'targetAttribute' => ['accreditation_type_id', 'company_id'], 'message' => 'You have already submitted an application for the selected Accreditation Category'],
             [['date_created', 'last_updated', 'app_company_experience', 'app_staff', 'initial_approval_date'], 'safe'],
             [['financial_status_link'], 'string', 'max' => 250],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyProfile::className(), 'targetAttribute' => ['company_id' => 'id']],
@@ -925,7 +925,6 @@ MSG;
             'status' => 'ApplicationWorkflow/draft',
             'application_type' => 2,
             'previous_category'=> $classification,
-            ''
         ]);
     }
     
@@ -939,7 +938,7 @@ MSG;
         }else{
             $sql = "SELECT * FROM accreditcomp.application WHERE
                 (parent_id = {$this->parent_id} or id = {$this->parent_id})
-                 AND initial_approval_date is not null order by id desc limit 1";
+                 AND ifnull(initial_approval_date, '1900-01-01') !='1900-01-01' order by id desc limit 1";
             //latest approved application
             $laa = Application::findBySql($sql)->one();
             if($laa){
@@ -990,6 +989,7 @@ MSG;
      */
     public function saveRenewal()
     {
+        $this->application_type = 2;
         if($this->save()){
             $sql = "UPDATE `accreditcomp`.`application` set
                 status = 'ApplicationWorkflow/renewed' where id = {$this->parent_id}";

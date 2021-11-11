@@ -29,7 +29,7 @@ class RenewalController extends Controller
     {
         //allow this to be run several days
         $this->companyAccreditationRenewals();
-        $this->professionalAccreditationRenewals();
+        //$this->professionalAccreditationRenewals();
         return ExitCode::OK;
     }
     
@@ -37,7 +37,7 @@ class RenewalController extends Controller
     {
         $sql = "SELECT id, parent_id, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 1 YEAR) ,NOW()) date_diff  FROM `accreditcomp`.`application`
             WHERE STATUS = 'ApplicationWorkflow/completed'
-            HAVING date_diff IN(40, 39, 38, 37, 36, 35)";
+            HAVING date_diff < 20";
         $applications = \app\models\Application::findBySql($sql)->all();
         foreach($applications as $application){
             $app_id = $application->id;
@@ -107,8 +107,15 @@ class RenewalController extends Controller
         $message = <<<MSG
                 Dear {$application->user->full_name},
                 <p>Kindly note that your Accreditation by ICT Authority for $type is approaching the annual renewal period.
-                    You will need to start the renewal process using the link below to ensure validity of your certificate.
-                    The renew link is on the 'status' column in the Applications tab after opening the link below.</p>
+                    You will need to start the renewal process using the link below to ensure validity of your certificate.</p>                        
+                    Make sure to review and update the following:-
+                        <ul>
+                            <li>Audited accounts (the last full financial year)</li>
+                            <li>Staff information</li>
+                            <li>Company statutory documents</li>
+                            <li>Company experience (for the last 5 years)</li>
+                        </ul>
+                    <p>The renew link is on the 'status' column in the Applications tab on the link below.</p>
                         
                 <p>$link</p>
                 <p>Thank you,<br>ICT Authority Accreditation.</p>
