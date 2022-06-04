@@ -57,5 +57,8 @@ class Utility {
     {
         $data_item = round($data_item/$total_item_count * 100, 1);
     }
-
+    
+    public static function generateMpesaAccountString($length = 6) {
+        return substr(str_shuffle(str_repeat($x='ABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+    }
 }

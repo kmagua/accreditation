@@ -6,6 +6,7 @@ use yii\helpers\Html;
 /* @var $content string */
 $this->title = $this->title;
 dmstr\web\AdminLteAsset::register($this);
+
 ?>
 
 <?php $this->beginPage() ?>
@@ -18,6 +19,11 @@ dmstr\web\AdminLteAsset::register($this);
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Ionicons -->
     <link href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
+    <?php $this->registerCss(".navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+        height: 70px !important;
+      }
+      ");
+    ?>
     <!-- Theme style -->
     <?php $this->head() ?>
 
@@ -51,72 +57,41 @@ dmstr\web\AdminLteAsset::register($this);
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                         <!-- Messages: style can be found in dropdown.less-->
-                        <li class="dropdown messages-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-envelope-o"></i>
-                                <span class="label label-success">1</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 1 notification(s)</li>
-                                <li>
-                                    <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="ion ion-ios7-people info"></i> Welcome to Phundament 4!
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-<!--                        <li class="dropdown tasks-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-flag"></i>
-                                <span class="label label-default">n/a</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">Languages</li>
-                                <li>
-                                     inner menu: contains the actual data 
-                                    <ul class="menu">
-                                        languages
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>-->
+                        
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:black">
                                 <i class="glyphicon glyphicon-user"></i>
-                                <span>Username <i class="caret"></i></span>
+                                <span>User <i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
-                                <li class="user-header bg-green-gradient">
-                                    <?php echo \cebe\gravatar\Gravatar::widget(
-                                        [
-                                            'email'   => 'username@example.com',
-                                            'options' => [
-                                                'alt' => 'username'
-                                            ],
-                                            'size'    => 128
-                                        ]
-                                    ); ?>
-                                    <p style="color:black">
-                                        username
-                                        <small>username@example.com</small>
+                                <li class="user-header bg-red-active">
+                                    
+                                    <p style="color:#fff">
+                                        <?php $email = '';
+                                        if(!Yii::$app->user->isGuest){ 
+                                            echo Yii::$app->user->identity->first_name . ' ' 
+                                        .Yii::$app->user->identity->last_name;
+                                            $email = Yii::$app->user->identity->email; } ?>
+                                        <small><?= $email ?></small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="<?= \yii\helpers\Url::to(['/user/settings/profile']) ?>"
+                                        <?php if(!Yii::$app->user->isGuest){  ?>
+                                        <a href="<?= \yii\helpers\Url::to(['/user/my-profile']) ?>"
                                            class="btn btn-default btn-flat">Profile</a>
+                                        <?php } ?>
                                     </div>
                                     <div class="pull-right">
+                                        <?php if(!Yii::$app->user->isGuest){  ?>
                                         <a href="<?= \yii\helpers\Url::to(['/site/logout']) ?>"
                                            class="btn btn-default btn-flat" data-method="post">Sign out</a>
+                                        <?php } else { ?>
+                                        <a href="<?= \yii\helpers\Url::to(['/site/login']) ?>"
+                                           class="btn btn-default btn-flat">Login</a><?php } ?>
                                     </div>
                                 </li>
                             </ul>

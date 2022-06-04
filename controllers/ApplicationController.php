@@ -40,7 +40,7 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['update','view', 'upload-receipt', 'download-cert', 'renew-cert', 'revert-rejection'],
+                        'actions' => ['update','view', 'upload-receipt', 'download-cert', 'renew-cert', 'revert-rejection','lipa-na-mpesa'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -333,11 +333,7 @@ class ApplicationController extends Controller
         
         if ($model->load(Yii::$app->request->post())) {
             if($model->savePayment()){
-                //$status = ($l == 1) ? "application-paid" : "certificate-paid";
-                if($model->application->progressWorkFlowStatus("certificate-paid")){
-                    return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";
-                }
-                return "Error updating payment details.";
+                return "Payment submitted successfully. You will receive an automated notification email once the payment has been confirmed.";                
             }
         }
         
@@ -683,5 +679,83 @@ class ApplicationController extends Controller
         }
         
         return $this->render('revert_for_review', ['id' => $id, 'model' => $application]);
+    }
+    
+    public function actionLipaNaMpesa($id)
+    {
+        $model = \app\models\Payment::find()->where(['application_id' => $id])->one();
+        if(!$model){
+            $model = new \app\models\Payment;
+            $model->application_id = $id;
+            $model->phone_number = 254;
+            $model->billable_amount = $model->application->category->application_fee;            
+        }
+        //check mpesa code is set
+        if($model->application->mpesa_account == ''){
+            if(!$model->application->genMpesaCode()){
+                return "Application does not have an MPESA code.";
+            }
+        }
+        $model->setScenario('mpesa_payment');
+        
+        if ($this->request->isPost && $model->load(Yii::$app->request->post()) && $model->validate()) {
+            if($model->callMpesaService()){
+                if($model->savePayment()){                
+                    return $this->renderAjax('mpesa_view', ['model'=>$model]);                
+                }
+                return "Error updating payment details." . print_r($model->errors, true);
+            }
+        }
+        
+        return $this->renderAjax('../payment/_form_mpesa', [
+            'model' => $model,
+        ]);
+    }
+    
+    public function actionValidateMpesa($id, $check)
+    {
+        $consumer_key = 'LHGuWfYkQG2JhBQojsprhKJDbtfmONKc';
+        $consumer_secret = 'GdgxAgDfBAmQ3cpF';
+        $credentials = base64_encode($consumer_key . ':' . $consumer_secret);
+        
+        $chh = curl_init('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials');
+        curl_setopt($chh, CURLOPT_HTTPHEADER, ["Authorization: Basic $credentials"]);
+        curl_setopt($chh, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($chh);
+        curl_close($chh);
+        $token = json_decode($response);
+        
+        $auth_token = $token->access_token;        
+        $timestamp = date('YmdHis');
+        $short_code = 174379;        
+        $passKey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
+        
+        $ch = curl_init('https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer $auth_token",
+            'Content-Type: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            "BusinessShortCode" => $short_code,
+            "Password" => base64_encode($short_code. $passKey . $timestamp),
+            "Timestamp" => $timestamp,
+            "CheckoutRequestID" => $check,
+          ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $resp = curl_exec($ch);
+        curl_close($ch);
+        $respo = json_decode($resp);
+        $payment = \app\models\Payment::findOne($id);
+        $payment->ValidationResultCode = $respo->ResultCode;
+        $payment->save(false);
+        if($respo->ResultCode == 0){
+            $application = $payment->application;
+            $application->status = 'ApplicationWorkflow/chair-approval';
+            $application->save(false);
+            return "Payment was successful.";
+        }
+        return $respo->ResultDesc;
+        //\Yii::$app->db->createCommand()->update('payment', ['ValidationResultCode' => $respo->ResultCode], ['id' => $id])->execute();
     }
 }

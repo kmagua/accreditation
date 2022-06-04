@@ -24,6 +24,7 @@ use raoul2000\workflow\events\WorkflowEvent;
  * @property int $application_type
  * @property string $previous_category
  * @property int|null $parent_id
+ * @property string|null $mpesa_account
  * @property string $date_created
  * @property string|null $last_updated
  *
@@ -114,6 +115,7 @@ class Application extends \yii\db\ActiveRecord
                 'message' => 'You must declare that the information given is correct to the best of your knowledge.'],
             [['status', 'certificate_serial'], 'string', 'max' => 50],
             [['previous_category', 'cash_flow', 'turnover'], 'string', 'max' => 20],
+            [['mpesa_account'], 'string', 'max' => 10],
             //[['accreditation_type_id'], 'unique', 'targetAttribute' => ['accreditation_type_id', 'company_id'], 'message' => 'You have already submitted an application for the selected Accreditation Category'],
             [['date_created', 'last_updated', 'app_company_experience', 'app_staff', 'initial_approval_date'], 'safe'],
             [['financial_status_link'], 'string', 'max' => 250],
@@ -287,6 +289,12 @@ class Application extends \yii\db\ActiveRecord
             $this->user_id = Yii::$app->user->identity->user_id;
             $this->turnover = $this->company->turnover;
             $this->cash_flow = $this->company->cashflow;
+            
+            $string = 'SUP-' . Utility::generateMpesaAccountString();
+            while(!$this->isUnique($string)){
+                $string =  'SUP-'. Utility::generateMpesaAccountString();
+            }
+            $this->mpesa_account = $string;
         }        
         return true;
     }
@@ -456,7 +464,12 @@ class Application extends \yii\db\ActiveRecord
             //return Html::a('MPESA', ['#'], ['oclick' =>'alert("Not Implemented"); return false;']) . ' &nbsp;&nbsp; '. 
             return Html::a('Upload Payment Receipt ' . Icon::show('receipt', ['class' => 'fas',
                 'framework' => Icon::FAS]), ['application/upload-receipt', 'id' => $this->id, 'l'=> $level], 
-                    ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"]);
+                    ['data-pjax'=>'0', 'onclick' => "getDataForm(this.href, '<h3>Upload Application Payment Receipt</h3>'); return false;"])
+                . \yii\helpers\Html::a('&nbsp;&nbsp;&nbsp;Pay with MPESA', [
+                    '/application/lipa-na-mpesa', 'id'=>$this->id
+                ], 
+                ['onclick' => "getDataForm(this.href, '<h3>Pay With MPESA</h3>'); return false;", 'class'=>'text-danger']
+            ); 
         }
         return "Pending Payment";
     }
@@ -1261,5 +1274,27 @@ MSG;
         fwrite($myfile, $msg);
         fclose($myfile);*/
         //exit;
+    }
+    
+    public function isUnique($mpesa_acct)
+    {
+        $app = Application::findOne(['mpesa_account' => $mpesa_acct]);
+        if($app){
+            return false;
+        }
+        return true;
+    }
+    
+    public function genMpesaCode()
+    {
+        $string = 'SUP-' . Utility::generateMpesaAccountString();
+        while(!$this->isUnique($string)){
+            $string =  'SUP-'. Utility::generateMpesaAccountString();
+        }
+        $this->mpesa_account = $string;
+        if($this->save(false)){
+            return true;
+        }
+        return false;
     }
 }

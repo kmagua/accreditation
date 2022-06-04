@@ -5,15 +5,8 @@
 <!-- Sidebar user panel -->
 <div class="user-panel">
     <div class="pull-left image">
-        <?php echo \cebe\gravatar\Gravatar::widget(
-            [
-                'email' => 'username@example.com',
-                'options' => [
-                    'alt' => 'username',
-                ],
-                'size' => 64,
-            ]
-        ); ?>
+        
+        
     </div>
     <div class="pull-left info">
         <p>username</p>
@@ -26,10 +19,10 @@
 <!-- search form -->
 <form action="#" method="get" class="sidebar-form">
     <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Search..."/>
+        <!--<input type="text" name="q" class="form-control" placeholder="Search..."/>
         <span class="input-group-btn">
             <button type='submit' name='seach' id='search-btn' class="btn btn-flat"><i
-                        class="fa fa-search"></i></button>
+                        class="fa fa-search"></i></button>-->
         </span>
     </div>
 </form>
@@ -41,7 +34,7 @@
 // prepare menu items, get all modules
 $menuItems = [];
 
-$favouriteMenuItems[] = ['label' => 'MAIN NAVIGATION', 'options' => ['class' => 'header']];
+$favouriteMenuItems[] = ['label' => 'DASHBOARD', 'options' => ['class' => 'header', 'style' => 'color:#fff']];
 
 
 $applicationsMenuItems = [];
@@ -81,23 +74,43 @@ $quickLinksMenuItems[] = [
 
 $adminMenuItems = []; // to start here
 $adminMenuItems[] = [
-    'url' => ['/company-profile/create'],
-    'icon' => 'cog',
-    'label' => 'Company Profile',
+    'url' => ['/user/index'],
+    'icon' => 'address-card',
+    'label' => 'Users',
 ];
 $adminMenuItems[] = [
     'icon' => 'user',
-    'label' => 'My Account',
-    'url' => ['/user/my-profile'],
+    'label' => 'Application documents',
+    'url' => ['/document-type/index'],
 ];
 $adminMenuItems[] = [
-    'icon' => 'user',
+    'icon' => 'list',
+    'label' => 'Accreditation Levels',
+    'url' => ['/accreditation-level/index'],
+];
+$adminMenuItems[] = [
+    'icon' => 'lock',
+    'label' => 'Accreditation Categories',
+    'url' => ['/accreditation-type/index'],
+];
+$adminMenuItems[] = [
+    'url' => ['/icta-committee/index'],
+    'icon' => 'list',
+    'label' => 'Approval Stages',
+];
+$adminMenuItems[] = [
+    'icon' => 'file',
+    'label' => 'Reports',
+    'url' => ['/site/reports'],
+];
+$adminMenuItems[] = [
+    'icon' => 'list',
     'label' => 'FAQs',
     'url' => ['/site/faqs'],
 ];
 $adminMenuItems[] = [
     'icon' => 'lock',
-    'label' => 'Change My Password',
+    'label' => 'Change my Password',
     'url' => ['/user/change-password'],
 ];
 
@@ -135,6 +148,14 @@ $menuItems[] = [
     'label' => 'Quick Links',
     'items' => $quickLinksMenuItems,
     'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))
+];
+
+$menuItems[] = [
+    #'url' => '#',
+    'icon' => 'cog',
+    'label' => 'Administration',
+    'items' => $adminMenuItems,
+    'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
 ];
 
 /*for ($i = 0; $i < 25; $i++) {

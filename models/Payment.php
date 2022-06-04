@@ -15,6 +15,10 @@ use Yii;
  * @property int|null $level
  * @property string|null $status
  * @property string|null $comment
+ * @property string|null $phone_number
+ * @property string|null $CheckoutRequestID
+ * @property int|null $ValidationResultCode
+ * @property string|null $mpesa_error_message
  * @property string $date_created
  * @property string|null $last_update
  *
@@ -23,7 +27,7 @@ use Yii;
 class Payment extends \yii\db\ActiveRecord
 {
     public $upload_file;
-    public $date_range;
+    public $date_range, $confirm_phone_number;
     /**
      * {@inheritdoc}
      */
@@ -38,14 +42,17 @@ class Payment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['application_id', 'level'], 'integer'],
+            [['application_id', 'level', 'ValidationResultCode'], 'integer'],
             [['billable_amount'], 'number'],
             [['date_created', 'last_update', 'date_range'], 'safe'],
             [['upload_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf', 'maxSize'=> 1024*1024*2],            
-            [['receipt'], 'string', 'max' => 100],
-            [['comment'], 'string', 'max' => 200],
+            [['receipt', 'CheckoutRequestID'], 'string', 'max' => 100],
+            [['comment', 'mpesa_error_message'], 'string', 'max' => 200],
+            [['phone_number', 'confirm_phone_number'], 'string', 'max' => 12],
             [['mpesa_code', 'comment'], \app\components\AlNumValidator::className()],
             [['mpesa_code', 'status'], 'string', 'max' => 20],
+            [['phone_number', 'confirm_phone_number'], 'required', 'on' => 'mpesa_payment'],
+            [['confirm_phone_number'], 'validatePhoneRepeat', 'on'=>['mpesa_payment']],
             [['application_id'], 'exist', 'skipOnError' => true, 'targetClass' => Application::className(), 'targetAttribute' => ['application_id' => 'id']],
         ];
     }
@@ -92,6 +99,16 @@ class Payment extends \yii\db\ActiveRecord
     }
     
     /**
+     * Validate password repeat
+     */
+    public function validatePhoneRepeat($attribute, $params)
+    {
+        if($this->confirm_phone_number != $this->phone_number){
+            $this->addError($attribute, "Phone numbers do not match!");
+        }
+    }
+    
+    /**
      * 
      * @throws \Exception
      */
@@ -108,6 +125,8 @@ class Payment extends \yii\db\ActiveRecord
             }
             if($this->save()){
                 ($this->upload_file)? $this->upload_file->saveAs($this->receipt):null;
+                $this->application->status = 'ApplicationWorkflow/certificate-paid'; // this is for payment done pending confirmation
+                $this->application->save(false);
                 $transaction->commit();
                 return true;
             }            
@@ -193,5 +212,63 @@ class Payment extends \yii\db\ActiveRecord
         $sum = number_format( $total, 2 );
 
         return $sum;
+    }
+    
+    public function callMpesaService()
+    {
+        $consumer_key = 'LHGuWfYkQG2JhBQojsprhKJDbtfmONKc';
+        $consumer_secret = 'GdgxAgDfBAmQ3cpF';
+        $credentials = base64_encode($consumer_key . ':' . $consumer_secret);
+        
+        $chh = curl_init('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials');
+        curl_setopt($chh, CURLOPT_HTTPHEADER, ["Authorization: Basic $credentials"]);
+        curl_setopt($chh, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($chh);
+        curl_close($chh);
+        $token = json_decode($response);
+        
+        $auth_token = $token->access_token;
+        
+        $timestamp = date('YmdHis');
+        $short_code = 174379;
+        
+        $passKey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
+        
+        //"https://" . \Yii::$app->params['environment_servers'][YII_ENV] . '/application-service/receive-resp/'
+        $ch = curl_init('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer $auth_token",
+            'Content-Type: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            "BusinessShortCode" => $short_code,
+            "Password" => base64_encode($short_code. $passKey . $timestamp),
+            "Timestamp" => $timestamp,
+            "TransactionType" => "CustomerPayBillOnline",
+            "Amount" => 1,
+            "PartyA" => $this->phone_number,
+            "PartyB" => $short_code,
+            "PhoneNumber" => $this->phone_number,
+            "CallBackURL" => "https://" . \Yii::$app->params['environment_servers'][YII_ENV] . '/application-service/receive-resp/',
+            "AccountReference" => $this->application->mpesa_account,
+            "TransactionDesc" => "Prof Accredit" 
+          ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $pay_response = curl_exec($ch);
+        curl_close($ch);
+        $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");        
+        $txt = $pay_response;
+        fwrite($myfile, $txt);
+        fclose($myfile);
+        $resp = json_decode($pay_response);
+        if(isset($resp->errorCode)){
+            $this->mpesa_error_message = $resp->errorCode . ' -- ' . $resp->errorMessage;
+            return false;
+        }else{
+            $this->CheckoutRequestID = $resp->CheckoutRequestID;
+            return true;
+        }
+        //$this->save(false);
     }
 }

@@ -50,4 +50,27 @@ class ApplicationServiceController extends ActiveController
         }
         return false;
     }
+    
+    public function actionReceiveResp()
+    {
+        \Yii::$app->controller->enableCsrfValidation = false;
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $content = file_get_contents('php://input'); //Recieves the response from MPESA as a string
+
+        $res = json_decode($content, false); //Converts the response string to an object
+        $myfile = fopen("newfile_test.txt", "w") or die("Unable to open file!");        
+        //$txt = $pay_response;
+        fwrite($myfile, $res);
+        fclose($myfile);
+        /*$dataToLog = array(
+            date("Y-m-d H:i:s"), //Date and time
+            $res
+        ); //Sets up the log format: Date, time and the response
+        $data = implode(" - ", $dataToLog);
+
+        $data .= PHP_EOL; //Add an end of line to the transaction log
+
+        file_put_contents('transaction_log', $data, FILE_APPEND);// Appends the response to the log file transaction_log*/
+    }
 }
