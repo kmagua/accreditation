@@ -11,7 +11,7 @@ Icon::map($this, Icon::FAS);
 /* @var $searchModel app\models\ApplicationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'My Pending Applications';
+$this->title = 'My Pending Reviews';
 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'content' => function($model){
                     return "<a href='{$model->financial_status_link}'>open</a>";
                 },
-            ],*/
+            ]
             [
                 'attribute' =>'date_created',
                 'label'=>'Application Date',
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'content' => function($data){
                     return date('d-m-Y', strtotime($data->date_created));
                 }     
-            ],
+            ],,*/
             [
                 'attribute' => 'status',
                 'contentOptions' => ['style' => 'width: 12%'],

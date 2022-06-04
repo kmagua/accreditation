@@ -7,16 +7,12 @@ use yii\grid\GridView;
 /* @var $searchModel app\modules\professional\models\PersonalInformationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Personal Informations';
+$this->title = 'Professional Accreditations';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="personal-information-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Personal Information', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -26,15 +22,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'idno',
             'first_name',
             'last_name',
             'other_names',
-            //'date_of_birth',
-            //'gender',
-            //'phone',
-            //'nationality',
+            'date_of_birth',
+            'gender',
+            'phone',
+            'nationality',
             //'county',
             //'postal_address',
             //'date_created',

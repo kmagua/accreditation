@@ -15,7 +15,7 @@ $level_val = ($level == 2)?1:$level;
 $app_classification = app\models\ApplicationClassification::find()->where(['application_id'=>$app_id, 'icta_committee_id'=>$level_val])->one();
 if($level == 2){
     $ac = app\models\ApplicationClassification::find()->where(['application_id'=>$app_id, 'icta_committee_id'=>2])->one();
-    if($ac->score > 0){
+    if($ac && $ac->score > 0){
         $app_classification = $ac;
     }
 }
@@ -166,8 +166,9 @@ foreach ($application_scores as $index => $application_score) {
         <?= Html::label("Approval Status", 'applicationscore-status') ?>
         <?= Html::dropDownList("ApplicationScore[status]", $app_status, [
             1 => 'Approved', 0 => 'Rejected'
-        ], ['prompt' => '', 'class' => 'form-control', 'id' => 'applicationscore-status',
-            'readonly'=>true, 'style'=>'pointer-events: none;']) ?>
+        ], ['prompt' => '', 'class' => 'form-control', 'id' => 'applicationscore-status'
+            //'readonly'=>true, 'style'=>'pointer-events: none;'
+            ]) ?>
     </div>
     
     <div class="col-md-5">

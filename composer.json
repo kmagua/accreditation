@@ -35,7 +35,9 @@
         "kartik-v/yii2-date-range": "dev-master",
         "demi/backup": "~1.0",
         "amoracr/yii2-backup": "*",
-        "beaten-sect0r/yii2-db-manager": "*"
+        "beaten-sect0r/yii2-db-manager": "*",
+        "dmstr/yii2-adminlte-asset": "^2.1",
+        "yiisoft/yii2-bootstrap4": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -53,6 +55,9 @@
         "process-timeout": 1800,
         "fxp-asset": {
             "enabled": false
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
         }
     },
     "scripts": {

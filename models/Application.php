@@ -250,6 +250,8 @@ class Application extends \yii\db\ActiveRecord
                 }else{
                     if($this->parent_id == ''){
                         $this->addError('application_type', 'An existing record already exists for the category. Kindly renew from that application.');
+                    }else{
+                        $this->validateOtherCHildIsNotPending();
                     }
                 }
             }
@@ -259,6 +261,20 @@ class Application extends \yii\db\ActiveRecord
         return true;
     }
     
+    public function validateOtherCHildIsNotPending()
+    {
+        $latest_renewal = Application::find()->where(['company_id' => $this->company_id,
+                'accreditation_type_id' => $this->accreditation_type_id, 'parent_id'=> $this->parent_id
+            ])->orderBy('id desc')->one();
+        if($latest_renewal){
+            if(!in_array($latest_renewal->status, ['ApplicationWorkflow/renewal', 'ApplicationWorkflow/completed'])){
+                $this->addError('accreditation_type_id', 'Another Renewal record that has not been approved to the last stage exists and hence cannot add a new one.');
+            }
+            
+        }        
+    }
+
+
     /**
      * Overridden function
      * @param type $insert
@@ -936,7 +952,7 @@ MSG;
         if($this->parent_id == ''){
             $this->initial_approval_date = date('Y-m-d');
         }else{
-            $sql = "SELECT * FROM accreditcomp.application WHERE
+            $sql = "SELECT * FROM supplier_accreditation.application WHERE
                 (parent_id = {$this->parent_id} or id = {$this->parent_id})
                  AND ifnull(initial_approval_date, '1900-01-01') !='1900-01-01' order by id desc limit 1";
             //latest approved application
@@ -962,8 +978,8 @@ MSG;
     public function getLatestCategory()
     {
         $parent_id = $this->parent_id;
-        $sql = "SELECT `classification` FROM accreditcomp.application app 
-            JOIN accreditcomp.`application_classification` ac ON ac.`application_id` = app.id  
+        $sql = "SELECT `classification` FROM supplier_accreditation.application app 
+            JOIN supplier_accreditation.`application_classification` ac ON ac.`application_id` = app.id  
             WHERE (app.parent_id = $parent_id OR app.id = $parent_id) AND `icta_committee_id` = 2
             ORDER BY app.id DESC LIMIT 1";
         $data = \Yii::$app->db->createCommand($sql)->queryScalar();
@@ -991,7 +1007,7 @@ MSG;
     {
         $this->application_type = 2;
         if($this->save()){
-            $sql = "UPDATE `accreditcomp`.`application` set
+            $sql = "UPDATE `supplier_accreditation`.`application` set
                 status = 'ApplicationWorkflow/renewed' where id = {$this->parent_id}";
             $app = \Yii::$app->db->createCommand($sql)->execute();
             return true;

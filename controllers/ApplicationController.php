@@ -539,7 +539,7 @@ class ApplicationController extends Controller
     {        
         $records = \Yii::$app->db->createCommand("
             SELECT COUNT(id) id, CONCAT_WS(' ', `status`, '(', COUNT(id), ')') `status`
-            FROM `accreditcomp`.application WHERE parent_id IS NULL GROUP BY `status`")
+            FROM `supplier_accreditation`.application WHERE parent_id IS NULL GROUP BY `status`")
             ->queryAll();
         $data = array_column($records, 'id');
         $values = $data;

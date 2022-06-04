@@ -31,10 +31,10 @@ class RemindersController extends Controller
 	WHEN icm.`committee_id` = 1 THEN 'Secretariat'
 	ELSE 'Committee'
 	END STATUS, app.id, icm.`committee_id`
-FROM `accreditcomp`.`application` app 
-JOIN `accreditcomp`.`application_committe_member`  acm ON app.id = acm.`application_id`
+FROM `supplier_accreditation`.`application` app 
+JOIN `supplier_accreditation`.`application_committe_member`  acm ON app.id = acm.`application_id`
 JOIN `icta_committee_member` icm ON icm.id = acm.`committee_member_id`
-JOIN `accreditcomp`.`user` usr ON usr.id = icm.`user_id`
+JOIN `supplier_accreditation`.`user` usr ON usr.id = icm.`user_id`
 WHERE app.status IN('ApplicationWorkflow/at-secretariat', 'ApplicationWorkflow/at-committee')";
         
         $recs = \app\models\Application::findBySql($sql)->asArray()->all();

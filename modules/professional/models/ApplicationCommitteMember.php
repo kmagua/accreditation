@@ -78,7 +78,7 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
     public function loadApplicationCommitteeMembers($level)
     {
         $rec = ApplicationCommitteMember::find()->from('application_committe_member acm')->select('committee_member_id')
-            ->join("join", 'accreditcomp.icta_committee_member icm', "acm.committee_member_id = icm.id")
+            ->join("join", 'supplier_accreditation.icta_committee_member icm', "acm.committee_member_id = icm.id")
             ->where(['application_id'=>$this->application_id, 'icm.committee_id' => $level])->all();
         if($rec){
             $this->committee_member_ids = array_column($rec, 'committee_member_id');
@@ -96,7 +96,7 @@ class ApplicationCommitteMember extends \yii\db\ActiveRecord
             }
         }
         $cmi = implode(",", $this->committee_member_ids);
-        $sql = "DELETE acm FROM application_committe_member acm JOIN accreditcomp.icta_committee_member icm ON icm.id=acm.committee_member_id
+        $sql = "DELETE acm FROM application_committe_member acm JOIN supplier_accreditation.icta_committee_member icm ON icm.id=acm.committee_member_id
             WHERE (application_id = {$this->application_id} AND icm.committee_id = $committee_id) AND committee_member_id NOT IN ($cmi)";
         \Yii::$app->db->createCommand($sql)->execute();
         return true;

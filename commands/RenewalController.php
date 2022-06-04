@@ -35,7 +35,7 @@ class RenewalController extends Controller
     
     public function companyAccreditationRenewals()
     {
-        $sql = "SELECT id, parent_id, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 1 YEAR) ,NOW()) date_diff  FROM `accreditcomp`.`application`
+        $sql = "SELECT id, parent_id, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 1 YEAR) ,NOW()) date_diff  FROM `supplier_accreditation`.`application`
             WHERE STATUS = 'ApplicationWorkflow/completed'
             HAVING date_diff < 20";
         $applications = \app\models\Application::findBySql($sql)->all();
@@ -44,13 +44,13 @@ class RenewalController extends Controller
             if($application->parent_id != ''){
                 $app_id = $application->parent_id;
             }
-            $sql2 = "SELECT id, parent_id,date_created,  DATEDIFF(NOW(), `date_created` ) date_diff  FROM `accreditcomp`.`application`
+            $sql2 = "SELECT id, parent_id,date_created,  DATEDIFF(NOW(), `date_created` ) date_diff  FROM `supplier_accreditation`.`application`
                 WHERE parent_id = {$app_id}
-                HAVING date_diff <20;";
+                HAVING date_diff < 20;";
             //echo "Hapa\n"; 
             $latest_app = \app\models\Application::findBySql($sql2)->one();
             if(!$latest_app){
-                //echo "Hapa ndani\n"; 
+                //echo "Hapa ndani\n";
                 $original_app = \app\models\Application::findOne($app_id);
                 if($original_app->status == 'ApplicationWorkflow/completed'){
                     $original_app->status = 'ApplicationWorkflow/renewal';

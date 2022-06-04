@@ -132,7 +132,7 @@ class Payment extends \yii\db\ActiveRecord
         $this->application->getInitApprovalDate();
         //update status of the parent to completed if renewal and payment is confirmed
         if($this->status == 'confirmed' && $this->application->parent_id != ''){
-            Yii::$app->db->createCommand()->update('accreditcomp.application',
+            Yii::$app->db->createCommand()->update('supplier_accreditation.application',
                 ['status' => 'ApplicationWorkflow/chair-approval'], ['id' =>$this->application->parent_id])->execute();
         }
         //only set serial # for the original application

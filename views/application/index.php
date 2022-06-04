@@ -87,7 +87,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'approval-payment-rejected' => 'Payment Rejected',
                     'completed' => 'Completed',
                     'renewal' => 'Pending Renewal',
-                    'renewed' => 'Pending Renewal Approval'
+                    'renewed' => 'Pending Renewal Approval',
+                    'chair-approval' => 'Chair Approval'
                 ]
             ],
             

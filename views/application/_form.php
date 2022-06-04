@@ -26,8 +26,14 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
     
     <div class="row"> 
         <div class="col-md-6">
-            <?= $form->field($model, 'accreditation_type_id')->dropDownList(
+            <?php if($model->isNewRecord){ ?>
+                <?= $form->field($model, 'accreditation_type_id')->dropDownList(
              ArrayHelper::map(app\models\AccreditationType::find()->all(), 'id', 'name'), ['prompt'=>'']) ?>
+            <?php } else { ?>
+            <?= $form->field($model, 'accreditation_type_id')->dropDownList(
+             ArrayHelper::map(app\models\AccreditationType::find()->where(['id' =>$model->accreditation_type_id])->all(), 'id', 'name'), ['prompt'=>'']) ?>
+            <?php } ?>
+            
         </div>
         
         <div class="col-md-6">

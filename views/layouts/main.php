@@ -1,145 +1,166 @@
 <?php
+use dmstr\widgets\Alert;
+use yii\helpers\Html;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-
-use app\widgets\Alert;
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
-
-AppAsset::register($this);
+$this->title = $this->title;
+dmstr\web\AdminLteAsset::register($this);
 ?>
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+<html>
 <head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php $this->registerCsrfMetaTags() ?>
-    
-     <?php $this->registerCssFile("/css/theming.css") ?>
-    
+    <meta charset="UTF-8">
+    <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- Ionicons -->
+    <link href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
+    <!-- Theme style -->
     <?php $this->head() ?>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body>
+
+<body class="hold-transition skin-black sidebar-mini">
 <?php $this->beginBody() ?>
 
-    <div class="wrap">
-    <?php   
-    NavBar::begin([
-        'brandImage' => Yii::getAlias("@web")."/images/ictabanntransparentlast.png",
-        //'brandLabel' => Yii::$app->name, 
-        //'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'my-navbar navbar-fixed-top',            
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right',],
-       // 'options' => ['style' => 'forecolor-color: red;'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],],
-            /*['label' => 'Applications', 'url' => ['/application/index'],
-                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
-                'linkOptions' => ['style' => 'color: white;font-weight: 900;margin-top: 25px;']],*/
-            
-            [
-                'label' => 'Applications', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
-                'items' => [
-                    ['label' => 'Company Accreditation', 'url' => ['/application/index'],
-                        //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450; background-color:green']],
-                    ['label' => 'My Pending Reviews', 'url' => ['/application/my-assigned'],
-                        //'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()),
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                    
-                ],
-                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
-            ],
-            ['label' => 'PDTP Applications', 'url' => ['/application/pdpt-applications'], 
-                'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'], 'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('pdtp', false))],
-            [
-                'label' => 'Quick Links', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
-                'items' => [
-                    ['label' => 'Company Profile', 'url' => ['/company-profile/create'],                        
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    //['label' => 'Professional', 'url' => ['/professional/personal-information/my-profile'],
-                    //    'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                    ['label' => 'My Account', 'url' => ['/user/my-profile'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'FAQs', 'url' => ['/site/faqs'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'Change My Password', 'url' => ['/user/change-password'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                ],
-                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->inGroup('Applicant', false))
-            ],
-            [
-                'label' => 'Administration', 'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],
-                'items' => [
-                    ['label' => 'Users', 'url' => ['/user/index'],                        
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'List of Application documents', 'url' => ['/document-type/index'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'Accreditation Levels', 'url' => ['/accreditation-level/index'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'Accreditation Categories', 'url' => ['/accreditation-type/index'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'Approval Stages', 'url' => ['/icta-committee/index'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'Reports', 'url' => ['/site/reports'],
-                        'linkOptions' => ['style' => 'color:#fff; background-color:green']],
-                    ['label' => 'FAQs', 'url' => ['/site/faqs'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                    ['label' => 'Change My Password', 'url' => ['/user/change-password'],
-                        'linkOptions' => ['style' => 'color: white;font-weight: 450;background-color:green']],
-                ],
-                'visible'=> (!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal())
-            ],
-            ['label' => 'Register', 'url' => ['/user/register'],
-                'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;'],'visible'=>Yii::$app->user->isGuest],
-            
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: white;font-weight: 450;margin-top: 20px;']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout',
-                    ['class' => 'btn btn-link logout glyphicon glyphicon-log-out', 'style' => 'color: white;font-weight: 450;margin-top: 20px;']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-    ]);
-    NavBar::end();
-    ?>
+<div class="wrapper">
+
+    <header class="main-header" style="background-color: green">
+        <!-- Logo -->
+        <a href="<?= \Yii::$app->homeUrl ?>" class="logo" style="background-color: green">
         
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?=''/* \mgcode\sessionWarning\widgets\SessionWarningWidget::widget([
-            'warnBefore' => 240,            
-        ]);*/ ?>
-        <?= $content ?>
+         <?php echo Html::img('@web/images/ictalogo.png',[ 'alt' => '','width' => '250px', 'height' => '50px' ]); ?>
+        <?= getenv('APP_TITLE') ?></a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation" style="background-color: green">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+<!--                <span class="sr-only">Toggle navigation</span>-->
+          
+            </a>
+            <strong style="color:white; text-align:center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ICT Supplier Accreditation Portal</strong>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                        <!-- Messages: style can be found in dropdown.less-->
+                        <li class="dropdown messages-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="label label-success">1</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header">You have 1 notification(s)</li>
+                                <li>
+                                    <!-- inner menu: contains the actual data -->
+                                    <ul class="menu">
+                                        <li>
+                                            <a href="#">
+                                                <i class="ion ion-ios7-people info"></i> Welcome to Phundament 4!
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+<!--                        <li class="dropdown tasks-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-flag"></i>
+                                <span class="label label-default">n/a</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header">Languages</li>
+                                <li>
+                                     inner menu: contains the actual data 
+                                    <ul class="menu">
+                                        languages
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>-->
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:black">
+                                <i class="glyphicon glyphicon-user"></i>
+                                <span>Username <i class="caret"></i></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header bg-green-gradient">
+                                    <?php echo \cebe\gravatar\Gravatar::widget(
+                                        [
+                                            'email'   => 'username@example.com',
+                                            'options' => [
+                                                'alt' => 'username'
+                                            ],
+                                            'size'    => 128
+                                        ]
+                                    ); ?>
+                                    <p style="color:black">
+                                        username
+                                        <small>username@example.com</small>
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="<?= \yii\helpers\Url::to(['/user/settings/profile']) ?>"
+                                           class="btn btn-default btn-flat">Profile</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="<?= \yii\helpers\Url::to(['/site/logout']) ?>"
+                                           class="btn btn-default btn-flat" data-method="post">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar" style="background-color: black">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <?= $this->render('_sidebar') ?>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                <small><?= $this->title ?></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+
+        <section class="content">
+            <?= Alert::widget() ?>
+            <?= $content ?>
+        </section>
+        <!-- /.content -->
     </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        &copy; <strong><a href="https://icta.go.ke">ICT Authority, Kenya.</a></strong>
+    </footer>
 </div>
-
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; ICT Authority <?= date('Y') ?></p>
-
-        <!--<p class="pull-right"><?= ""//Yii::powered() ?></p>-->
-    </div>
-</footer>
+<!-- ./wrapper -->
 <?php
 yii\bootstrap\Modal::begin([
     'headerOptions' => ['id' => 'modalHeader'],
@@ -164,8 +185,6 @@ echo '<div class="modal-footer">
       </div>';
 yii\bootstrap\Modal::end();
 ?>
-<?php $this->endBody() ?>
-
 <?php
 $path = Yii::getAlias('@web');
 $js = <<<JS
@@ -180,6 +199,8 @@ JS;
 
 $this->registerJs($js,yii\web\View::POS_END, 'refresh_on_close_modal');
 ?>
+<?php $this->endBody() ?>
+
 </body>
 </html>
 <?php $this->endPage() ?>

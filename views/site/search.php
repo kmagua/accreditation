@@ -38,4 +38,4 @@ $this->title = "Validate certificate";
     </div>
 </div>
 
-<h4>You can also search from the list of Companies Accredited before system was rolled out <?= Html::a('HERE', ['pre-system-accredited-companies/index']) ?></h4>
+<!-- <h4>You can also search from the list of Companies Accredited before system was rolled out <?= '' //Html::a('HERE', ['pre-system-accredited-companies/index']) ?></h4> -->
