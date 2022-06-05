@@ -42,7 +42,7 @@ class CompanyStaffController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['view','update'],
+                        'actions' => ['view','update', 'update-ajax', 'delete-ajax'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -132,6 +132,26 @@ class CompanyStaffController extends Controller
             'model' => $model,
         ]);
     }
+    
+    /**
+     * Updates an existing CompanyStaff model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdateAjax($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return "updated Successfully";
+        }
+
+        return $this->renderAjax('_form', [
+            'model' => $model,
+        ]);
+    }
 
     /**
      * Deletes an existing CompanyStaff model.
@@ -145,6 +165,24 @@ class CompanyStaffController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+    
+    /**
+     * Deletes an existing CompanyStaff model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDeleteAjax($id)
+    {
+        $application = \app\models\ApplicationStaff::find()->where(['staff_id' => $id])->one();        
+        if(!$application){
+            $this->findModel($id)->delete();
+            return 'Deleted successfully';
+        }else{
+            return '<p style="color:red">The member is linked to an existing application hence cannot be removed.</p>';
+        }
     }
 
     /**

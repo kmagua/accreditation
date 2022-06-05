@@ -53,5 +53,3 @@ echo GoogleChart::widget(array('visualization' => 'ScatterChart',
     'data' => $status_summary,
     'options' => array('title' => 'Appplications Status Summary', 'legend'=>'left', 'is3D' => true, 'colors'=> ['#008000']
         )));//'hAxis'=> array('slantedText'=>true, 'slantedTextAngle' => 90 ,'height'=>900)
-
-?>

@@ -192,6 +192,9 @@ class ApplicationController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if($model->status != 'ApplicationWorkflow/draft'){
+            throw new \yii\web\HttpException(403, 'This application is in review hence you cannot be able to edit it.');
+        }
         $model->setScenario('create_update');
         $model->loadExperienceData();
         $model->loadStaffData();

@@ -8,6 +8,7 @@ use app\models\ProfessionalCertificationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ProfessionalCertificationController implements the CRUD actions for ProfessionalCertification model.
@@ -20,6 +21,48 @@ class ProfessionalCertificationController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                //'only' => ['create','view','update','delete', 'index'],
+                'rules' => [
+                    [
+                        'actions' => ['create-ajax', 'data'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['sid'])){
+                                $st = \app\models\CompanyStaff::findOne(Yii::$app->request->get()['sid']);
+                                if($st){
+                                    return (Yii::$app->user->identity->id == $st->company->user_id) || Yii::$app->user->identity->isAdmin(false);
+                                }
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['update-ajax','view', 'delete-ajax'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){
+                                $pc = \app\models\ProfessionalCertification::findOne(Yii::$app->request->get()['id']);
+                                if($pc){
+                                    return (Yii::$app->user->identity->id == $pc->staff->company->user_id) || Yii::$app->user->identity->isAdmin(false);
+                                }
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {                            
+                            return Yii::$app->user->identity->isInternal();
+                        }
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -160,6 +203,18 @@ class ProfessionalCertificationController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+    
+    /**
+     * Deletes an existing AcademicQualification model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDeleteAjax($id)
+    {
+        return $this->findModel($id)->delete();
     }
 
     /**

@@ -145,6 +145,15 @@ class CompanyStaff extends \yii\db\ActiveRecord
         return true;
     }
     
+    public function beforeDelete() 
+    {
+        parent::beforeDelete();
+        StaffExperience::deleteAll(['staff_id' =>$this->id]);
+        ProfessionalCertification::deleteAll(['staff_id' =>$this->id]);
+        AcademicQualification::deleteAll(['staff_id' =>$this->id]);
+        return true;
+    }
+    
     /**
      * Get staff name
      * @return type string

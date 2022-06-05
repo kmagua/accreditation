@@ -8,6 +8,7 @@ use app\models\AcademicQualificationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * AcademicQualificationController implements the CRUD actions for AcademicQualification model.
@@ -20,6 +21,48 @@ class AcademicQualificationController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                //'only' => ['create','view','update','delete', 'index'],
+                'rules' => [
+                    [
+                        'actions' => ['create-ajax', 'data'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['sid'])){
+                                $st = \app\models\CompanyStaff::findOne(Yii::$app->request->get()['sid']);
+                                if($st){
+                                    return (Yii::$app->user->identity->id == $st->company->user_id) || Yii::$app->user->identity->isAdmin(false);
+                                }
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['update-ajax','view', 'delete-ajax'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            if(isset(Yii::$app->request->get()['id'])){
+                                $aq = \app\models\AcademicQualification::findOne(Yii::$app->request->get()['id']);
+                                if($aq){
+                                    return (Yii::$app->user->identity->id == $aq->staff->company->user_id) || Yii::$app->user->identity->isAdmin(false);
+                                }
+                            }                             
+                            return false;
+                        }
+                    ],
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {                            
+                            return Yii::$app->user->identity->isInternal();
+                        }
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

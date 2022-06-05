@@ -70,6 +70,11 @@ $quickLinksMenuItems[] = [
     'label' => 'Change My Password',
     'url' => ['/user/change-password'],
 ];
+$quickLinksMenuItems[] = [
+    'icon' => 'comment-dots',
+    'label' => 'Send us Feeback',
+    'url' => ['/feedback/my-submissions'],
+];
 
 
 $adminMenuItems = []; // to start here

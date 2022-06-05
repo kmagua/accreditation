@@ -43,17 +43,24 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 7%'],
                 //'visible'=> Yii::$app->user->isGuest ? false : true,
-                'template' => '{view}{update}',
+                'template' => '{view}{update}{delete}',
                 'buttons'=>[
                     'view' => function ($url, $model) {
                         return Html::a('', $url, ['class' => 'glyphicon glyphicon-eye-open btn btn-default btn-xs custom_button',
                             'title' =>"Full Staff Details",
                             'onclick'=>"getDataForm('$url', '<h3>Full Staff Details - " . $model->getNames() . "</h3>'); return false;"]);
                     },
-                    'update' => function ($url) {
-                        return Html::a('', $url, ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
+                    'update' => function ($url, $model) {
+                        $url = yii\helpers\Url::to(['company-staff/update-ajax', 'id'=>$model->id], true);
+                        return Html::a('',['company-staff/update-ajax', 'id'=>$model->id] , ['class' => 'glyphicon glyphicon-pencil btn btn-default btn-xs custom_button',
                             'title' =>"Edit Staff Details",
                             'onclick'=>"getDataForm('$url', '<h3>Record Edit</h3>'); return false;"]);
+                    },
+                    'delete' => function ($url, $model) {
+                        $url = yii\helpers\Url::to(['company-staff/delete-ajax', 'id'=>$model->id], true);
+                        return Html::a('',['company-staff/delete-ajax', 'id'=>$model->id] , ['class' => 'glyphicon glyphicon-trash btn btn-default btn-xs custom_button',
+                            'title' =>"Delete Staff Details",
+                            'onclick'=>"getDataForm('$url', '<h3>Record Delete</h3>'); return false;"]);
                     },
                 ],
             ],
