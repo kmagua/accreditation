@@ -68,6 +68,9 @@ class SiteController extends Controller
     public function actionIndex()
     {
         //echo \Yii::getAlias('@webroot/images/francis.png'); exit;
+        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->isInternal()){
+            return $this->render('index_internal');
+        }
         return $this->render('index');
     }
 

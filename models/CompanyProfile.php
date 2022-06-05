@@ -32,6 +32,7 @@ use app\components\AlphaValidator;
  * @property CompanyExperience[] $companyExperiences
  * @property User $user
  * @property CompanyStaff[] $companyStaff
+ * @property CompanyType $companyType
  */
 class CompanyProfile extends \yii\db\ActiveRecord
 {
@@ -63,6 +64,7 @@ class CompanyProfile extends \yii\db\ActiveRecord
             [['town', 'building'], 'string', 'max' => 40],
             [['postal_address'], 'string', 'max' => 50],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['company_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyType::className(), 'targetAttribute' => ['company_type_id' => 'id']], 
         ];
     }
 
@@ -142,6 +144,16 @@ class CompanyProfile extends \yii\db\ActiveRecord
     {
         return $this->hasMany(CompanyStaff::className(), ['company_id' => 'id']);
     }
+    
+    /**
+    * Gets query for [[CompanyType]]. 
+    * 
+    * @return \yii\db\ActiveQuery 
+    */ 
+    public function getCompanyType() 
+    { 
+        return $this->hasOne(CompanyType::className(), ['id' => 'company_type_id']); 
+    } 
     
     /**
      * 

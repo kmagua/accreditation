@@ -49,7 +49,7 @@ if($cur_application->application_type == 2){
     </div>
     
     <div class="col-md-2">
-        <h4>Categoty</h4><hr>
+        <h4>Category</h4><hr>
     </div>
 
     <div class="col-md-3">

@@ -40,6 +40,11 @@ class ApplicationController extends Controller
                         }
                     ],
                     [
+                        'actions' => ['validate-mpesa'],
+                        'allow' => true,
+                        'roles' => ['@'],                        
+                    ],
+                    [
                         'actions' => ['update','view', 'upload-receipt', 'download-cert', 'renew-cert', 'revert-rejection','lipa-na-mpesa'],
                         'allow' => true,
                         'roles' => ['@'],
@@ -72,12 +77,15 @@ class ApplicationController extends Controller
                         'matchCallback' => function () {
                             if(Yii::$app->request->get()['l'] == 1){
                                 $email = Yii::$app->user->identity->username;
-                                if(in_array($email, ['charles.waithiru@ict.go.ke', 'charles.waithiru@icta.go.ke']) 
+                                if(in_array($email, Yii::$app->params['secAssigner']) 
                                         || Yii::$app->user->identity->isAdmin()){
                                     return true;
                                 }
                             }else if(Yii::$app->request->get()['l'] == 2){
-                                return Yii::$app->user->identity->isInternal();
+                                if(in_array($email, Yii::$app->params['committeeAssigner']) 
+                                        || Yii::$app->user->identity->isAdmin()){
+                                    return true;
+                                }
                             }
                         }
                     ],
@@ -289,7 +297,7 @@ class ApplicationController extends Controller
     public function actionApproval($id, $level, $rej=null)
     {
         $application_scores = \app\models\ApplicationScore::find()
-            ->where(['application_id' => $id, 'committee_id' => $level])->indexBy('id')->orderBy('score_item_id')->all();
+            ->where(['application_id' => $id, 'committee_id' => $level])->indexBy('id')->orderBy('id')->all();
 
         if (Model::loadMultiple($application_scores, Yii::$app->request->post()) && Model::validateMultiple($application_scores)) {
             foreach ($application_scores as $application_score) {                

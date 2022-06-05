@@ -17,6 +17,12 @@
                 }
             ],
             [
+                'label' => 'Date Assigned',
+                'content' => function($data){
+                    return date('d-m-Y', strtotime($data->date_created));
+                }
+            ],
+            [
                 'label' => 'Re-assign',
                 'content' => function($data){
                     $show = false;

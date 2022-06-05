@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             'company.company_name',
             'company.business_reg_no',
-            'company.company_name',
+            'company.companyType.name',
             'company.registration_date',
             'company.county',
             'company.town',

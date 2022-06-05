@@ -680,7 +680,7 @@ MSG;
      */
     public function loadApplicationScores($level)
     {
-        $score_items_sql ="SELECT id FROM `score_item`";
+        $score_items_sql ="SELECT id FROM `score_item` order by order_col asc";
         $uid = \Yii::$app->user->identity->user_id;
         $score_items_data = \Yii::$app->db->createCommand($score_items_sql)->queryAll();
         ApplicationClassification::setClassificationItemsToNull($level->data, $this->id);
@@ -928,7 +928,7 @@ MSG;
         $sql = "SELECT cd.* FROM `company_document` cd 
             JOIN `company_type_document` ctd ON cd.`company_type_doc_id`=ctd.id
             JOIN `document_type` dt ON dt.id = ctd.`document_type_id`
-            WHERE dt.name = 'business permit' AND cd.company_id = $cid";
+            WHERE cd.company_id = $cid"; // removed dt.name = 'business permit' AND
         $query = CompanyDocument::findBySql($sql);
         $provider = new \yii\data\ActiveDataProvider(['query' => $query]);
         return $provider;
@@ -1296,5 +1296,32 @@ MSG;
             return true;
         }
         return false;
+    }
+    
+    public static function getAllAppsPerCategory($approved = false)
+    {
+        $and = '';
+        if($approved){
+            $and = 'WHERE a.status = "ApplicationWorkflow/completed"';
+        }
+        $sql = "SELECT COUNT(*) AS id, at.`name` FROM `application` a JOIN `accreditation_type` `at` 
+            ON at.id=a.`accreditation_type_id` $and GROUP BY a.`accreditation_type_id`";
+        $recs = Yii::$app->db->createCommand($sql)->queryAll();
+        return $recs;
+    }
+    
+    public static function getStatusSummary()
+    {
+        $sql = "SELECT COUNT(*) id, SUBSTR(`status`, 21, 50) `status` FROM `application` GROUP BY `status`";
+        $recs = Yii::$app->db->createCommand($sql)->queryAll();
+        return $recs;
+    }
+    
+    public static function getAccreditationLevelData()
+    {
+        $sql = "SELECT COUNT(*) id, `classification` FROM `application_classification` 
+                WHERE `classification` IS NOT NULL AND `classification` != 'reapply' GROUP BY `classification`";
+        $recs = Yii::$app->db->createCommand($sql)->queryAll();
+        return $recs;
     }
 }
