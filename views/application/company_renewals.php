@@ -26,7 +26,7 @@ $model->company_id = $searchModel->company_id;
             
             [
                 'attribute' => 'financial_status_link',
-                'contentOptions' => ['style' => 'width: 7%'],
+                'contentOptions' => ['style' => 'width: 20%'],
                 'content' => function($model){
                     return "<a href='{$model->financial_status_link}'>Financial status link</a>";
                 },

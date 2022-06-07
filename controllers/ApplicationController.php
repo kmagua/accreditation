@@ -82,6 +82,7 @@ class ApplicationController extends Controller
                                     return true;
                                 }
                             }else if(Yii::$app->request->get()['l'] == 2){
+                                $email = Yii::$app->user->identity->username;
                                 if(in_array($email, Yii::$app->params['committeeAssigner']) 
                                         || Yii::$app->user->identity->isAdmin()){
                                     return true;
@@ -193,7 +194,7 @@ class ApplicationController extends Controller
     {
         $model = $this->findModel($id);
         if($model->status != 'ApplicationWorkflow/draft'){
-            throw new \yii\web\HttpException(403, 'This application is in review hence you cannot be able to edit it.');
+            throw new \yii\web\HttpException(403, 'This application is in review by ICTA hence you cannot be able to edit it.');
         }
         $model->setScenario('create_update');
         $model->loadExperienceData();
@@ -364,7 +365,7 @@ class ApplicationController extends Controller
         if(!$model){
             throw new \Exception("Record not found!");
         }
-        
+        //$model->updateApplicationPaymentStatus();  
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->updateApplicationPaymentStatus();           
             return "Payment status updated successfully.";

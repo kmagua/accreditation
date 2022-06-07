@@ -150,12 +150,14 @@ class Payment extends \yii\db\ActiveRecord
         $status = $this->status == 'confirmed'?'chair-approval':'approval-payment-rejected';
         $this->application->getInitApprovalDate();
         //update status of the parent to completed if renewal and payment is confirmed
-        if($this->status == 'confirmed' && $this->application->parent_id != ''){
-            Yii::$app->db->createCommand()->update('supplier_accreditation.application',
-                ['status' => 'ApplicationWorkflow/chair-approval'], ['id' =>$this->application->parent_id])->execute();
-        }
+        //DISABLED DURING VERSION II
+        //if($this->status == 'confirmed' && $this->application->parent_id != ''){
+            
+            //Yii::$app->db->createCommand()->update('supplier_accreditation.application',
+            //    ['status' => 'ApplicationWorkflow/chair-approval'], ['id' =>$this->application_id])->execute();
+        //}
         //only set serial # for the original application
-        $cert_serial_id = ($this->application->parent_id == '') ? $this->application->id : $this->application->parent_id;
+        $cert_serial_id = $this->application->id; //($this->application->parent_id == '') ? $this->application->id : $this->application->parent_id;
         $this->application->certificate_serial = strtoupper(dechex($cert_serial_id * 100000027));
         $this->application->progressWorkFlowStatus($status);
     }

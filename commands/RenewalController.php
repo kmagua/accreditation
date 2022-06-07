@@ -35,29 +35,30 @@ class RenewalController extends Controller
     
     public function companyAccreditationRenewals()
     {
-        $sql = "SELECT id, parent_id, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 1 YEAR) ,NOW()) date_diff  FROM `supplier_accreditation`.`application`
+        $sql = "SELECT *, DATEDIFF(DATE_ADD(`initial_approval_date`, INTERVAL 1 YEAR) ,NOW()) date_diff  FROM `supplier_accreditation`.`application`
             WHERE STATUS = 'ApplicationWorkflow/completed'
             HAVING date_diff < 20";
         $applications = \app\models\Application::findBySql($sql)->all();
         foreach($applications as $application){
             $app_id = $application->id;
-            if($application->parent_id != ''){
+            //Removed since version 2 to allow a renewal to atache to a previous renewal instead of always the parent
+            /*if($application->parent_id != ''){
                 $app_id = $application->parent_id;
-            }
-            $sql2 = "SELECT id, parent_id,date_created,  DATEDIFF(NOW(), `date_created` ) date_diff  FROM `supplier_accreditation`.`application`
-                WHERE parent_id = {$app_id}
-                HAVING date_diff < 20;";
+            }*/
+            $sql2 = "SELECT id, parent_id  FROM `supplier_accreditation`.`application` WHERE parent_id = {$app_id}";
             //echo "Hapa\n"; 
             $latest_app = \app\models\Application::findBySql($sql2)->one();
             if(!$latest_app){
                 //echo "Hapa ndani\n";
-                $original_app = \app\models\Application::findOne($app_id);
-                if($original_app->status == 'ApplicationWorkflow/completed'){
-                    $original_app->status = 'ApplicationWorkflow/renewal';
-                    $original_app->save(false);
-                    $this->sendEmail($original_app);
+                //$original_app = \app\models\Application::findOne($app_id);
+                if($application->status == 'ApplicationWorkflow/completed'){
+                    //echo "Hapa ndani tena\n";
+                    $application->status = 'ApplicationWorkflow/renewal';
+                    $application->save(false);
+                    $this->sendEmail($application);
                 }
             }
+            //echo "Hapa nje";
         }
     }
     
@@ -105,7 +106,7 @@ class RenewalController extends Controller
         $link = \yii\helpers\Url::to(['/company-profile/view', 'id' => $application->company_id], true);
         
         $message = <<<MSG
-                Dear {$application->user->full_name},
+                Dear Applicant,
                 <p>Kindly note that your Accreditation by ICT Authority for $type is approaching the annual renewal period.
                     You will need to start the renewal process using the link below to ensure validity of your certificate.</p>                        
                     Make sure to review and update the following:-

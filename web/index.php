@@ -2,10 +2,10 @@
 ini_set('memory_limit', '512M');
 ini_set('max_execution_time', 300);
 // comment out the following two lines when deployed to production
-//if($_SERVER['SERVER_NAME'] == 'localhost'){
+if(strtolower($_SERVER['SERVER_NAME']) != 'accreditation.icta.go.ke'){
     defined('YII_DEBUG') or define('YII_DEBUG', true);
     defined('YII_ENV') or define('YII_ENV', 'dev');
-//}
+}
 
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';

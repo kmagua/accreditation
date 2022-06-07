@@ -258,8 +258,7 @@ class Application extends \yii\db\ActiveRecord
                 }
             }
             $this->checkDuplicates();
-        }
-        
+        }        
         return true;
     }
     
@@ -272,7 +271,6 @@ class Application extends \yii\db\ActiveRecord
             if(!in_array($latest_renewal->status, ['ApplicationWorkflow/renewal', 'ApplicationWorkflow/completed'])){
                 $this->addError('accreditation_type_id', 'Another Renewal record that has not been approved to the last stage exists and hence cannot add a new one.');
             }
-            
         }        
     }
 
@@ -444,7 +442,7 @@ class Application extends \yii\db\ActiveRecord
             case 'ApplicationWorkflow/renewal':
                 return $this->processRenewal();
             case 'ApplicationWorkflow/renewed':
-                return 'Pending Renewal Approval';
+                return 'Certificate Renewed';
             case 'ApplicationWorkflow/chair-approval':
                 return $this->processCeremonialAPproval(1);
             case 'ApplicationWorkflow/director-approval':
@@ -966,7 +964,7 @@ MSG;
             $this->initial_approval_date = date('Y-m-d');
         }else{
             $sql = "SELECT * FROM supplier_accreditation.application WHERE
-                (parent_id = {$this->parent_id} or id = {$this->parent_id})
+                (id = {$this->parent_id} OR parent_id = {$this->parent_id})
                  AND ifnull(initial_approval_date, '1900-01-01') !='1900-01-01' order by id desc limit 1";
             //latest approved application
             $laa = Application::findBySql($sql)->one();
@@ -1184,7 +1182,7 @@ MSG;
        // echo $url . " ------- " .$response; exit;
         $obj = json_decode($response);
         //print_r($obj); exit;
-        if($obj->Title == 'error'){
+        if(isset($obj->Title) && $obj->Title == 'error'){
             $this->registerBizRegNumberInERP($biz_reg);
         }else{
             $msg = "Hapa; exists";

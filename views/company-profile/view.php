@@ -72,7 +72,7 @@ $cpDataProvider = $searchCP->search([]);
             'label' => 'Renewals',
             'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['application/my-renewals', 'cid'=>$model->id])],
             //'headerOptions' => ['style'=>'font-weight:bold'],
-            'options' => ['id' => 'application_data_tab'],
+            'options' => ['id' => 'renewals_data_tab'],
         ],
         /*[
             'label' => 'Dropdown',
