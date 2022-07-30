@@ -148,3 +148,11 @@ ul.dropdown-menu > li:hover{
     background-color: red !important;
 }
 
+
+.accessible_toggle-contrast{
+    color:#fff; 
+}
+
+.accessible_toggle-contrast:hover{
+    color:#000 !important; 
+}

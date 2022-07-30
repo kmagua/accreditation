@@ -8,6 +8,7 @@ use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
 $this->title = 'Login';
+
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login" style="margin:10px !important">
@@ -36,10 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="form-group">
             <div class="offset-lg-2 col-lg-4">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-success', 'name' => 'login-button']) ?>
+                <?= Html::submitButton('Login', ['class' => 'btn btn-danger', 'name' => 'login-button', 'style'=>'background-color:#CB3720']) ?>
                 
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <?= yii\helpers\Html::a('Create Account', ['user/register'], ['class' => 'btn btn-primary']) ?>
+                <?= yii\helpers\Html::a('Create Account', ['user/register'], ['class' => 'btn btn-primary', 'style'=>'background-color:#24537F']) ?>
             </div>
         </div>
 

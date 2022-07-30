@@ -6,12 +6,12 @@ use yii\helpers\Html;
 /* @var $content string */
 $this->title = $this->title;
 dmstr\web\AdminLteAsset::register($this);
-
+$css_url = Yii::getAlias('@web') .'/css/accessibility.css';
 ?>
 
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <?= Html::csrfMetaTags() ?>
@@ -24,6 +24,8 @@ dmstr\web\AdminLteAsset::register($this);
       }
       ");
     ?>
+    
+    <?php $this->registerCssFile($css_url); ?>
     <!-- Theme style -->
     <?php $this->head() ?>
 
@@ -37,22 +39,22 @@ dmstr\web\AdminLteAsset::register($this);
 
 <body class="hold-transition skin-black sidebar-mini">
 <?php $this->beginBody() ?>
-
+    <a href="#main-content-div" class="skip" style='color:#B2210E'>Skip to main content</a>
 <div class="wrapper">
 
     <header class="main-header" style="background-color: green">
         <!-- Logo -->
         <a href="<?= \Yii::$app->homeUrl ?>" class="logo" style="background-color: green">
         
-         <?php echo Html::img('@web/images/ictalogo.png',[ 'alt' => '','width' => '250px', 'height' => '50px' ]); ?>
+         <?php echo Html::img('@web/images/ictalogo.png',[ 'alt' => 'ICT Authority Logo','width' => '250px', 'height' => '50px' ]); ?>
         <?= getenv('APP_TITLE') ?></a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation" style="background-color: green">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+            <button name="toggle-sidebar" aria-label="toggle-sidebar" class="sidebar-toggle" data-toggle="push-menu" role="button">
 <!--                <span class="sr-only">Toggle navigation</span>-->
           
-            </a>
+            </button>
             <strong style="color:white; text-align:center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ICT Supplier Accreditation Portal</strong>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
@@ -60,7 +62,7 @@ dmstr\web\AdminLteAsset::register($this);
                         
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:black">
+                            <a href="#" class="dropdown-toggle accessible_toggle-contrast" data-toggle="dropdown" style="color:white">
                                 <i class="glyphicon glyphicon-user"></i>
                                 <span>User <i class="caret"></i></span>
                             </a>
@@ -101,7 +103,7 @@ dmstr\web\AdminLteAsset::register($this);
         </nav>
     </header>
     <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar" style="background-color: black">
+    <aside class="main-sidebar" style="background-color: black" aria-label='Secondary'>
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             <?= $this->render('_sidebar') ?>
@@ -110,15 +112,15 @@ dmstr\web\AdminLteAsset::register($this);
     </aside>
 
     <!-- Right side column. Contains the navbar and content of the page -->
-    <div class="content-wrapper">
+    <main class="content-wrapper" id="main-content-div">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                <small><?= $this->title ?></small>
+                <small style="color:#000 !important;font-weight: 500"><?= $this->title ?></small>
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Dashboard</li>
+            <ol class="breadcrumb" style="color:#000 !important;font-weight: 500" aria-label='breadcrumb'>
+                <li><a href="<?= Yii::getAlias('@web') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li aria-current='location' class="active">Dashboard</li>
             </ol>
         </section>
 
@@ -129,10 +131,12 @@ dmstr\web\AdminLteAsset::register($this);
             <?= $content ?>
         </section>
         <!-- /.content -->
-    </div>
+    </main>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-        &copy; <strong><a href="https://icta.go.ke">ICT Authority, Kenya.</a></strong>
+        &copy; <strong><a href="https://icta.go.ke" style='color:#B2210E'>ICT Authority, Kenya.</a></strong>
+        
+        <a href="https://icta.go.ke" style="float:right; color:#B2210E">ICT Authority, Kenya Sitemap</a>
     </footer>
 </div>
 <!-- ./wrapper -->

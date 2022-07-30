@@ -43,7 +43,7 @@ class CompanyType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Type Of Business',
             'date_created' => 'Date Created',
             'last_updated' => 'Last Updated',
         ];

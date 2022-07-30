@@ -86,10 +86,10 @@ class CompanyDocument extends \yii\db\ActiveRecord
      * @author kmagua
      * @return string
      */
-    public function fileLink($icon = false)
+    public function fileLink($icon = true)
     {
         if($this->upload_file != ''){
-            $text = ($icon== true)?"<span class='glyphicon glyphicon-download-alt' title='Download - {$this->upload_file}'></span>" :
+            $text = ($icon== true)?"<span class='glyphicon glyphicon-download-alt' title='Download - {$this->upload_file}'>Document</span>" :
                 \yii\helpers\Html::encode($this->upload_file);
             $path = Yii::getAlias('@web') ."/";
             return \yii\helpers\Html::a($text,$path . $this->upload_file,['data-pjax'=>"0", 'target'=>'_blank']);

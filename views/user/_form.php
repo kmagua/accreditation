@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="container" style="margin-top:2%;background-color:white;margin-left:-5%" id="Log">
-    <div class="col-md-6 col-md-offset-3 alert alert-info" style="background-color:white;border:solid 1px  #009933;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;">
+    <div class="col-md-6 col-md-offset-3" style="background-color:white;border:solid 1px  #009933;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;">
         <!--<div style="text-align:center;"><img src="<?= Yii::getAlias("@web") ?>/images/icta.png" height="60"; width="100" /></div>
         <br />
     
@@ -21,10 +21,10 @@ use yii\widgets\ActiveForm;
         </div>
         <br>-->
         <div class="row">
-            <h4 class="text-center" style=width:100%;color:green;height:6%;text-align:center;margin-top:-15.5px;text-justify: 
+            <!--<h1 class="text-center" style=width:100%;color:#000000;height:6%;text-align:center;margin-top:-15.5px;text-justify: 
             font-family:'Times New Roman', 'Times', Arial, sans-serif;font-weight:100">
                 Register Account
-            </h4>
+            </h1>-->
         </div>
         <!--<br /> -->
 <div class="user-form" style="color: black !important">
@@ -49,10 +49,10 @@ use yii\widgets\ActiveForm;
 
     <div class="form-group">
         <div class="col-md-6">
-       <?= Html::submitButton('Register', ['class' => 'btn btn-success']) ?>
+       <?= Html::submitButton('Register', ['class' => 'btn btn-danger', 'style'=>'background-color:#CB3720']) ?>
         </div>
         <div class="col-md-5 col-md-offset-1">
-            <?= Html::a('Back to Login', ['/site/login'], ['class'=>'btn btn-default']) ?>
+            <?= Html::a('Back to Login', ['/site/login'], ['class'=>'btn btn-default', 'style'=>'background-color:#24537F; color:#fff']) ?>
         </div>
     </div>
 

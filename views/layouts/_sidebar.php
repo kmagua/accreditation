@@ -36,7 +36,11 @@ $menuItems = [];
 
 $favouriteMenuItems[] = ['label' => 'DASHBOARD', 'options' => ['class' => 'header', 'style' => 'color:#fff']];
 
-
+$menuItems[] = [
+    'url' => ['/'],
+    'icon' => 'home',
+    'label' => 'Home',    
+];
 $applicationsMenuItems = [];
 $applicationsMenuItems[] = [
     'url' => ['/application/index'],

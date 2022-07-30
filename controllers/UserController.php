@@ -247,7 +247,7 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
             //\Yii::$app->session->setFlash('user_confirmation','Password updated. Use your new password to login.');
             return $this->redirect(['user/index']);
         }

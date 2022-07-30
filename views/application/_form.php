@@ -56,6 +56,11 @@ $staff_data = ArrayHelper::map(\app\models\CompanyStaff::find()->select($express
             <?= $form->field($model, 'cash_flow')->textInput() ?>
         </div>
     </div>-->
+    <div class="row">
+        <h4 style="color:#E30613; padding:10px">Note: For work experience and staff below. Only select those who are applicable for this application. e.g. 
+            If you are applying for "Systems and Applications" only select work that is re
+            lated to systems development and staff who are in system development field</h4>
+    </div>
     
     <div class="row">
           <div class="col-md-6">

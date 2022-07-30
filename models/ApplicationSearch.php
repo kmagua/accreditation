@@ -203,10 +203,10 @@ class ApplicationSearch extends Application
     public function getMyListList($params)
     {
         $sql = "SELECT app.*
-        FROM `supplier_accreditation`.`application` app 
-        JOIN `supplier_accreditation`.`application_committe_member`  acm ON app.id = acm.`application_id`
+        FROM `application` app 
+        JOIN `application_committe_member`  acm ON app.id = acm.`application_id`
         JOIN `icta_committee_member` icm ON icm.id = acm.`committee_member_id`
-        JOIN `supplier_accreditation`.`user` usr ON usr.id = icm.`user_id`
+        JOIN `user` usr ON usr.id = icm.`user_id`
         WHERE usr.id=:uid  AND app.status IN('ApplicationWorkflow/at-secretariat', 'ApplicationWorkflow/at-committee', 'ApplicationWorkflow/com-rejected', 'ApplicationWorkflow/pdtp-reviewed')";
         if(in_array(\Yii::$app->user->identity->group, ['Chair', 'Director'])){
             $status = (\Yii::$app->user->identity->group == 'Chair')?'ApplicationWorkflow/chair-approval':'ApplicationWorkflow/director-approval';

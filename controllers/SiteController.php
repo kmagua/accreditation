@@ -248,4 +248,9 @@ class SiteController extends Controller
         $model->checkCompanyExists(); 
         //$model->updateApplicationPaymentOnERP();
     }
+    
+    public function actionSiteMap()
+    {
+        return $this->render('site_map');
+    }
 }
