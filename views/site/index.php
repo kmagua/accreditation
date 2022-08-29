@@ -75,7 +75,7 @@ $this->title = 'Supplier Accreditation';
                     echo Html::a('My Profile', ['company-profile/view', 'id' => $company_profile->id], ['class' => 'btn btn-danger', 'style' =>"margin-top:3px; color:#B2210E"]);
                     //return $this->redirect(['company-profile/view', 'id' => ]);
                 }else{
-                    echo Html::a('Add Company Profile', ['company-profile/create'], ['class' => 'btn btn-danger', 'style' =>"margin-top:3px; color:#B2210E"]);
+                    echo Html::a('Add Company Profile', ['company-profile/create'], ['class' => 'btn btn-danger', 'style' =>"margin-top:3px; background-color:#CB3720"]);
                 }
                 ?>
                 
@@ -103,8 +103,8 @@ $this->title = 'Supplier Accreditation';
                 <h2>Contacts</h2>
                 Use the contacts below to reach us in case you experience difficulties using the site.<br/>
                 <strong>Telephone Contacts:</strong><br/>
-                <a href='tel:+254 20 2211960'>&nbsp;&nbsp;&nbsp;&nbsp;+254 20 2211960</a><br/>
-                <a href='tel:+254 20 2211961'>    &nbsp;&nbsp;&nbsp;&nbsp;+254 20 2211961</a><br/>
+                <a href='tel:+254 20 2211960' style='color:#B2210E'>&nbsp;&nbsp;&nbsp;&nbsp;+254 20 2211960</a><br/>
+                <a href='tel:+254 20 2211961' style='color:#B2210E'>    &nbsp;&nbsp;&nbsp;&nbsp;+254 20 2211961</a><br/>
                 Email: <a href="mailto:standards@ict.go.ke" target="_top" style='color:#B2210E'>standards@ict.go.ke</a>
             </div>
         </div>

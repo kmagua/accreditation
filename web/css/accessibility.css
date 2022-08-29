@@ -68,3 +68,8 @@
 a:focus{
     text-decoration: underline !important;
 }
+
+.skin-black .sidebar-menu>li>.treeview-menu {
+    margin: 0 1px;
+    background: #000 !important;
+}

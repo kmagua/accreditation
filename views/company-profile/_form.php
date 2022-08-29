@@ -129,7 +129,7 @@ use yii\helpers\ArrayHelper;
 -->
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'style'=>'background-color:#CB3720']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

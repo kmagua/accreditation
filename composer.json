@@ -38,7 +38,8 @@
         "beaten-sect0r/yii2-db-manager": "*",
         "dmstr/yii2-adminlte-asset": "^2.1",
         "yiisoft/yii2-bootstrap4": "^2.0",
-        "scotthuangzl/yii2-google-chart": "dev-master"
+        "scotthuangzl/yii2-google-chart": "dev-master",
+        "kekaadrenalin/yii2-module-recaptcha-v3": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

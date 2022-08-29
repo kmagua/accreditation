@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "995614b03e053c08e218db30063c6b1e",
+    "content-hash": "629abaa00fc1b01ff2ea14bdd309b7e8",
     "packages": [
         {
             "name": "2amigos/yii2-chartjs-widget",
@@ -1902,6 +1902,57 @@
                 }
             ],
             "time": "2022-03-29T13:25:36+00:00"
+        },
+        {
+            "name": "kekaadrenalin/yii2-module-recaptcha-v3",
+            "version": "1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kekaadrenalin/yii2-module-recaptcha-v3.git",
+                "reference": "411c333cf267237bc711d01363fba154d20c69e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kekaadrenalin/yii2-module-recaptcha-v3/zipball/411c333cf267237bc711d01363fba154d20c69e7",
+                "reference": "411c333cf267237bc711d01363fba154d20c69e7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "yiisoft/yii2": "~2.0.15"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "kekaadrenalin\\recaptcha3\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "kekaadrenalin",
+                    "email": "kekapor@outlook.com"
+                }
+            ],
+            "description": "This is reCAPTCHA v3 for Yii2.",
+            "keywords": [
+                "Yii2 recaptcha",
+                "Yii2 recaptcha 3",
+                "Yii2 recaptcha v3",
+                "captcha",
+                "module",
+                "recaptcha 3",
+                "recaptcha v3",
+                "yii2"
+            ],
+            "support": {
+                "issues": "https://github.com/kekaadrenalin/yii2-module-recaptcha-v3/issues",
+                "source": "https://github.com/kekaadrenalin/yii2-module-recaptcha-v3"
+            },
+            "time": "2019-02-22T09:14:06+00:00"
         },
         {
             "name": "league/flysystem",

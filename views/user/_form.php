@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
         <!--<br /> -->
 <div class="user-form" style="color: black !important">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['enableAjaxValidation' => false]); ?>
     
     <?= ''//$form->field($model, 'kra_pin_number')->textInput(['maxlength' => true]) ?>
 
@@ -43,9 +43,7 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>
     
-    <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), [
-        // configure additional widget properties here
-    ]) ?>
+    <?= $form->field($model, 'reCaptcha')->widget(\kekaadrenalin\recaptcha3\ReCaptchaWidget::class) ?>
 
     <div class="form-group">
         <div class="col-md-6">

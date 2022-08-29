@@ -20,12 +20,11 @@ $this->title = 'Changing My Password';
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
     
-    <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>
-    
+    <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>    
 
     <div class="form-group">
         <div class="col-md-6">
-       <?= Html::submitButton('Register', ['class' => 'btn btn-success']) ?>
+       <?= Html::submitButton('Register', ['class' => 'btn btn-success', 'style' => 'background-color:#006638']) ?>
         </div>
     </div>
 

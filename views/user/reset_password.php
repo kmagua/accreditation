@@ -12,19 +12,14 @@ $this->title = "Reset Password";
 <div style="margin-top:2%;background-color:white;" id="Log">
     <div class="user-password-reset-form">
 
-        <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(); ?>  
+        <?= $form->field($model, 'email')->textInput()->label('Enter your E-Mail Address') ?>       
         
-        <?= Html::label('Enter your E-Mail Address', 'kra_pin_number') ?>
-
-        <?= $form->field($model, 'email')->textInput()->label('') ?>
-        
-        <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), [
-            // configure additional widget properties here
-        ]) ?>
+        <?= $form->field($model, 'reCaptcha')->widget(\kekaadrenalin\recaptcha3\ReCaptchaWidget::class) ?>
 
         <div class="form-group">
             <div class="col-md-6">
-           <?= Html::submitButton('Reset Password', ['class' => 'btn btn-success']) ?>
+           <?= Html::submitButton('Reset Password', ['class' => 'btn btn-success', 'style' => 'background-color:#006638']) ?>
             </div>
         </div>
 

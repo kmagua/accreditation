@@ -35,7 +35,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public $group;
     public $user_id;
     public $full_name;
-    public $captcha;
+    //public $captcha;
+    public $reCaptcha;
     /**
      * {@inheritdoc}
      */
@@ -53,9 +54,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email', 'first_name'], 'required'],
             [['role'], 'string'],
             [['status'], 'number'],
-            [['captcha', 'password'], 'required', 'on'=>'register'],
-            [['captcha'], 'required', 'on'=>['password_reset']],  
-            ['captcha', 'captcha','captchaAction'=>'/site/captcha', 'on'=>['register', 'password_reset']], // add this code to your rules.
+            //[['captcha', 'password'], 'required', 'on'=>'register'],
+            //[['captcha'], 'required', 'on'=>['password_reset']],  
+            //['captcha', 'captcha','captchaAction'=>'/site/captcha', 'on'=>['register', 'password_reset']], // add this code to your rules.
             [['password'], 'required', 'on'=>['register', 'password_update', 'register_internal']],
             [['email', 'kra_pin_number'], 'unique'],
             [['date_created', 'last_updated', 'last_login_date', 'last_password_change_date'], 'safe'],
@@ -67,7 +68,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['last_name'], 'string', 'max' => 20],
             [['password', 'password_repeat', 'first_name'], 'string', 'max' => 100],
             [['password_repeat'], 'validatePasswordRepeat', 'on'=>['register', 'password_update', 'register_internal']],
-            ['recent_passwords', 'string', 'max' => 500]
+            ['recent_passwords', 'string', 'max' => 500],
+            [['reCaptcha'], \kekaadrenalin\recaptcha3\ReCaptchaValidator::className(), 'acceptance_score' => 0.7]
         ];
     }
 

@@ -1,3 +1,8 @@
+<?php
+$this->title = "Pre-requisites for Supplier Accreditation categories";
+
+?>
+
 <div class=WordSection1>
 
 <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><u><span

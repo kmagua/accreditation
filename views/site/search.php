@@ -11,7 +11,7 @@ $this->title = "Validate certificate";
 ?>
 
 
-<div class="site-login">
+<div class="validate-certificate" style="padding:10px">
     <div class="row" style="margin-top: 20px">
     <p>Please fill in the certificate serial number to search:</p>
     </div>
@@ -24,7 +24,7 @@ $this->title = "Validate certificate";
     </div>
        
     <div class="form-group row" style="margin-top: 5px">            
-        <?= Html::submitButton($this->title, ['class' => 'btn btn-success', 'name' => 'validate-button']) ?>            
+        <?= Html::submitButton($this->title, ['class' => 'btn btn-success', 'name' => 'validate-button', 'style' => 'background-color:#006638']) ?>            
     </div>
 
     <?php ActiveForm::end(); ?>
