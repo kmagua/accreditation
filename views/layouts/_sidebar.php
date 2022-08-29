@@ -112,11 +112,7 @@ $adminMenuItems[] = [
     'label' => 'Reports',
     'url' => ['/site/reports'],
 ];
-$adminMenuItems[] = [
-    'icon' => 'list',
-    'label' => 'FAQs',
-    'url' => ['/site/faqs'],
-];
+
 $adminMenuItems[] = [
     'icon' => 'lock',
     'label' => 'Change my Password',
@@ -135,6 +131,18 @@ $menuItems[] = [
     'label' => 'Register',
     'visible' => Yii::$app->user->isGuest ,
 ];
+$menuItems[] = [
+    'icon' => 'list',
+    'label' => 'FAQs',
+    'url' => ['/site/faqs'],
+];
+$menuItems[] = [
+    'url' => ['/site/site-map'],
+    //'icon' => 'user-plus',
+    'label' => 'Site Map',
+    //'visible' => Yii::$app->user->isGuest ,
+];
+
 
 $menuItems[] = [
     'url' => ['/application/pdpt-applications'],
